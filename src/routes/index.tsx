@@ -1,7 +1,9 @@
 import AuthLayout from "@/components/layouts/auth";
 import DashboardLayout from "@/components/layouts/dashboard";
 import Login from "@/pages/auth/login";
+import Recaptcha from "@/pages/auth/recaptcha";
 import Register from "@/pages/auth/register";
+import VerifyPhone from "@/pages/auth/verify-phone";
 import Error404 from "@/pages/error/404";
 import DashboardHome from "@/pages/home";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
@@ -12,6 +14,8 @@ const AppRoutes = () => {
       <Route path="auth" element={<AuthLayout />}>
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
+        <Route path="verify-phone" element={<VerifyPhone />} />
+        <Route path="recaptcha" element={<Recaptcha />} />
         <Route index path="*" element={<Navigate replace to="/auth/login" />} />
       </Route>
       <Route path="app" element={<DashboardLayout />}>
