@@ -109,7 +109,8 @@ const DashboardLayout = () => {
             height: "100%",
             width: "100%",
             maxWidth: "24.4rem",
-            position: "relative",
+            position: "sticky",
+            top: 0,
           }}
         >
           <Box
@@ -120,6 +121,10 @@ const DashboardLayout = () => {
           <Box
             sx={{
               mt: "4.8rem",
+              height: "calc(100% - 11.3rem)",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
             }}
           >
             <Box
@@ -142,9 +147,9 @@ const DashboardLayout = () => {
                 color: "#121212",
                 width: "100%",
                 justifyContent: "flex-start",
-                position: "absolute",
-                bottom: "5.4rem",
-                left: 0,
+                // position: "absolute",
+                // bottom: "5.4rem",
+                // left: 0,
               }}
             >
               <LogoutOutlinedIcon sx={{ mr: "1.15rem" }} /> Sign Out
@@ -162,7 +167,7 @@ const DashboardLayout = () => {
           <Box
             sx={{
               width: "100%",
-              height: "100%",
+              minHeight: "100%",
               borderRadius: "1.5rem",
               bgcolor: (theme) => theme.palette.primary.contrastText,
             }}

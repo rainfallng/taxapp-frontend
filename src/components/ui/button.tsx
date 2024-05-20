@@ -9,6 +9,7 @@ import { FC } from "react";
 const createStyles: (props: ButtonProps) => SxProps<Theme> = (props) => ({
   boxShadow: "none",
   fontWeight: 500,
+  textTransform: "capitalize",
   ...(props?.sx ?? {}),
   "&:hover": {
     opacity: 0.8,

@@ -6,6 +6,16 @@ import Register from "@/pages/auth/register";
 import VerifyPhone from "@/pages/auth/verify-phone";
 import Error404 from "@/pages/error/404";
 import DashboardHome from "@/pages/home";
+import OnboardingInitial from "@/pages/onboarding";
+import CompanyInfo from "@/pages/onboarding/company-info";
+import ContactInfo from "@/pages/onboarding/contact-info";
+import EmploymentDetails from "@/pages/onboarding/employment-details";
+import PersonalInfo from "@/pages/onboarding/personal-info";
+import Success from "@/pages/onboarding/success";
+import TaxHistory from "@/pages/onboarding/tax-history";
+import TaxIdentification from "@/pages/onboarding/tax-identification";
+import VerifyTIN from "@/pages/onboarding/verify-tin";
+import VerifyTINCode from "@/pages/onboarding/verify-tin-code";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 
 const AppRoutes = () => {
@@ -20,8 +30,19 @@ const AppRoutes = () => {
       </Route>
       <Route path="app" element={<DashboardLayout />}>
         <Route path="home" element={<DashboardHome />} />
-        <Route path="professionals" element={<Outlet />}>
+        <Route path="onboarding" element={<Outlet />}>
+          <Route index element={<OnboardingInitial />} />
+          <Route path="verify-tin" element={<VerifyTIN />} />
+          <Route path="verify-tin-code" element={<VerifyTINCode />} />
+          <Route path="personal-info" element={<PersonalInfo />} />
+          <Route path="company-info" element={<CompanyInfo />} />
+          <Route path="contact-info" element={<ContactInfo />} />
+          <Route path="tax-identification" element={<TaxIdentification />} />
+          <Route path="tax-history" element={<TaxHistory />} />
+          <Route path="employment-details" element={<EmploymentDetails />} />
+          <Route path="success" element={<Success />} />
         </Route>
+        <Route path="professionals" element={<Outlet />}></Route>
         <Route index element={<Navigate replace to="/app/home" />} />
         <Route path="*" element={<Error404 />} />
       </Route>

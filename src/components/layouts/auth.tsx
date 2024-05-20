@@ -80,7 +80,7 @@ const Auth = () => {
         <Box
           bgcolor={theme.palette.primary.contrastText}
           width="100%"
-          sx={{ padding: "3.93rem 3.2rem 6.2rem 3.2rem", borderRadius: "1rem" }}
+          sx={{ padding: "3.93rem 3.2rem", borderRadius: "1rem" }}
         >
           <Outlet />
         </Box>
