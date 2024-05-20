@@ -1,5 +1,6 @@
 import AuthLayout from "@/components/layouts/auth";
 import DashboardLayout from "@/components/layouts/dashboard";
+import GetStarted from "@/pages/auth/get-started";
 import Login from "@/pages/auth/login";
 import Recaptcha from "@/pages/auth/recaptcha";
 import Register from "@/pages/auth/register";
@@ -22,6 +23,7 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route path="auth" element={<AuthLayout />}>
+        <Route index element={<GetStarted />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route path="verify-phone" element={<VerifyPhone />} />
