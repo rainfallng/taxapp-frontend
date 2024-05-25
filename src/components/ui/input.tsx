@@ -2,18 +2,22 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   IconButton,
   InputAdornment,
-  OutlinedInput,
-  OutlinedInputProps,
+  StandardTextFieldProps,
   SxProps,
   TextField,
   TextFieldProps,
   Theme,
 } from "@mui/material";
-import React, { useState } from "react";
+import { useState } from "react";
+import { FieldValues, UseFormReturn, Path, PathValue } from "react-hook-form";
 
-const createStyles: (
-  props: OutlinedInputProps | TextFieldProps
-) => SxProps<Theme> = (props) => ({
+export interface InputProps<T extends FieldValues> extends StandardTextFieldProps {
+  errorMessage?: string;
+  form?: UseFormReturn<T>;
+  name?: Path<T>
+}
+
+const createStyles: (props: TextFieldProps) => SxProps<Theme> = (props) => ({
   width: "100%",
   fontSize: "1.6rem",
   "& .MuiOutlinedInput-root": { fontSize: "1.6rem" },
@@ -24,50 +28,68 @@ const createStyles: (
   ...(props?.sx ?? {}),
 });
 
-const Input: React.FC<OutlinedInputProps | TextFieldProps> = ({
+const Input = <T extends FieldValues>({
   sx,
   type: defaultType,
+  errorMessage,
+  form,
+  onChange,
+  name,
+  value,
   ...props
-}) => {
+}: InputProps<T>) => {
   const [showPassword, setShowPassword] = useState(false);
   const styles = createStyles({ sx, ...props });
   const type =
     defaultType === "password" && showPassword ? "text" : defaultType;
 
-  if (defaultType === "password")
-    return (
-      <OutlinedInput
-        type={type}
-        sx={styles}
-        endAdornment={
-          <InputAdornment position="end">
-            <IconButton
-              aria-label="toggle password visibility"
-              onClick={() => setShowPassword(!showPassword)}
-              edge="end"
-            >
-              {showPassword ? <VisibilityOff /> : <Visibility />}
-            </IconButton>
-          </InputAdornment>
-        }
-        {...(props as OutlinedInputProps)}
-      />
-    );
-
-  const textFieldProps = props as TextFieldProps;
+  const formValue = name ? form?.watch(name) : undefined;
+  const formError = name
+    ? (form?.formState?.errors?.[name]?.message as string)
+    : undefined;
 
   return (
     <TextField
       type={type}
       sx={styles}
       InputLabelProps={{
-        ...textFieldProps?.InputLabelProps,
+        ...props?.InputLabelProps,
         sx: {
-          ...textFieldProps?.InputLabelProps?.sx,
+          ...props?.InputLabelProps?.sx,
           fontSize: "1.6rem",
         },
       }}
-      {...textFieldProps}
+      error={Boolean(errorMessage) || Boolean(formError) || props.error}
+      helperText={errorMessage || formError || props.helperText}
+      FormHelperTextProps={{
+        ...props?.FormHelperTextProps,
+        sx: {
+          ...props?.FormHelperTextProps?.sx,
+          fontSize: "1rem",
+        },
+      }}
+      InputProps={{
+        ...(defaultType === "password" && {
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={() => setShowPassword(!showPassword)}
+                edge="end"
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          ),
+        }),
+      }}
+      name={name}
+      value={value ?? formValue}
+      onChange={(e) => {
+        if (onChange) return onChange(e);
+        if (name) form?.setValue?.(name, e.target.value as PathValue<T, Path<T>>);
+      }}
+      {...props}
     />
   );
 };

@@ -1,9 +1,53 @@
 import { Box, Typography } from "@mui/material";
-import { Fragment } from "react";
+import { FC, Fragment, useLayoutEffect, useState } from "react";
 import Input from "../ui/input";
 import Button from "../ui/button";
+import toast from "react-hot-toast";
+import { AxiosError } from "axios";
 
-const VerifyCode = () => {
+const VerifyCode: FC<{
+  phone: string;
+  send?: () => Promise<unknown>;
+  verify?: (code: string) => Promise<unknown>;
+  verifying?: boolean;
+}> = ({ phone, send, verify, verifying }) => {
+  const [otp, setOtp] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const onSend = async (loading: string) => {
+    if (!send) return;
+    try {
+      setLoading(true);
+      await toast.promise(send(), {
+        loading,
+        error: "Request failed",
+        success: "OTP has been sent",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onVerify = async () => {
+    if (!verify) return;
+    try {
+      setLoading(true);
+      await toast.promise(verify(otp), {
+        loading: "Verifying",
+        error: (error: AxiosError<{ message: string }>) =>
+          error?.response?.data?.message || "Verification failed",
+        success: "Verification successful",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useLayoutEffect(() => {
+    onSend("Please wait...");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <Fragment>
       <Typography
@@ -46,7 +90,7 @@ const VerifyCode = () => {
         sx={{ fontSize: "1.8rem" }}
         fontWeight={500}
       >
-        080123456789
+        {phone}
       </Typography>
       <Box sx={{ mt: "4rem", mb: "3.2rem" }}>
         <Typography
@@ -58,10 +102,14 @@ const VerifyCode = () => {
         >
           Enter the 6-digit code
         </Typography>
-        <Input />
+        <Input
+          value={otp}
+          onChange={({ target: { value } }) => setOtp(value)}
+        />
       </Box>
       <Button
-        disabled
+        disabled={!otp || loading || verifying}
+        onClick={onVerify}
         sx={{
           py: "1.45rem",
           borderRadius: "5rem",
@@ -74,6 +122,8 @@ const VerifyCode = () => {
       </Button>
       <Button
         variant="text"
+        disabled={loading || verifying}
+        onClick={() => onSend("Resending...")}
         sx={{
           width: "100%",
           fontSize: "1.6rem",

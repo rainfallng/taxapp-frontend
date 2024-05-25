@@ -124,7 +124,6 @@ table {
   border-spacing: 0;
 }
 html {
-  /* font-size: calc(100vw * 10 / 1440); */
   font-size: 62.5%;
   font-family: "Poppins", "Roboto", "Arial", "sans-serif";
 }

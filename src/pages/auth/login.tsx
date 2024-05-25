@@ -9,13 +9,51 @@ import {
 import HttpsOutlinedIcon from "@mui/icons-material/HttpsOutlined";
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { ILogin } from "@/types";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { loginSchema } from "@/lib/schemas/login";
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import { handleFormErrors, handleFormToastErrors } from "@/lib/utils";
+import { AxiosError } from "axios";
+import { useAPI } from "@/hooks/useApi";
+import { useStore } from "@/store";
 
 const Login = () => {
   const theme = useTheme();
+  const { api } = useAPI();
+  const navigate = useNavigate();
+  const { setUser, setToken } = useStore()
+  const form = useForm<ILogin>({
+    defaultValues: loginSchema.defaultValues,
+    resolver: loginSchema.resolver,
+  });
+
+  const { handleSubmit, setError } = form;
+
+  const { mutateAsync: onLogin, isPending } = useMutation({
+    mutationFn: api.login,
+    onSuccess(data) {
+      const { user, ...token } = data;
+      setUser(user);
+      setToken(token?.access, token?.refresh);
+      navigate("/app");
+    },
+    onError: (error: AxiosError<{ [message: string]: string | string[] }>) =>
+      handleFormErrors(error, setError),
+  });
+
+  const onSubmit: SubmitHandler<ILogin> = (values) => {
+    toast.promise(onLogin(values), {
+      success: "Login successful",
+      loading: "Please wait...",
+      error: (error) => handleFormToastErrors(error, "Login failed"),
+    });
+  };
 
   return (
-    <div>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Box
         sx={{
           mx: "auto",
@@ -58,11 +96,19 @@ const Login = () => {
         flexDirection="column"
         sx={{ gap: "2.4rem" }}
       >
-        <Input type="email" sx={{ height: "5.6rem" }} placeholder="Email" />
+        <Input
+          type="email"
+          name="email"
+          form={form}
+          sx={{ height: "5.6rem" }}
+          placeholder="Email"
+        />
         <Input
           type="password"
           sx={{ height: "5.6rem" }}
           placeholder="Password"
+          name="password"
+          form={form}
         />
         <FormGroup>
           <FormControlLabel
@@ -75,7 +121,8 @@ const Login = () => {
           />
         </FormGroup>
         <Button
-          disabled
+          disabled={form.formState.isDirty || isPending}
+          type="submit"
           sx={{
             py: "1.75rem",
             borderRadius: "5rem",
@@ -96,7 +143,7 @@ const Login = () => {
           Forgot your pasword?
         </Box>
       </Box>
-    </div>
+    </form>
   );
 };
 

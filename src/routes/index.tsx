@@ -1,5 +1,6 @@
 import AuthLayout from "@/components/layouts/auth";
 import DashboardLayout from "@/components/layouts/dashboard";
+import TenantCheck from "@/components/layouts/tenant-check";
 import GetStarted from "@/pages/auth/get-started";
 import Login from "@/pages/auth/login";
 import Recaptcha from "@/pages/auth/recaptcha";
@@ -24,13 +25,28 @@ const AppRoutes = () => {
     <Routes>
       <Route path="auth" element={<AuthLayout />}>
         <Route index element={<GetStarted />} />
-        <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
-        <Route path="verify-phone" element={<VerifyPhone />} />
-        <Route path="recaptcha" element={<Recaptcha />} />
+        <Route
+          element={
+            <TenantCheck>
+              <Outlet />
+            </TenantCheck>
+          }
+        >
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
+          <Route path="verify-phone" element={<VerifyPhone />} />
+          <Route path="recaptcha" element={<Recaptcha />} />
+        </Route>
         <Route index path="*" element={<Navigate replace to="/auth/login" />} />
       </Route>
-      <Route path="app" element={<DashboardLayout />}>
+      <Route
+        path="app"
+        element={
+          <TenantCheck>
+            <DashboardLayout />
+          </TenantCheck>
+        }
+      >
         <Route path="home" element={<DashboardHome />} />
         <Route path="onboarding" element={<Outlet />}>
           <Route index element={<OnboardingInitial />} />
