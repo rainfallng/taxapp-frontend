@@ -1,10 +1,14 @@
 import AuthLayout from "@/components/layouts/auth";
 import DashboardLayout from "@/components/layouts/dashboard";
 import TenantCheck from "@/components/layouts/tenant-check";
+import ForgotPassword from "@/pages/auth/forgot-password";
+import ForgotPasswordSuccess from "@/pages/auth/forgot-password-success";
 import GetStarted from "@/pages/auth/get-started";
 import Login from "@/pages/auth/login";
 import Recaptcha from "@/pages/auth/recaptcha";
 import Register from "@/pages/auth/register";
+import TaxRetrieval from "@/pages/auth/tax-retrieval";
+import TaxRetrievalSuccess from "@/pages/auth/tax-retrieval-success";
 import VerifyPhone from "@/pages/auth/verify-phone";
 import Error404 from "@/pages/error/404";
 import DashboardHome from "@/pages/home";
@@ -34,11 +38,21 @@ const AppRoutes = () => {
         >
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
+          <Route path="forgot-password" element={<ForgotPassword />} />
+          <Route path="tax-retrieval" element={<TaxRetrieval />} />
           <Route path="verify-phone" element={<VerifyPhone />} />
           <Route path="recaptcha" element={<Recaptcha />} />
         </Route>
         <Route index path="*" element={<Navigate replace to="/auth/login" />} />
       </Route>
+      <Route
+        path="forgot-password-success"
+        element={<ForgotPasswordSuccess />}
+      />
+      <Route
+        path="tax-id-retrieval-success"
+        element={<TaxRetrievalSuccess />}
+      />
       <Route
         path="app"
         element={
@@ -60,7 +74,7 @@ const AppRoutes = () => {
           <Route path="employment-details" element={<EmploymentDetails />} />
           <Route path="success" element={<Success />} />
         </Route>
-        <Route path="professionals" element={<Outlet />}></Route>
+        <Route path="returns" element={<Outlet />}></Route>
         <Route index element={<Navigate replace to="/app/home" />} />
         <Route path="*" element={<Error404 />} />
       </Route>

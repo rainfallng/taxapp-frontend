@@ -69,7 +69,7 @@ const PhoneInput = <T extends FieldValues>({
           borderColor: hasError
             ? theme.palette.error.main
             : isFocused
-            ? theme.palette.success.light
+            ? theme.palette.success.main
             : theme.palette.grey[300],
           borderRadius: "0.5rem",
           "& input": {

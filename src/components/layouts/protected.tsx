@@ -3,11 +3,11 @@ import { Navigate } from "react-router-dom";
 import { useStore } from "@/store";
 
 const Protected: FC<{ children: ReactNode }> = ({ children }) => {
-  const { access, user } = useStore();
+  const { access, user, tenantName } = useStore();
 
-  if (access === null) return <div />;
+  if (!tenantName) return <Navigate to="/auth" />;
 
-  if (!access || !user.email) return <Navigate to="/auth/login" />
+  if (!access || !user.email) return <Navigate to="/auth/login" />;
 
   return children;
 };

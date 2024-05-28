@@ -20,10 +20,7 @@ const Register = () => {
   const theme = useTheme();
   const { setToken, setUser } = useStore();
   const navigate = useNavigate();
-  const form = useForm<IRegister>({
-    defaultValues: registerSchema.defaultValues,
-    resolver: registerSchema.resolver,
-  });
+  const form = useForm<IRegister>(registerSchema);
 
   const {
     setValue,
@@ -147,7 +144,7 @@ const Register = () => {
             errorMessage={errors.user_type?.message}
           >
             {Object.entries(UserType).map(([key, val]) => (
-              <MenuItem key={key} value={key}>
+              <MenuItem key={key} value={val}>
                 {val}
               </MenuItem>
             ))}

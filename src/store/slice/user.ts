@@ -19,6 +19,7 @@ export const userSlice: StateCreator<IUserSlice> = (set) => ({
     email: "",
     phone: "",
     user_type: "",
+    tin_profile: null,
   },
   setRefreshToken: (value) => set({ refresh: value }),
   setAccessToken: (value) => set({ access: value }),

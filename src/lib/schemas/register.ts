@@ -9,7 +9,7 @@ const schema = yup.object({
   phone: yup.string().required("Phone number is a required field"),
   user_type: yup
     .string()
-    .oneOf(Object.keys(UserType))
+    .oneOf(Object.values(UserType))
     .required("This field is required"),
 });
 

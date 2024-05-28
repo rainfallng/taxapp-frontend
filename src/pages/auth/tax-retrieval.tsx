@@ -1,16 +1,8 @@
-import {
-  Box,
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
-  Typography,
-  useTheme,
-} from "@mui/material";
-import HttpsOutlinedIcon from "@mui/icons-material/HttpsOutlined";
+import { Box, Typography, useTheme } from "@mui/material";
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
 import { Link, useNavigate } from "react-router-dom";
-import { ILogin } from "@/types";
+import { ILogin, UserType } from "@/types";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { loginSchema } from "@/lib/schemas/login";
 import { useMutation } from "@tanstack/react-query";
@@ -19,8 +11,10 @@ import { handleFormErrors, handleFormToastErrors } from "@/lib/utils";
 import { AxiosError } from "axios";
 import { useAPI } from "@/hooks/useApi";
 import { useStore } from "@/store";
+import DatePicker from "@/components/ui/date-picker";
+import Select, { MenuItem } from "@/components/ui/select";
 
-const Login = () => {
+const TaxRetrieval = () => {
   const theme = useTheme();
   const { api } = useAPI();
   const navigate = useNavigate();
@@ -54,7 +48,7 @@ const Login = () => {
       <Box
         sx={{
           mx: "auto",
-          maxWidth: "30rem",
+          maxWidth: "34.3rem",
           textAlign: "center",
         }}
       >
@@ -66,25 +60,19 @@ const Login = () => {
             fontWeight: 500,
           }}
         >
-          Sign in
+          Find Your Tax Payer ID
         </Typography>
         <Typography
           sx={{
             fontSize: "1.4rem",
             color: theme.palette.info.main,
             mt: "1.6rem",
+            mb: "2.4rem",
           }}
         >
-          I am a returning user.
-        </Typography>
-        <Typography
-          sx={{
-            fontSize: "1.4rem",
-            color: theme.palette.info.main,
-            mb: "2.35rem",
-          }}
-        >
-          Please enter your login details below
+          Please provide your Identification number and date of birth to
+          retrieve your Tax Payer ID. Your retrieved Tax Payer ID will be sent
+          to the phone number or email registered with your profile.
         </Typography>
       </Box>
       <Box
@@ -93,30 +81,30 @@ const Login = () => {
         flexDirection="column"
         sx={{ gap: "2.4rem" }}
       >
-        <Input
-          type="email"
-          name="email"
-          form={form}
+        <Select sx={{ height: "5.6rem" }} placeholder="Select Tax Payer Type">
+          {Object.entries(UserType).map(([key, val]) => (
+            <MenuItem key={key} value={val}>
+              {val}
+            </MenuItem>
+          ))}
+        </Select>
+        <Select
           sx={{ height: "5.6rem" }}
-          placeholder="Email"
-        />
+          placeholder="Select Identification Type"
+        >
+          {Object.entries(UserType).map(([key, val]) => (
+            <MenuItem key={key} value={val}>
+              {val}
+            </MenuItem>
+          ))}
+        </Select>
         <Input
-          type="password"
           sx={{ height: "5.6rem" }}
-          placeholder="Password"
+          label="Enter Identification Number"
           name="password"
           form={form}
         />
-        <FormGroup>
-          <FormControlLabel
-            control={<Checkbox />}
-            label="Remember me next time"
-            sx={{
-              "& .MuiFormControlLabel-label": { fontSize: "1.6rem" },
-              "& .MuiSvgIcon-root": { fontSize: "2.4rem" },
-            }}
-          />
-        </FormGroup>
+        <DatePicker />
         <Button
           disabled={form.formState.isDirty || isPending}
           type="submit"
@@ -127,10 +115,7 @@ const Login = () => {
             textTransform: "capitalize",
           }}
         >
-          <HttpsOutlinedIcon
-            sx={{ mr: "0.8rem", width: "1.6rem", height: "1.6rem" }}
-          />
-          Sign In
+          Proceed
         </Button>
         <Box
           textAlign="center"
@@ -140,41 +125,19 @@ const Login = () => {
         >
           <Box
             component={Link}
-            to="/forgot-password"
+            to="/auth/login"
             sx={{
               fontSize: "1.6rem",
               color: "#7879C5",
               textDecoration: "none",
             }}
           >
-            Forgot your pasword?
+            Already have an account? Log in here
           </Box>
-          <Box
-            component={Link}
-            to="/auth/tax-retrieval"
-            sx={{
-              fontSize: "1.6rem",
-              color: "#7879C5",
-              textDecoration: "none",
-            }}
-          >
-            Forgot Tax ID?
-          </Box>
-          {/* <Box
-            component={Link}
-            to="/"
-            sx={{
-              fontSize: "1.6rem",
-              color: "#7879C5",
-              textDecoration: "none",
-            }}
-          >
-            Create New Tax ID?
-          </Box> */}
         </Box>
       </Box>
     </form>
   );
 };
 
-export default Login;
+export default TaxRetrieval;

@@ -1,4 +1,4 @@
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
 import Protected from "./protected";
 import { Box, useTheme } from "@mui/material";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
@@ -7,6 +7,8 @@ import { SIDEBAR_LINKS } from "./constants";
 import { useState } from "react";
 import { ISidebar } from "@/types";
 import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
+import { clearLS } from "@/lib/utils";
+import { useStore } from "@/store";
 
 const SidebarItem = ({ item }: { item: ISidebar }) => {
   const [open, setOpen] = useState(false);
@@ -38,8 +40,12 @@ const SidebarItem = ({ item }: { item: ISidebar }) => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          borderTopRightRadius: "0.5rem",
+          borderBottomRightRadius: "0.5rem",
+          borderColor: theme.palette.success.main,
           "&:hover": hoverStyle,
           ...(location.pathname === item?.link && activeStyle),
+          ...(open && { borderWidth: "0.2rem", borderStyle: "solid", borderLeft: "none" }),
         }}
         onClick={(e) => {
           if (item?.subs?.length) {
@@ -62,8 +68,7 @@ const SidebarItem = ({ item }: { item: ISidebar }) => {
           sx={{
             display: "flex",
             flexDirection: "column",
-            gap: "0.6rem",
-            ml: "1.6rem",
+            gap: "1.2rem",
             mt: "1rem",
           }}
         >
@@ -75,12 +80,14 @@ const SidebarItem = ({ item }: { item: ISidebar }) => {
               sx={{
                 textDecoration: "none",
                 color: theme.palette.grey[600],
-                fontSize: "1.2rem",
-                padding: "0.8rem 1.9rem",
+                fontSize: "1.4rem",
+                padding: "1rem 1.9rem",
                 display: "flex",
                 alignItems: "center",
+                borderTopRightRadius: "0.5rem",
+                borderBottomRightRadius: "0.5rem",
                 "&:hover": hoverStyle,
-                ...(location.pathname === item?.link && activeStyle),
+                ...(location.pathname === sub?.link ? activeStyle : {}),
               }}
             >
               <span>{sub.title}</span>
@@ -93,6 +100,23 @@ const SidebarItem = ({ item }: { item: ISidebar }) => {
 };
 
 const DashboardLayout = () => {
+  const navigate = useNavigate();
+  const { user } = useStore();
+  const { pathname } = useLocation();
+
+  const logout = () => {
+    clearLS();
+    navigate("/auth/login");
+  };
+
+  if (!user.phone) return <Navigate to="/auth/verify-phone" />;
+
+  if (!user.tin_profile && !pathname.startsWith("/app/onboarding"))
+    return <Navigate to="/app/onboarding" />;
+
+  if (user.tin_profile && pathname.startsWith("/app/onboarding"))
+    return <Navigate to="/app/home" />;
+
   return (
     <Protected>
       <Box
@@ -134,7 +158,7 @@ const DashboardLayout = () => {
                 gap: "1.2rem",
               }}
             >
-              {SIDEBAR_LINKS.map((item) => (
+              {SIDEBAR_LINKS?.[user.user_type]?.map((item) => (
                 <SidebarItem item={item} key={item.title} />
               ))}
             </Box>
@@ -147,10 +171,8 @@ const DashboardLayout = () => {
                 color: "#121212",
                 width: "100%",
                 justifyContent: "flex-start",
-                // position: "absolute",
-                // bottom: "5.4rem",
-                // left: 0,
               }}
+              onClick={logout}
             >
               <LogoutOutlinedIcon sx={{ mr: "1.15rem" }} /> Sign Out
             </Button>

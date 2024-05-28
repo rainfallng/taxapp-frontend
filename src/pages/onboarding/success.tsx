@@ -1,9 +1,11 @@
 import Layout from "@/components/features/onboarding/layout";
 import Button from "@/components/ui/button";
 import { Box, Typography, useTheme } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const Success = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
 
   return (
     <Layout>
@@ -35,7 +37,10 @@ const Success = () => {
         <Typography sx={{ fontSize: "1.8rem", mb: "4rem" }}>
           Your details have been successfully verified.
         </Typography>
-        <Button sx={{ fontSize: "1.8rem", borderRadius: "5rem", px: "2.4rem" }}>
+        <Button
+          onClick={() => navigate("/app")}
+          sx={{ fontSize: "1.8rem", borderRadius: "5rem", px: "2.4rem" }}
+        >
           Proceed to dashboard
         </Button>
       </Box>

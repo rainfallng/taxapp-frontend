@@ -7,13 +7,12 @@ import { QueryKeys } from "@/lib/queryKeys";
 import { useAPI } from "@/hooks/useApi";
 import { useStore } from "@/store";
 import { useLoader } from "@/hooks/useLoader";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const GetStarted = () => {
   const theme = useTheme();
   const { api } = useAPI();
   const navigate = useNavigate();
-  const { state } = useLocation()
 
   const { setTenantName, tenantName } = useStore();
 
@@ -23,7 +22,7 @@ const GetStarted = () => {
   });
 
   const onSubmit = () => {
-    navigate(state?.pathname || '/auth/login');
+    navigate('/auth/login');
   };
 
   useLoader(isLoading);

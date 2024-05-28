@@ -1,5 +1,12 @@
 import { getStore } from "@/lib/utils";
-import { ILogin, IRegister } from "@/types";
+import {
+  ICompanyOnboarding,
+  IIndividualOnboarding,
+  ILGAs,
+  ILogin,
+  IRegister,
+  IState,
+} from "@/types";
 import axios, { AxiosInstance } from "axios";
 
 export class APIRequest {
@@ -46,8 +53,8 @@ export class APIRequest {
   sendAuthOtp = async () => {
     const { data } = await axios.get(`/api/v1/ums/profile/send_otp/`, {
       headers: {
-        Authorization: `JWT ${this.accessToken}`
-      }
+        Authorization: `JWT ${this.accessToken}`,
+      },
     });
 
     return data;
@@ -56,8 +63,8 @@ export class APIRequest {
   verifyAuthOtp = async (body: { token: string }) => {
     const { data } = await axios.post(`/api/v1/ums/profile/verify_otp/`, body, {
       headers: {
-        Authorization: `JWT ${this.accessToken}`
-      }
+        Authorization: `JWT ${this.accessToken}`,
+      },
     });
 
     return data;
@@ -66,8 +73,50 @@ export class APIRequest {
   getAuthUser = async () => {
     const { data } = await axios.get(`/api/v1/ums/profile/me`, {
       headers: {
-        Authorization: `JWT ${this.accessToken}`
-      }
+        Authorization: `JWT ${this.accessToken}`,
+      },
+    });
+
+    return data;
+  };
+
+  getStates = async () => {
+    const { data } = await axios.get(`/api/v1/tin/state`, {
+      headers: {
+        Authorization: `JWT ${this.accessToken}`,
+      },
+    });
+
+    return data as IState[];
+  };
+
+  getLGAs = async (stateId: number) => {
+    const { data } = await axios.get(`/api/v1/tin/state/${stateId}/lgas/`, {
+      headers: {
+        Authorization: `JWT ${this.accessToken}`,
+      },
+    });
+
+    return data as ILGAs[];
+  };
+
+  completeIndividualOnboarding = async (
+    body: Partial<IIndividualOnboarding>
+  ) => {
+    const { data } = await axios.post(`/api/v1/tin/profile/individual/`, body, {
+      headers: {
+        Authorization: `JWT ${this.accessToken}`,
+      },
+    });
+
+    return data;
+  };
+
+  completeCompanyOnboarding = async (body: Partial<ICompanyOnboarding>) => {
+    const { data } = await axios.post(`/api/v1/tin/profile/company/`, body, {
+      headers: {
+        Authorization: `JWT ${this.accessToken}`,
+      },
     });
 
     return data;

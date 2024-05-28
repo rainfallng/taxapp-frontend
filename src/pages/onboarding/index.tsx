@@ -3,14 +3,16 @@ import Layout from "@/components/features/onboarding/layout";
 import Button from "@/components/ui/button";
 import { Box, Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 import { useState } from "react";
-import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import ArrowForwardIosOutlinedIcon from "@mui/icons-material/ArrowForwardIosOutlined";
+import { useNavigate } from "react-router-dom";
+import { SubmissionModeType, UserType } from "@/types";
+import { useStore } from "@/store";
 
 const OnboardingInitial = () => {
   const [firstCheck, setFirstCheck] = useState<number | null>(null);
   const [secondCheck, setSecondCheck] = useState<number | null>(null);
-
-  console.log({ firstCheck, secondCheck });
+  const navigate = useNavigate();
+  const { setOnboardingMode, user } = useStore();
 
   const onCheck = (value: number, level = 0) => {
     if (level === 0) {
@@ -24,6 +26,18 @@ const OnboardingInitial = () => {
 
   const isValid =
     (firstCheck === 0 && !Number.isNaN(secondCheck)) || firstCheck === 1;
+
+  const linkTo = () => {
+    let value: string = SubmissionModeType.MANUAL;
+    if (firstCheck === 0) {
+      if (secondCheck === 0) value = SubmissionModeType["TIN-MANUAL"];
+      if (secondCheck === 1) value = SubmissionModeType.TIN;
+    }
+    setOnboardingMode(value);
+    if (firstCheck === 0 && secondCheck === 1) return "/verify-tin";
+    if (user.user_type === UserType.COMPANY) return "/company-info";
+    return "/personal-info";
+  };
 
   return (
     <Layout>
@@ -92,16 +106,11 @@ const OnboardingInitial = () => {
           />
         </FormGroup>
       </Box>
-      <Box display="flex" justifyContent="space-between" sx={{ mt: "18rem" }}>
-        <Button
-          sx={{ fontSize: "1.8rem", p: "1rem 2.4rem", borderRadius: "5rem" }}
-          variant="outlined"
-        >
-          <ArrowBackIosNewOutlinedIcon sx={{ mr: "1.6rem" }} /> Back
-        </Button>
+      <Box display="flex" justifyContent="flex-end" sx={{ mt: "18rem" }}>
         <Button
           sx={{ fontSize: "1.8rem", p: "1rem 2.4rem", borderRadius: "5rem" }}
           disabled={!isValid}
+          onClick={() => navigate(`/app/onboarding${linkTo()}`)}
         >
           Continue <ArrowForwardIosOutlinedIcon sx={{ ml: "1.6rem" }} />
         </Button>

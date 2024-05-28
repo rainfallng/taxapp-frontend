@@ -14,7 +14,7 @@ const VerifyTINCode = () => {
           mx: "auto",
         }}
       >
-        <VerifyCode />
+        <VerifyCode phone="" />
       </Box>
     </Box>
   );
