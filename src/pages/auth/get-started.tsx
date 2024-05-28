@@ -7,12 +7,10 @@ import { QueryKeys } from "@/lib/queryKeys";
 import { useAPI } from "@/hooks/useApi";
 import { useStore } from "@/store";
 import { useLoader } from "@/hooks/useLoader";
-import { useNavigate } from "react-router-dom";
 
 const GetStarted = () => {
   const theme = useTheme();
   const { api } = useAPI();
-  const navigate = useNavigate();
 
   const { setTenantName, tenantName } = useStore();
 
@@ -22,7 +20,8 @@ const GetStarted = () => {
   });
 
   const onSubmit = () => {
-    navigate('/auth/login');
+    const { protocol, host } = window.location;
+    window.location.href = `${protocol}//${tenantName}.${host}/auth/login`;
   };
 
   useLoader(isLoading);
