@@ -3,7 +3,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 
 const TenantCheck = ({ children }: { children: ReactNode }) => {
-  const { setTenantName } = useStore();
+  const { setTenantName, tenantName } = useStore();
   const { pathname } = useLocation();
   const [shouldRedirect, setShouldRedirect] = useState<null | boolean>(null);
 
@@ -20,14 +20,14 @@ const TenantCheck = ({ children }: { children: ReactNode }) => {
 
     const tenant = splitHost.length !== 3 ? "" : splitHost[0];
 
-    if (tenant) {
-      setTenantName(tenant);
+    if (tenant || tenantName) {
+      if (!tenantName) setTenantName(tenant);
       setShouldRedirect(false);
     } else {
       setShouldRedirect(true);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [tenantName]);
 
   if (shouldRedirect === null) return;
 
