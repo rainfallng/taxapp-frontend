@@ -60,6 +60,7 @@ const IndividualContactInfo = <T extends FieldValues>({
                 )
               }
               label="Enter Number"
+              errorMessage={form.formState.errors.phone_number_1?.message?.toString()}
             />
           </Grid>
           <Grid item xs={4}>
@@ -83,6 +84,7 @@ const IndividualContactInfo = <T extends FieldValues>({
                 )
               }
               label="Enter Number"
+              errorMessage={form.formState.errors.phone_number_2?.message?.toString()}
             />
           </Grid>
         </Grid>

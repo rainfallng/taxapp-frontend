@@ -6,7 +6,10 @@ const schema = yup.object({
   email: yup.string().email().required("Email is a required field"),
   password1: yup.string().required("Password is a required field"),
   password2: yup.string().required("Password is a required field"),
-  phone: yup.string().required("Phone number is a required field"),
+  phone: yup
+    .string()
+    .max(15, "Phone number cannot be more than 15 characters")
+    .required("Phone number is a required field"),
   user_type: yup
     .string()
     .oneOf(Object.values(UserType))

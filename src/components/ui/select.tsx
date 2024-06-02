@@ -22,6 +22,7 @@ const createStyles: (props: SelectProps) => SxProps<Theme> = (props) => ({
   "& fieldset": {
     borderColor: (theme) => theme.palette.grey[300],
   },
+  "& .MuiSelect-icon": { fontSize: "2.4rem" },
   ...(props?.sx ?? {}),
 });
 

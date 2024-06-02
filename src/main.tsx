@@ -50,7 +50,11 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <ThemeProvider theme={theme}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <App />
-            <Toaster position="top-center" />
+            <Toaster
+              containerClassName="toaster-wrapper"
+              position="top-center"
+              toastOptions={{ style: { fontSize: "1.2rem", fontWeight: 500 } }}
+            />
           </LocalizationProvider>
         </ThemeProvider>
       </BrowserRouter>

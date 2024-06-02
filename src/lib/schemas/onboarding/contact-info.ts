@@ -5,12 +5,17 @@ import { IIndividualOnboarding } from "@/types";
 const store = getStore() as { individualOnboarding: IIndividualOnboarding };
 
 const contactInfoSchemaObject = yup.object({
-  phone_number_1: yup.string().required("Phone number is a required field"),
-  phone_number_2: yup.string(),
+  phone_number_1: yup
+    .string()
+    .max(15, "Phone number cannot be more than 15 characters")
+    .required("Phone number is a required field"),
+  phone_number_2: yup
+    .string()
+    .max(15, "Phone number cannot be more than 15 characters"),
   email_address: yup
     .string()
     .email()
-    .required("First name is a required field"),
+    .required("Email address is a required field"),
 });
 
 const contactInfoDefaultValues = {

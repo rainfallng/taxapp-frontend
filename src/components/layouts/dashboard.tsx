@@ -61,7 +61,7 @@ const SidebarItem = ({ item }: { item: ISidebar }) => {
           <Icon sx={{ fontSize: "2rem" }} />
           <span>{item.title}</span>
         </Box>
-        {item?.subs && <KeyboardArrowDownOutlinedIcon />}
+        {item?.subs && <KeyboardArrowDownOutlinedIcon sx={{ fontSize: "1.6rem"}} />}
       </Box>
       {item?.subs && open && (
         <Box
