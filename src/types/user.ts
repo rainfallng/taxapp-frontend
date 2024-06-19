@@ -24,6 +24,12 @@ export const SubmissionModeType = {
   "TIN-MANUAL": "TIN-MANUAL",
 } as const;
 
+export const IndentificationType = {
+  NIN: "NIN",
+  BVN: "BVN",
+  "TIN-MANUAL": "TIN-MANUAL",
+} as const;
+
 export interface IRegister {
   email: string;
   password1: string;
