@@ -1,4 +1,10 @@
-import { Link, Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
+import {
+  Link,
+  Navigate,
+  Outlet,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import Protected from "./protected";
 import { Box, useTheme } from "@mui/material";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
@@ -7,6 +13,7 @@ import { SIDEBAR_LINKS } from "./constants";
 import { useState } from "react";
 import { ISidebar } from "@/types";
 import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
+import KeyboardArrowUpOutlinedIcon from "@mui/icons-material/KeyboardArrowUpOutlined";
 import { clearLS } from "@/lib/utils";
 import { useStore } from "@/store";
 
@@ -16,6 +23,10 @@ const SidebarItem = ({ item }: { item: ISidebar }) => {
   const theme = useTheme();
 
   const Icon = item.icon;
+
+  const CaretIcon = open
+    ? KeyboardArrowUpOutlinedIcon
+    : KeyboardArrowDownOutlinedIcon;
 
   const activeStyle = {
     bgcolor: theme.palette.success.main,
@@ -45,7 +56,11 @@ const SidebarItem = ({ item }: { item: ISidebar }) => {
           borderColor: theme.palette.success.main,
           "&:hover": hoverStyle,
           ...(location.pathname === item?.link && activeStyle),
-          ...(open && { borderWidth: "0.2rem", borderStyle: "solid", borderLeft: "none" }),
+          ...(open && {
+            borderWidth: "0.2rem",
+            borderStyle: "solid",
+            borderLeft: "none",
+          }),
         }}
         onClick={(e) => {
           if (item?.subs?.length) {
@@ -61,7 +76,9 @@ const SidebarItem = ({ item }: { item: ISidebar }) => {
           <Icon sx={{ fontSize: "2rem" }} />
           <span>{item.title}</span>
         </Box>
-        {item?.subs && <KeyboardArrowDownOutlinedIcon sx={{ fontSize: "1.6rem"}} />}
+        {item?.subs && (
+          <CaretIcon sx={{ fontSize: "1.6rem" }} />
+        )}
       </Box>
       {item?.subs && open && (
         <Box

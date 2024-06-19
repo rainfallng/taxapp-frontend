@@ -1,3 +1,4 @@
+import { ProfileLayout } from "@/components/features/profile/layout";
 import AuthLayout from "@/components/layouts/auth";
 import DashboardLayout from "@/components/layouts/dashboard";
 import TenantCheck from "@/components/layouts/tenant-check";
@@ -22,6 +23,7 @@ import TaxHistory from "@/pages/onboarding/tax-history";
 import TaxIdentification from "@/pages/onboarding/tax-identification";
 import VerifyTIN from "@/pages/onboarding/verify-tin";
 import VerifyTINCode from "@/pages/onboarding/verify-tin-code";
+import MyProfile from "@/pages/profile";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 
 const AppRoutes = () => {
@@ -62,6 +64,16 @@ const AppRoutes = () => {
         }
       >
         <Route path="home" element={<DashboardHome />} />
+        <Route
+          path="profile"
+          element={
+            <ProfileLayout>
+              <Outlet />
+            </ProfileLayout>
+          }
+        >
+          <Route index element={<MyProfile />} />
+        </Route>
         <Route path="onboarding" element={<Outlet />}>
           <Route index element={<OnboardingInitial />} />
           <Route path="verify-tin" element={<VerifyTIN />} />
