@@ -5,6 +5,7 @@ import ForgotPassword from "@/pages/auth/forgot-password";
 import ForgotPasswordSuccess from "@/pages/auth/forgot-password-success";
 import GetStarted from "@/pages/auth/get-started";
 import Login from "@/pages/auth/login";
+import InitialOnboarding from "@/pages/auth/onboarding/InitialOnboarding";
 import Identification from "@/pages/auth/onboarding/identification";
 import Personalinformation from "@/pages/auth/onboarding/personalinformation";
 import Recaptcha from "@/pages/auth/recaptcha";
@@ -47,6 +48,7 @@ const AppRoutes = () => {
           <Route path="onboarding" element={<Outlet />}>
             <Route path="identification" element={<Identification />} />
             <Route path="personal" element={<Personalinformation />} />
+            <Route path="tin" element={<InitialOnboarding />} />
           </Route>
         </Route>
         <Route index path="*" element={<Navigate replace to="/auth/login" />} />
