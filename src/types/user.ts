@@ -8,6 +8,11 @@ export const MaritalStatusType = {
   MARRIED: "Married",
 } as const;
 
+export const BusinessType = {
+  LARGE: "Large",
+  SMALL: "Small",
+} as const;
+
 export const TitleType = {
   Mr: "Mr",
   Ms: "Mrs",
