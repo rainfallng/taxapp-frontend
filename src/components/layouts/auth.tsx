@@ -64,7 +64,7 @@ const Auth = () => {
         component="section"
         sx={{
           mx: "auto",
-          maxWidth: "40.9rem",
+          maxWidth: "89.5rem",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",

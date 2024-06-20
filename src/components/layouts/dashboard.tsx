@@ -1,4 +1,10 @@
-import { Link, Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
+import {
+  Link,
+  Navigate,
+  Outlet,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import Protected from "./protected";
 import { Box, useTheme } from "@mui/material";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
@@ -45,7 +51,11 @@ const SidebarItem = ({ item }: { item: ISidebar }) => {
           borderColor: theme.palette.success.main,
           "&:hover": hoverStyle,
           ...(location.pathname === item?.link && activeStyle),
-          ...(open && { borderWidth: "0.2rem", borderStyle: "solid", borderLeft: "none" }),
+          ...(open && {
+            borderWidth: "0.2rem",
+            borderStyle: "solid",
+            borderLeft: "none",
+          }),
         }}
         onClick={(e) => {
           if (item?.subs?.length) {
@@ -61,7 +71,9 @@ const SidebarItem = ({ item }: { item: ISidebar }) => {
           <Icon sx={{ fontSize: "2rem" }} />
           <span>{item.title}</span>
         </Box>
-        {item?.subs && <KeyboardArrowDownOutlinedIcon sx={{ fontSize: "1.6rem"}} />}
+        {item?.subs && (
+          <KeyboardArrowDownOutlinedIcon sx={{ fontSize: "1.6rem" }} />
+        )}
       </Box>
       {item?.subs && open && (
         <Box
@@ -111,8 +123,8 @@ const DashboardLayout = () => {
 
   if (!user.phone) return <Navigate to="/auth/verify-phone" />;
 
-  if (!user.tin_profile && !pathname.startsWith("/app/onboarding"))
-    return <Navigate to="/app/onboarding" />;
+  // if (!user.tin_profile && !pathname.startsWith("/app/onboarding"))
+  //   return <Navigate to="/app/onboarding" />;
 
   if (user.tin_profile && pathname.startsWith("/app/onboarding"))
     return <Navigate to="/app/home" />;

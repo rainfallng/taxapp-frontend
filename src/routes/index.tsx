@@ -6,6 +6,7 @@ import ForgotPasswordSuccess from "@/pages/auth/forgot-password-success";
 import GetStarted from "@/pages/auth/get-started";
 import Login from "@/pages/auth/login";
 import Identification from "@/pages/auth/onboarding/identification";
+import Personalinformation from "@/pages/auth/onboarding/personalinformation";
 import Recaptcha from "@/pages/auth/recaptcha";
 import Register from "@/pages/auth/register";
 import TaxRetrieval from "@/pages/auth/tax-retrieval";
@@ -45,6 +46,7 @@ const AppRoutes = () => {
           <Route path="recaptcha" element={<Recaptcha />} />
           <Route path="onboarding" element={<Outlet />}>
             <Route path="identification" element={<Identification />} />
+            <Route path="personal" element={<Personalinformation />} />
           </Route>
         </Route>
         <Route index path="*" element={<Navigate replace to="/auth/login" />} />

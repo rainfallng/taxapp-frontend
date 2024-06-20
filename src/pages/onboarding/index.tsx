@@ -58,7 +58,7 @@ const OnboardingInitial = () => {
                 onChange={() => onCheck(0)}
               />
             }
-            label="I already have a Payer ID/Tax Identification Number (TIN)"
+            label="I already have a Taxpayer ID/Tax Identification Number (TIN)"
           />
           {firstCheck === 0 && (
             <FormGroup sx={{ ml: "3.2rem", mt: "0.8rem" }}>
@@ -102,7 +102,7 @@ const OnboardingInitial = () => {
                 onChange={() => onCheck(1)}
               />
             }
-            label="I don't have a Payer ID/Tax Identification Number (TIN)"
+            label="I don’t have a Taxpayer ID/Tax Identification Number (TIN)"
           />
         </FormGroup>
       </Box>
