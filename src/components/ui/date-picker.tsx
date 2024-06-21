@@ -24,7 +24,7 @@ const createStyles: <T extends FieldValues>(
 ) => SxProps<Theme> = (props) => ({
   width: "100%",
   fontSize: "1.6rem",
-  "& .MuiOutlinedInput-root": { fontSize: "1.6rem" },
+  "& .MuiOutlinedInput-root, & .MuiInputLabel-root": { fontSize: "1.6rem" },
   "& > div": { height: "100%" },
   "& fieldset": {
     borderColor: (theme) => props?.form?.formState?.errors?.[props?.name]?.message ? theme.palette.error.main : theme.palette.grey[300],

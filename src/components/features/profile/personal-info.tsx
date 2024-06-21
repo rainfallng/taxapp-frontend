@@ -1,12 +1,14 @@
 import Button from "@/components/ui/button";
-import { Box, Grid, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import PersonIcon from "@mui/icons-material/Person";
-// import { useState } from "react";
+import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import DetailsMode from "./details-personal-info";
+import EditMode from "./edit-personal-info";
+import { FC } from "react";
 
-const PersonalInfo = () => {
+const PersonalInfo: FC<{ editMode: boolean; setEditMode: () => void }> = ({ editMode, setEditMode }) => {
   const theme = useTheme();
-  //   const [editMode, setEditMode] = useState(false);
 
   return (
     <Box
@@ -37,83 +39,62 @@ const PersonalInfo = () => {
         >
           Personal Information
         </Typography>
-        <Button
-          variant="text"
-          sx={{ fontSize: "1.4rem", color: theme.palette.grey[600] }}
-        >
-          <EditOutlinedIcon sx={{ fontSize: "1.4rem", mr: "0.8rem" }} /> Edit
-        </Button>
+        {!editMode && (
+          <Button
+            variant="text"
+            sx={{ fontSize: "1.4rem", color: theme.palette.grey[600] }}
+            onClick={setEditMode}
+          >
+            <EditOutlinedIcon sx={{ fontSize: "1.4rem", mr: "0.8rem" }} /> Edit
+          </Button>
+        )}
       </Box>
       <Box sx={{ display: "flex", gap: "6.4rem" }}>
-        <Box
-          sx={{
-            width: "9.6rem",
-            height: "9.6rem",
-            borderRadius: "50%",
-            border: "2px solid",
-            borderColor: theme.palette.grey[400],
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            overflow: "hidden",
-          }}
-        >
-          <PersonIcon
-            sx={{ fontSize: "9.6rem", color: theme.palette.grey[400] }}
-          />
+        <Box position="relative" height="fit-content">
+          <Box
+            sx={{
+              width: "9.6rem",
+              height: "9.6rem",
+              borderRadius: "50%",
+              border: "2px solid",
+              borderColor: theme.palette.grey[400],
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              overflow: "hidden",
+            }}
+          >
+            <PersonIcon
+              sx={{ fontSize: "9.6rem", color: theme.palette.grey[400] }}
+            />
+            {editMode && (
+              <Box
+                position="absolute"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                sx={{
+                  width: "3.2rem",
+                  height: "3.2rem",
+                  borderRadius: "50%",
+                  border: "2px solid",
+                  borderColor: theme.palette.grey[400],
+                  bottom: "0",
+                  right: "-0.4rem",
+                  bgcolor: theme.palette.grey[100],
+                  cursor: "pointer",
+                }}
+              >
+                <CameraAltIcon
+                  sx={{ fontSize: "1.9rem", color: theme.palette.grey[500] }}
+                />
+              </Box>
+            )}
+          </Box>
         </Box>
-        <Box sx={{ width: "calc(100% - 9.6rem)" }}>
-          <Grid container spacing={2}>
-            <Grid item md={4}>
-              <Typography
-                sx={{
-                  color: theme.palette.grey[400],
-                  fontSize: "1.8rem",
-                  mb: "0.8rem",
-                }}
-              >
-                First Name
-              </Typography>
-              <Typography
-                sx={{ fontSize: "1.8rem", color: theme.palette.grey[800], fontWeight: 500 }}
-              >
-                John
-              </Typography>
-            </Grid>
-            <Grid item md={4}>
-              <Typography
-                sx={{
-                  color: theme.palette.grey[400],
-                  fontSize: "1.8rem",
-                  mb: "0.8rem",
-                }}
-              >
-                Surname
-              </Typography>
-              <Typography
-                sx={{ fontSize: "1.8rem", color: theme.palette.grey[800], fontWeight: 500 }}
-              >
-                Doe
-              </Typography>
-            </Grid>
-            <Grid item md={4}>
-              <Typography
-                sx={{
-                  color: theme.palette.grey[400],
-                  fontSize: "1.8rem",
-                  mb: "0.8rem",
-                }}
-              >
-                Other Names
-              </Typography>
-              <Typography
-                sx={{ fontSize: "1.8rem", color: theme.palette.grey[800], fontWeight: 500 }}
-              >
-                Ebuka
-              </Typography>
-            </Grid>
-          </Grid>
+        <Box sx={{ width: "calc(100% - 9.6rem - 6.4rem)" }}>
+          {editMode ? <EditMode /> : <DetailsMode />}
         </Box>
       </Box>
     </Box>

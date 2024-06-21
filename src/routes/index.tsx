@@ -24,6 +24,9 @@ import TaxIdentification from "@/pages/onboarding/tax-identification";
 import VerifyTIN from "@/pages/onboarding/verify-tin";
 import VerifyTINCode from "@/pages/onboarding/verify-tin-code";
 import MyProfile from "@/pages/profile";
+import Corporation from "@/pages/profile/corporation";
+import FamilyRelations from "@/pages/profile/relations";
+import SupportStaff from "@/pages/profile/staff";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 
 const AppRoutes = () => {
@@ -73,6 +76,9 @@ const AppRoutes = () => {
           }
         >
           <Route index element={<MyProfile />} />
+          <Route path="relations" element={<FamilyRelations />} />
+          <Route path="staff" element={<SupportStaff />} />
+          <Route path="corporation" element={<Corporation />} />
         </Route>
         <Route path="onboarding" element={<Outlet />}>
           <Route index element={<OnboardingInitial />} />
