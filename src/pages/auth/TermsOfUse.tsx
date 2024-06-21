@@ -7,9 +7,14 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Button from "@/components/ui/button";
+import { useReducerState } from "@/hooks/useReducerState";
 
 const TermsOfUse = () => {
   const navigate = useNavigate();
+  const [state, setState] = useReducerState({
+    acceptTerms: false,
+    acceptPrivacy: false,
+  });
 
   return (
     <Box
@@ -37,9 +42,9 @@ const TermsOfUse = () => {
         }}
       >
         You must agree to the{" "}
-        <span style={{ color: "#AE111C", textDecoration: "underline" }}>
+        <Box component="a" href="/terms" sx={{ color: "#AE111C", textDecoration: "underline" }}>
           terms of use
-        </span>{" "}
+        </Box>{" "}
         to create a Taxapp account
       </Typography>
 
@@ -65,14 +70,19 @@ const TermsOfUse = () => {
       >
         Rainfall collects, uses and discloses your personal information as set
         out in the{" "}
-        <span style={{ color: "#AE111C", textDecoration: "underline" }}>
+        <Box component="a" href="/privacy" sx={{ color: "#AE111C", textDecoration: "underline" }}>
           Taxapp privacy notice.
-        </span>
+        </Box>
       </Typography>
 
       <FormGroup>
         <FormControlLabel
-          control={<Checkbox />}
+          control={
+            <Checkbox
+              checked={state.acceptTerms}
+              onChange={() => setState({ acceptTerms: !state.acceptTerms })}
+            />
+          }
           label="I have read and agree to the terms."
           sx={{
             "& .MuiFormControlLabel-label": { fontSize: "1.6rem" },
@@ -81,7 +91,12 @@ const TermsOfUse = () => {
         />
 
         <FormControlLabel
-          control={<Checkbox />}
+          control={
+            <Checkbox
+              checked={state.acceptPrivacy}
+              onChange={() => setState({ acceptPrivacy: !state.acceptPrivacy })}
+            />
+          }
           label="I have read and understand the privacy notice."
           sx={{
             "& .MuiFormControlLabel-label": { fontSize: "1.6rem" },
@@ -108,6 +123,8 @@ const TermsOfUse = () => {
         </Button>
         <Button
           type="submit"
+          disabled={!state.acceptPrivacy || !state.acceptTerms}
+          onClick={() => navigate("/auth/register")}
           sx={{
             width: "100%",
             fontSize: "1.8rem",
