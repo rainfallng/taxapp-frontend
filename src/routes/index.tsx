@@ -1,6 +1,8 @@
 import AuthLayout from "@/components/layouts/auth";
 import DashboardLayout from "@/components/layouts/dashboard";
 import TenantCheck from "@/components/layouts/tenant-check";
+import SuccessPage from "@/pages/auth/SuccessPage";
+import TermsOfUse from "@/pages/auth/TermsOfUse";
 import ForgotPassword from "@/pages/auth/forgot-password";
 import ForgotPasswordSuccess from "@/pages/auth/forgot-password-success";
 import GetStarted from "@/pages/auth/get-started";
@@ -42,6 +44,8 @@ const AppRoutes = () => {
           }
         >
           <Route path="login" element={<Login />} />
+          <Route path="terms" element={<TermsOfUse />} />
+          <Route path="successfull" element={<SuccessPage />} />
           <Route path="register" element={<Register />} />
           <Route path="forgot-password" element={<ForgotPassword />} />
           <Route path="tax-retrieval" element={<TaxRetrieval />} />
