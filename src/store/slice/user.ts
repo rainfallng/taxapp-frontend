@@ -13,6 +13,7 @@ export const userSlice: StateCreator<IUserSlice> = (set) => ({
   access: null,
   refresh: null,
   user: {
+    id: "",
     pk: "",
     first_name: "",
     last_name: "",

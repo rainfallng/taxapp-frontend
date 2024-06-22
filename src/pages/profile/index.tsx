@@ -2,17 +2,41 @@ import AddressInfo from "@/components/features/profile/address-info";
 import CompanyInfo from "@/components/features/profile/company-info";
 import PersonalInfo from "@/components/features/profile/personal-info";
 import Button from "@/components/ui/button";
+import { useAPI } from "@/hooks/useApi";
+import { QueryKeys } from "@/lib/queryKeys";
 import { useStore } from "@/store";
 import { UserType } from "@/types";
 import { Box, Typography, useTheme } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
 type EditMode = "personal" | "address" | null;
 
 const MyProfile = () => {
   const theme = useTheme();
+  const { api } = useAPI()
   const [editMode, setEditMode] = useState<EditMode>(null);
   const { user } = useStore();
+
+  const { data: individual } = useQuery({
+    queryKey: [QueryKeys.INDIVIDUAL, user.id],
+    queryFn: () => api.getIndividual(user.id),
+    enabled: user.user_type === UserType.INDIVIDUAL
+  })
+
+  const { data: company } = useQuery({
+    queryKey: [QueryKeys.COMPANY, user.id],
+    queryFn: () => api.getIndividual(user.id),
+    enabled: user.user_type === UserType.COMPANY
+  })
+
+  const { data: authUser } = useQuery({
+    queryKey: [QueryKeys.USER],
+    queryFn: () => api.getAuthUser(),
+    // enabled: user.user_type === UserType.COMPANY
+  })
+
+  console.log({ individual, user, company, authUser })
 
   const onSave = () => {
     setEditMode(null);

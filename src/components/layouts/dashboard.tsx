@@ -118,7 +118,7 @@ const SidebarItem = ({ item }: { item: ISidebar }) => {
 const DashboardLayout = () => {
   const navigate = useNavigate();
   const { user } = useStore();
-  const { pathname } = useLocation();
+  // const { pathname } = useLocation();
 
   const logout = () => {
     clearLS();
@@ -127,11 +127,11 @@ const DashboardLayout = () => {
 
   if (!user.phone) return <Navigate to="/auth/verify-phone" />;
 
-  if (!user.tin_profile && !pathname.startsWith("/app/onboarding"))
-    return <Navigate to="/app/onboarding" />;
+  // if (!user.tin_profile && !pathname.startsWith("/app/onboarding"))
+  //   return <Navigate to="/app/onboarding" />;
 
-  if (user.tin_profile && pathname.startsWith("/app/onboarding"))
-    return <Navigate to="/app/home" />;
+  // if (user.tin_profile && pathname.startsWith("/app/onboarding"))
+  //   return <Navigate to="/app/home" />;
 
   return (
     <Protected>
