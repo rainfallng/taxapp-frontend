@@ -41,8 +41,7 @@ const SidebarItem = ({ item }: { item: ISidebar }) => {
   return (
     <div>
       <Box
-        component={Link}
-        to={item?.link ?? "/"}
+        {...(item?.link ? { component: Link, to: item?.link ?? "" } : {})}
         sx={{
           textDecoration: "none",
           color: theme.palette.grey[600],
@@ -55,7 +54,7 @@ const SidebarItem = ({ item }: { item: ISidebar }) => {
           borderBottomRightRadius: "0.5rem",
           borderColor: theme.palette.success.main,
           "&:hover": hoverStyle,
-          ...(location.pathname === item?.link && activeStyle),
+          ...(location.pathname.startsWith(item?.link ?? '') && !item?.subs && activeStyle),
           ...(open && {
             borderWidth: "0.2rem",
             borderStyle: "solid",

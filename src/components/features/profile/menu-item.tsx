@@ -27,8 +27,6 @@ const MenuItem: FC<{ linkItem: IProfileMenuBar }> = ({ linkItem }) => {
     if (isSubActive)
       return {
         bgcolor: "transparent",
-        color: theme.palette.success.main,
-        border: "0.1rem solid #52D0B2",
         borderRadius: "0.3rem",
       };
     return {};

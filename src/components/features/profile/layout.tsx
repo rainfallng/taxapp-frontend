@@ -2,9 +2,12 @@ import { Box, Typography, useTheme } from "@mui/material";
 import { FC, ReactNode } from "react";
 import { ProfileLinks } from "./constants";
 import MenuItem from "./menu-item";
+import { useStore } from "@/store";
+import { UserType } from "@/types";
 
 export const ProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
   const theme = useTheme();
+  const { user } = useStore();
 
   return (
     <Box sx={{ p: "2.4rem", minHeight: "100%" }}>
@@ -12,7 +15,7 @@ export const ProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
         component="h3"
         sx={{ fontWeight: 600, fontSize: "2.4rem", mb: "1rem" }}
       >
-        User Profile
+        {user.user_type === UserType.INDIVIDUAL ? 'User Profile' : 'Company Profile'}
       </Typography>
       <Box
         sx={{
@@ -36,7 +39,7 @@ export const ProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
             pt: "4.5rem"
           }}
         >
-          {ProfileLinks.map((linkItem) => (
+          {ProfileLinks?.[user?.user_type]?.map((linkItem) => (
             <MenuItem linkItem={linkItem} key={linkItem.title} />
           ))}
         </Box>

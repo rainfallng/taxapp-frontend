@@ -24,7 +24,12 @@ import TaxIdentification from "@/pages/onboarding/tax-identification";
 import VerifyTIN from "@/pages/onboarding/verify-tin";
 import VerifyTINCode from "@/pages/onboarding/verify-tin-code";
 import MyProfile from "@/pages/profile";
+import Address from "@/pages/profile/address";
 import Corporation from "@/pages/profile/corporation";
+import Directors from "@/pages/profile/directors";
+import GenerateTaxCertificate from "@/pages/profile/generate-tax-certificate";
+import ChangePassword from "@/pages/profile/password";
+import Payroll from "@/pages/profile/payroll";
 import FamilyRelations from "@/pages/profile/relations";
 import SupportStaff from "@/pages/profile/staff";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
@@ -67,6 +72,7 @@ const AppRoutes = () => {
         }
       >
         <Route path="home" element={<DashboardHome />} />
+        <Route path="profile/generate-tax-certificate" element={<GenerateTaxCertificate />} />
         <Route
           path="profile"
           element={
@@ -78,7 +84,11 @@ const AppRoutes = () => {
           <Route index element={<MyProfile />} />
           <Route path="relations" element={<FamilyRelations />} />
           <Route path="staff" element={<SupportStaff />} />
+          <Route path="directors" element={<Directors />} />
           <Route path="corporation" element={<Corporation />} />
+          <Route path="payroll" element={<Payroll />} />
+          <Route path="password" element={<ChangePassword />} />
+          <Route path="address" element={<Address />} />
         </Route>
         <Route path="onboarding" element={<Outlet />}>
           <Route index element={<OnboardingInitial />} />

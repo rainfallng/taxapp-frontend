@@ -1,6 +1,9 @@
 import AddressInfo from "@/components/features/profile/address-info";
+import CompanyInfo from "@/components/features/profile/company-info";
 import PersonalInfo from "@/components/features/profile/personal-info";
 import Button from "@/components/ui/button";
+import { useStore } from "@/store";
+import { UserType } from "@/types";
 import { Box, Typography, useTheme } from "@mui/material";
 import { useState } from "react";
 
@@ -9,6 +12,7 @@ type EditMode = "personal" | "address" | null;
 const MyProfile = () => {
   const theme = useTheme();
   const [editMode, setEditMode] = useState<EditMode>(null);
+  const { user } = useStore();
 
   const onSave = () => {
     setEditMode(null);
@@ -32,7 +36,9 @@ const MyProfile = () => {
             color: theme.palette.grey[900],
           }}
         >
-          My Profile
+          {user.user_type === UserType.INDIVIDUAL
+            ? "My Profile"
+            : "Business Profile"}
         </Typography>
         {Boolean(editMode) && (
           <Button rounded onClick={onSave}>
@@ -40,10 +46,17 @@ const MyProfile = () => {
           </Button>
         )}
       </Box>
-      <PersonalInfo
-        editMode={editMode === "personal"}
-        setEditMode={() => setEditMode("personal")}
-      />
+      {user.user_type === UserType.INDIVIDUAL ? (
+        <PersonalInfo
+          editMode={editMode === "personal"}
+          setEditMode={() => setEditMode("personal")}
+        />
+      ) : (
+        <CompanyInfo
+          editMode={editMode === "personal"}
+          setEditMode={() => setEditMode("personal")}
+        />
+      )}
       <AddressInfo
         editMode={editMode === "address"}
         setEditMode={() => setEditMode("address")}
