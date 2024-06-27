@@ -103,7 +103,7 @@ const AppRoutes = () => {
           <Route path="address" element={<Address />} />
         </Route>
         <Route path="returns" element={<Outlet />}></Route>
-        <Route index element={<Navigate replace to="/app/home" />} />
+        <Route index element={<Navigate replace to="/app/quick-menu" />} />
         <Route path="*" element={<Error404 />} />
       </Route>
       <Route index path="*" element={<Navigate replace to="/app" />} />
