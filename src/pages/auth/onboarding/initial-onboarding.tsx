@@ -1,47 +1,58 @@
 import OnboardingHeader from "@/components/features/onboarding/header";
-import Layout from "@/components/features/onboarding/layout";
 import Button from "@/components/ui/button";
 import { Box, Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 import { useState } from "react";
-import ArrowForwardIosOutlinedIcon from "@mui/icons-material/ArrowForwardIosOutlined";
 import { useNavigate } from "react-router-dom";
-import { SubmissionModeType, UserType } from "@/types";
-import { useStore } from "@/store";
 import Input from "@/components/ui/input";
+import { useMutation } from "@tanstack/react-query";
+import { useStore } from "@/store";
+import { useAPI } from "@/hooks/useApi";
+import { handleFormToastErrors } from "@/lib/utils";
+import toast from "react-hot-toast";
+import { useLoader } from "@/hooks/useLoader";
+import { UserType } from "@/types";
 
 const InitialOnboarding = () => {
   const [firstCheck, setFirstCheck] = useState<number | null>(null);
-  const [secondCheck, setSecondCheck] = useState<number | null>(null);
+  const [tin, setTIN] = useState("");
   const navigate = useNavigate();
-  const { setOnboardingMode, user } = useStore();
+  const { user } = useStore();
+  const { api } = useAPI();
 
   const onCheck = (value: number, level = 0) => {
     if (level === 0) {
-      if (value === 1) setSecondCheck(null);
+      if (value === 1) setTIN("");
       if (value === firstCheck) return setFirstCheck(null);
       return setFirstCheck(value);
     }
-    if (value === secondCheck) return setSecondCheck(null);
-    setSecondCheck(value);
   };
 
-  const isValid =
-    (firstCheck === 0 && !Number.isNaN(secondCheck)) || firstCheck === 1;
+  const isValid = (firstCheck === 0 && !!tin) || firstCheck === 1;
 
-  const linkTo = () => {
-    let value: string = SubmissionModeType.MANUAL;
-    if (firstCheck === 0) {
-      if (secondCheck === 0) value = SubmissionModeType["TIN-MANUAL"];
-      if (secondCheck === 1) value = SubmissionModeType.TIN;
-    }
-    setOnboardingMode(value);
-    if (firstCheck === 0 && secondCheck === 1) return "/verify-tin";
-    if (user.user_type === UserType.COMPANY) return "/company-info";
-    return "/personal-info";
+  const { mutateAsync: verifyTIN, isPending } = useMutation({
+    mutationFn: () => api.verifyTIN(tin),
+    onSuccess() {
+      navigate("/auth/onboarding/tin/verify");
+    },
+  });
+
+  const onSubmit = () => {
+    const link =
+      user.user_type === UserType.INDIVIDUAL
+        ? "/auth/onboarding/personal-info"
+        : "/auth/onboarding/company-info";
+    if (firstCheck === 1) return navigate(link);
+    toast.promise(verifyTIN(), {
+      success: "Update successful",
+      loading: "Please wait...",
+      error: (error) => handleFormToastErrors(error, "Update failed"),
+    });
   };
+
+  useLoader(isPending, "Please wait...");
 
   return (
-    <Layout>
+    <Box>
       <OnboardingHeader
         title="Welcome on board!"
         description="Let's get you set up with these few steps."
@@ -66,7 +77,11 @@ const InitialOnboarding = () => {
               <Input
                 sx={{ height: "5.6rem" }}
                 label="Enter Taxpayer ID/Tax Identification Number"
-                name="names"
+                value={tin}
+                onChange={({ target: { value } }) => {
+                  if (Number.isNaN(Number(value))) return;
+                  setTIN(value);
+                }}
               />
             </FormGroup>
           )}
@@ -86,16 +101,33 @@ const InitialOnboarding = () => {
           />
         </FormGroup>
       </Box>
-      <Box display="flex" justifyContent="flex-end" sx={{ mt: "18rem" }}>
+      <Box
+        display="flex"
+        justifyContent="flex-end"
+        sx={{ mt: "5.6rem", gap: "1.6rem" }}
+      >
+        {/* <Button
+          onClick={() => navigate("/auth/login")}
+          variant="outlined"
+          sx={{
+            fontSize: "1.8rem",
+            fontWeight: 500,
+            borderRadius: "5rem",
+            py: "1rem",
+            px: "2.4rem",
+          }}
+        >
+          Back
+        </Button> */}
         <Button
           sx={{ fontSize: "1.8rem", p: "1rem 2.4rem", borderRadius: "5rem" }}
           disabled={!isValid}
-          onClick={() => navigate(`/app/onboarding${linkTo()}`)}
+          onClick={onSubmit}
         >
-          Continue <ArrowForwardIosOutlinedIcon sx={{ ml: "1.6rem" }} />
+          Save and Continue
         </Button>
       </Box>
-    </Layout>
+    </Box>
   );
 };
 

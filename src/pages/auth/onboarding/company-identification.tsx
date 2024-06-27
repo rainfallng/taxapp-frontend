@@ -1,13 +1,11 @@
 import Button from "@/components/ui/button";
-import DatePicker from "@/components/ui/date-picker";
 import Input from "@/components/ui/input";
-import Select, { MenuItem } from "@/components/ui/select";
 import { useAPI } from "@/hooks/useApi";
 import { useLoader } from "@/hooks/useLoader";
-import { identificationSchema } from "@/lib/schemas/onboarding/identification";
+import { identificationSchema } from "@/lib/schemas/onboarding/company-identification";
 import { handleFormErrors, handleFormToastErrors } from "@/lib/utils";
 import { useStore } from "@/store";
-import { IIndividualOnboarding } from "@/types/form";
+import { IVerifyCAC } from "@/types/form";
 import { Box, FormLabel, Typography, useTheme } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
@@ -15,27 +13,24 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
-const Identification = () => {
+const CompanyIdentification = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { api } = useAPI();
   const { setUser } = useStore();
-  const form = useForm({
-    defaultValues: identificationSchema.defaultValues,
-    resolver: identificationSchema.resolver,
-  });
-  const { mutateAsync: individualIdentification, isPending } = useMutation({
-    mutationFn: api.individualIdentification,
+  const form = useForm(identificationSchema);
+  const { mutateAsync: verifyCAC, isPending } = useMutation({
+    mutationFn: api.verifyCAC,
     onSuccess(data) {
       setUser({ tin_profile: data?.data });
-      navigate("/auth/onboarding/personal-info");
+      navigate("/auth/onboarding/company-profile");
     },
     onError: (error: AxiosError<{ [message: string]: string | string[] }>) =>
       handleFormErrors(error, form.setError),
   });
 
-  const onSubmit = (values: IIndividualOnboarding) => {
-    toast.promise(individualIdentification(values), {
+  const onSubmit = (values: IVerifyCAC) => {
+    toast.promise(verifyCAC(values), {
       success: "Identification successful",
       loading: "Please wait...",
       error: (error) => handleFormToastErrors(error, "Identification failed"),
@@ -45,11 +40,7 @@ const Identification = () => {
   useLoader(isPending, "Please wait...");
 
   return (
-    <Box
-      component="form"
-      sx={{ width: { lg: "51.2rem" } }}
-      onSubmit={form.handleSubmit(onSubmit)}
-    >
+    <Box component="form" onSubmit={form.handleSubmit(onSubmit)} sx={{ width: { lg: "54.5rem" } }}>
       <Typography
         component="h4"
         sx={{
@@ -78,54 +69,33 @@ const Identification = () => {
               mb: "1.6rem",
             }}
           >
-            Identification Type
-          </FormLabel>
-          <Select
-            sx={{ height: "5.6rem" }}
-            placeholder="Select Identification Type"
-            value={form.watch("id_type")}
-            {...form.register("id_type")}
-            errorMessage={form.formState.errors.id_type?.message}
-          >
-            {["BVN", "NIN"].map((val) => (
-              <MenuItem key={val} value={val}>
-                {val}
-              </MenuItem>
-            ))}
-          </Select>
-        </Box>
-        <Box>
-          <FormLabel
-            sx={{
-              display: "block",
-              fontSize: "2rem",
-              fontWeight: 500,
-              color: theme.palette.grey[800],
-              mb: "1.6rem",
-            }}
-          >
-            Identification Number
+            Company Name
           </FormLabel>
           <Input
             sx={{ height: "5.6rem" }}
-            label="Enter Identification Number"
-            name="id_number"
+            label="Enter Company Name"
+            name="company_name"
             form={form}
           />
         </Box>
         <Box>
           <FormLabel
             sx={{
-              fontSize: "2rem",
               display: "block",
+              fontSize: "2rem",
               fontWeight: 500,
-              mb: "1.6rem",
               color: theme.palette.grey[800],
+              mb: "1.6rem",
             }}
           >
-            Date of Birth
+            Corporate Affairs Commission (CAC)
           </FormLabel>
-          <DatePicker form={form} name="date_of_birth" format="YYYY-MM-DD" />
+          <Input
+            sx={{ height: "5.6rem" }}
+            label="Enter CAC ID Number"
+            name="rc_number"
+            form={form}
+          />
         </Box>
       </Box>
       <Box
@@ -133,12 +103,12 @@ const Identification = () => {
           display: "flex",
           gap: "1.6rem",
           justifyContent: "flex-end",
-          mt: "2.2rem",
+          mt: "4rem",
         }}
       >
         {/* <Button
-          variant="outlined"
           onClick={() => navigate("/auth/login")}
+          variant="outlined"
           sx={{
             fontSize: "1.8rem",
             fontWeight: 500,
@@ -167,4 +137,4 @@ const Identification = () => {
   );
 };
 
-export default Identification;
+export default CompanyIdentification;
