@@ -82,7 +82,7 @@ const VerifyCode: FC<{
         color="#4A4A68"
         sx={{ fontSize: "1.8rem", mb: "0.8rem" }}
       >
-        We sent a code to:
+        We sent a code to your phone number:
       </Typography>
       <Typography
         textAlign="center"

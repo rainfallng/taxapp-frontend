@@ -3,6 +3,16 @@ import { StateCreator } from "zustand";
 
 export interface IUserSlice extends IToken {
   user: IUser;
+  onboarded: {
+    Company: {
+      cac_verified: boolean;
+      id_verified: boolean;
+    };
+    Individual: {
+      cac_verified: boolean;
+      id_verified: boolean;
+    };
+  };
   setRefreshToken: (value: string) => void;
   setAccessToken: (value: string) => void;
   setUser: (user: Partial<IUser>) => void;
@@ -12,6 +22,16 @@ export interface IUserSlice extends IToken {
 export const userSlice: StateCreator<IUserSlice> = (set) => ({
   access: null,
   refresh: null,
+  onboarded: {
+    Company: {
+      cac_verified: false,
+      id_verified: false,
+    },
+    Individual: {
+      cac_verified: false,
+      id_verified: false,
+    },
+  },
   user: {
     id: "",
     pk: "",

@@ -13,7 +13,7 @@ const Auth = () => {
       case "/auth/login":
         return {
           text: "I am a new user.",
-          link: "/auth/register",
+          link: "/auth/termss",
           linkText: "Create Account",
         };
       case "/auth/register":
@@ -31,7 +31,7 @@ const Auth = () => {
   const headerContent = getHeaderContent();
 
   return (
-    <Box component="main" sx={{ padding: "1.6rem 6.4rem" }}>
+    <Box component="main" sx={{ padding: { lg: "1.6rem 6.4rem" } }}>
       {headerContent && (
         <Box
           sx={{
@@ -64,7 +64,8 @@ const Auth = () => {
         component="section"
         sx={{
           mx: "auto",
-          maxWidth: "40.9rem",
+          minWidth: { md: "42.5rem" },
+          width: { xs: '100%', md: "fit-content" },
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
