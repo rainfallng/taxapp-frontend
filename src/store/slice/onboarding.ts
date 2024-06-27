@@ -17,6 +17,7 @@ export interface IOnboardingSlice {
 export const onboardingSlice: StateCreator<IOnboardingSlice> = (set) => ({
   onboardingMode: SubmissionModeType.MANUAL,
   individualOnboarding: {
+    vtin: "",
     tin: "",
     tin_type: "",
     submission_mode: "",

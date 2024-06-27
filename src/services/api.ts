@@ -1,12 +1,13 @@
 import { getStore } from "@/lib/utils";
 import {
   ICompanyOnboarding,
-  IIndividualOnboarding,
+  IIndividualOnboarding as OldIIndividualOnboarding,
   ILGAs,
   ILogin,
   IRegister,
   IState,
 } from "@/types";
+import { IIndividualOnboarding, IVerifyCAC } from "@/types/form";
 import axios, { AxiosInstance } from "axios";
 
 export class APIRequest {
@@ -101,7 +102,7 @@ export class APIRequest {
   };
 
   completeIndividualOnboarding = async (
-    body: Partial<IIndividualOnboarding>
+    body: Partial<OldIIndividualOnboarding>
   ) => {
     const { data } = await axios.post(`/api/v1/tin/profile/individual/`, body, {
       headers: {
@@ -114,6 +115,66 @@ export class APIRequest {
 
   completeCompanyOnboarding = async (body: Partial<ICompanyOnboarding>) => {
     const { data } = await axios.post(`/api/v1/tin/profile/company/`, body, {
+      headers: {
+        Authorization: `JWT ${this.accessToken}`,
+      },
+    });
+
+    return data;
+  };
+
+  individualIdentification = async (body: IIndividualOnboarding) => {
+    const { data } = await axios.post(`/api/v1/tin/individual/verify/`, body, {
+      headers: {
+        Authorization: `JWT ${this.accessToken}`,
+      },
+    });
+
+    return data;
+  };
+
+  getIndividual = async () => {
+    const { data } = await axios.get(`/api/v1/tin/individual/profile/`, {
+      headers: {
+        Authorization: `JWT ${this.accessToken}`,
+      },
+    });
+
+    return data;
+  };
+
+  updateIndividual = async (body: Partial<IIndividualOnboarding>) => {
+    const { data } = await axios.patch(`/api/v1/tin/individual/profile/`, body, {
+      headers: {
+        Authorization: `JWT ${this.accessToken}`,
+      },
+    });
+
+    return data;
+  };
+
+  updateCompany = async (body: Partial<ICompanyOnboarding>) => {
+    const { data } = await axios.patch(`/api/v1/tin/company/profile/`, body, {
+      headers: {
+        Authorization: `JWT ${this.accessToken}`,
+      },
+    });
+
+    return data;
+  };
+
+  verifyTIN = async (tin: string) => {
+    const { data } = await axios.post(`/api/v1/tin/individual/verify-tin/`, { tin }, {
+      headers: {
+        Authorization: `JWT ${this.accessToken}`,
+      },
+    });
+
+    return data;
+  };
+
+  verifyCAC = async (body: IVerifyCAC) => {
+    const { data } = await axios.post(`/api/v1/tin/company/verify/`, body, {
       headers: {
         Authorization: `JWT ${this.accessToken}`,
       },

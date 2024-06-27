@@ -1,4 +1,4 @@
-import { Box, FormHelperText, useTheme } from "@mui/material";
+import { Box, FormHelperText, SxProps, useTheme } from "@mui/material";
 import { forwardRef, useState } from "react";
 import { UseFormReturn, Path, FieldValues, PathValue } from "react-hook-form";
 import ReactPhoneInput, {
@@ -9,12 +9,13 @@ import flags from "react-phone-number-input/flags";
 
 export interface PhoneInputProps<T extends FieldValues>
   extends DefaultInputComponentProps {
-  onChange: (value: Value) => void;
+  onChange?: (value: Value) => void;
   errorMessage?: string;
   helperText?: string;
   error?: boolean;
   form?: UseFormReturn<T>;
   name?: Path<T>;
+  sx?: SxProps;
 }
 
 const InputCompoment = forwardRef((props, ref) => (
@@ -36,6 +37,7 @@ const PhoneInput = <T extends FieldValues>({
   name,
   form,
   value,
+  sx,
   ...rest
 }: PhoneInputProps<T>) => {
   const theme = useTheme();
@@ -75,6 +77,8 @@ const PhoneInput = <T extends FieldValues>({
           "& input": {
             fontSize: "1.6rem",
           },
+          ...(sx ?? {}),
+          ...(rest?.disabled ? { opacity: 0.7 } : {}),
         }}
         inputComponent={InputCompoment}
         country="NG"

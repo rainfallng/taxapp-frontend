@@ -48,9 +48,10 @@ export const handleFormErrors = <T extends FieldValues>(
 ) => {
   const errorData = error.response?.data;
   if (error.response?.status === 400 && errorData) {
-    Object.entries(errorData).forEach(([key, val]) => {
+    const errorsObj = errorData?.errors ?? errorData
+    Object.entries(errorsObj).forEach(([key, val]) => {
       const errMsg = Array.isArray(val) ? val[0] : val;
-      if (Object.keys(errorData).includes(key))
+      if (Object.keys(errorsObj).includes(key))
         setError(key as Path<T>, {
           type: "manual",
           message: errMsg,

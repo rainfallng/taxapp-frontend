@@ -1,23 +1,29 @@
 import * as yup from "yup";
-import { getStore, resolveSchema } from "../../utils";
-import { ICompanyOnboarding } from "@/types";
-
-const store = getStore() as { companyOnboarding: ICompanyOnboarding };
+import { resolveSchema } from "../../utils";
 
 const companyInfoSchemaObject = yup.object({
   name: yup.string().required("Name is a required field"),
-  sector: yup.string().required("Sector is a required field"),
-  city: yup.string().required("City is a required field"),
-  address: yup.string().required("Address is a required field"),
-  has_cac: yup.boolean().nullable().required("Choose an option"),
+  state: yup.string().required("Select a state"),
+  lga: yup.string().required("Select a LGA"),
+  house_number: yup.number().required("House number is a required field"),
+  street: yup.string().required("Street is a required field"),
+  lcda: yup.string().required("LCDA is required"),
+  tax_station: yup.string().required("Tax station is a required field"),
+  business_type: yup.string().required("Business type is a required field"),
+  place_of_business: yup
+    .string()
+    .required("Place of business is a required field"),
 });
 
 const companyInfoDefaultValues = {
-  name: store?.companyOnboarding?.name ?? "",
-  sector: store?.companyOnboarding?.sector ?? "",
-  city: store?.companyOnboarding?.city ?? "",
-  address: store?.companyOnboarding?.address ?? "",
-  has_cac: store?.companyOnboarding?.has_cac ?? null,
+  state: "",
+  lga: "",
+  house_number: 0,
+  street: "",
+  lcda: "",
+  tax_station: "",
+  business_type: "",
+  place_of_business: "",
 };
 
 export const companyInfoSchema = resolveSchema({
