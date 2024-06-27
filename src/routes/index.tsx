@@ -19,18 +19,9 @@ import TaxRetrievalSuccess from "@/pages/auth/tax-retrieval-success";
 import VerifyPhone from "@/pages/auth/verify-phone";
 import Error404 from "@/pages/error/404";
 import DashboardHome from "@/pages/home";
-import OnboardingInitial from "@/pages/onboarding";
-import CompanyInfo from "@/pages/onboarding/company-info";
-import ContactInfo from "@/pages/onboarding/contact-info";
-import EmploymentDetails from "@/pages/onboarding/employment-details";
-import PersonalInfo from "@/pages/onboarding/personal-info";
-import Success from "@/pages/onboarding/success";
-import TaxHistory from "@/pages/onboarding/tax-history";
-import TaxIdentification from "@/pages/onboarding/tax-identification";
-import VerifyTIN from "@/pages/onboarding/verify-tin";
-import VerifyTINCode from "@/pages/onboarding/verify-tin-code";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import QuickMenu from "@/pages/quick-menu";
+import VerifyTIN from "@/pages/auth/onboarding/verify-tin";
 
 const AppRoutes = () => {
   return (
@@ -83,18 +74,6 @@ const AppRoutes = () => {
       >
         <Route path="home" element={<DashboardHome />} />
         <Route path="quick-menu" element={<QuickMenu />} />
-        <Route path="onboarding" element={<Outlet />}>
-          <Route index element={<OnboardingInitial />} />
-          <Route path="verify-tin" element={<VerifyTIN />} />
-          <Route path="verify-tin-code" element={<VerifyTINCode />} />
-          <Route path="personal-info" element={<PersonalInfo />} />
-          <Route path="company-info" element={<CompanyInfo />} />
-          <Route path="contact-info" element={<ContactInfo />} />
-          <Route path="tax-identification" element={<TaxIdentification />} />
-          <Route path="tax-history" element={<TaxHistory />} />
-          <Route path="employment-details" element={<EmploymentDetails />} />
-          <Route path="success" element={<Success />} />
-        </Route>
         <Route path="returns" element={<Outlet />}></Route>
         <Route index element={<Navigate replace to="/app/home" />} />
         <Route path="*" element={<Error404 />} />
