@@ -13,7 +13,7 @@ const Auth = () => {
       case "/auth/login":
         return {
           text: "I am a new user.",
-          link: "/auth/termss",
+          link: "/auth/terms",
           linkText: "Create Account",
         };
       case "/auth/register":
