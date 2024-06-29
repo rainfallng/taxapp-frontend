@@ -20,13 +20,13 @@ const MyProfile = () => {
 
   const { data: individual } = useQuery({
     queryKey: [QueryKeys.INDIVIDUAL, user.id],
-    queryFn: () => api.getIndividual(user.id),
+    queryFn: () => api.getIndividual(),
     enabled: user.user_type === UserType.INDIVIDUAL
   })
 
   const { data: company } = useQuery({
     queryKey: [QueryKeys.COMPANY, user.id],
-    queryFn: () => api.getIndividual(user.id),
+    queryFn: () => api.getCompany(user.id),
     enabled: user.user_type === UserType.COMPANY
   })
 
