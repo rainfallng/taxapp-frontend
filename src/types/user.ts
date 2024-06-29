@@ -113,6 +113,7 @@ export interface ITINProfile {
 
 export interface IUser {
   pk: string;
+  id: string;
   first_name: string;
   last_name: string;
   email: string;

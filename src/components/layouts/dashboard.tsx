@@ -12,6 +12,7 @@ import Button from "../ui/button";
 import { SIDEBAR_LINKS } from "./constants";
 import { useState } from "react";
 import { ISidebar } from "@/types";
+import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutlined';
 import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
 import SegmentOutlinedIcon from "@mui/icons-material/SegmentOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
@@ -27,6 +28,10 @@ const SidebarItem = ({ item }: { item: ISidebar }) => {
 
   const Icon = item.icon;
 
+  const CaretIcon = open
+    ? KeyboardArrowUpOutlinedIcon
+    : KeyboardArrowDownOutlinedIcon;
+
   const activeStyle = {
     bgcolor: theme.palette.success.main,
     color: theme.palette.primary.contrastText,
@@ -40,8 +45,7 @@ const SidebarItem = ({ item }: { item: ISidebar }) => {
   return (
     <div>
       <Box
-        component={Link}
-        to={item?.link ?? "/"}
+        {...(item?.link ? { component: Link, to: item?.link ?? "" } : {})}
         sx={{
           textDecoration: "none",
           color: theme.palette.grey[600],
@@ -54,7 +58,9 @@ const SidebarItem = ({ item }: { item: ISidebar }) => {
           borderBottomRightRadius: "0.5rem",
           borderColor: theme.palette.success.main,
           "&:hover": hoverStyle,
-          ...(location.pathname === item?.link && activeStyle),
+          ...(location.pathname.startsWith(item?.link ?? "") &&
+            !item?.subs &&
+            activeStyle),
           ...(open && {
             borderWidth: "0.2rem",
             borderStyle: "solid",
@@ -75,9 +81,7 @@ const SidebarItem = ({ item }: { item: ISidebar }) => {
           <Icon sx={{ fontSize: "2rem" }} />
           <span>{item.title}</span>
         </Box>
-        {item?.subs && (
-          <KeyboardArrowDownOutlinedIcon sx={{ fontSize: "1.6rem" }} />
-        )}
+        {item?.subs && <CaretIcon sx={{ fontSize: "1.6rem" }} />}
       </Box>
       {item?.subs && open && (
         <Box
@@ -118,7 +122,7 @@ const SidebarItem = ({ item }: { item: ISidebar }) => {
 const DashboardLayout = () => {
   const navigate = useNavigate();
   const { user } = useStore();
-  const { pathname } = useLocation();
+  // const { pathname } = useLocation();
 
   const logout = () => {
     clearLS();
@@ -130,8 +134,8 @@ const DashboardLayout = () => {
   // if (!user.tin_profile && !pathname.startsWith("/app/onboarding"))
   //   return <Navigate to="/app/onboarding" />;
 
-  if (user.tin_profile && pathname.startsWith("/app/onboarding"))
-    return <Navigate to="/app/home" />;
+  // if (user.tin_profile && pathname.startsWith("/app/onboarding"))
+  //   return <Navigate to="/app/home" />;
 
   return (
     <Protected>
@@ -233,7 +237,9 @@ const DashboardLayout = () => {
                   sx={{ width: "2.8rem", height: "2.8rem" }}
                 />
               </Button>
-              <Box sx={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
+              <Box
+                sx={{ display: "flex", alignItems: "center", gap: "0.8rem" }}
+              >
                 <Box
                   sx={{
                     overflow: "hidden",
@@ -254,7 +260,12 @@ const DashboardLayout = () => {
                     }}
                   />
                 </Box>
-                <Typography sx={{ fontSize: "1.4rem", color: (theme) => theme.palette.grey[800], }}>
+                <Typography
+                  sx={{
+                    fontSize: "1.4rem",
+                    color: (theme) => theme.palette.grey[800],
+                  }}
+                >
                   {user.first_name} {user.last_name}
                 </Typography>
               </Box>

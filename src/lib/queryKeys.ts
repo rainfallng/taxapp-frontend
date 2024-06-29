@@ -3,4 +3,6 @@ export const QueryKeys = {
   USER: "USER",
   STATES: "STATES",
   LGA: "LGA",
+  INDIVIDUAL: "INDIVIDUAL",
+  COMPANY: "COMPANY",
 };

@@ -133,6 +133,16 @@ export class APIRequest {
     return data;
   };
 
+  getCompany = async (id: string) => {
+    const { data } = await axios.get(`/api/v1/tin/profile/company/${id}/`, {
+      headers: {
+        Authorization: `JWT ${this.accessToken}`,
+      },
+    });
+
+    return data;
+  };
+  
   getIndividual = async () => {
     const { data } = await axios.get(`/api/v1/tin/individual/profile/`, {
       headers: {

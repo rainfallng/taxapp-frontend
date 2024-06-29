@@ -1,3 +1,4 @@
+import { ProfileLayout } from "@/components/features/profile/layout";
 import AuthLayout from "@/components/layouts/auth";
 import DashboardLayout from "@/components/layouts/dashboard";
 import TenantCheck from "@/components/layouts/tenant-check";
@@ -22,6 +23,15 @@ import DashboardHome from "@/pages/home";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import QuickMenu from "@/pages/quick-menu";
 import VerifyTIN from "@/pages/auth/onboarding/verify-tin";
+import MyProfile from "@/pages/profile";
+import Address from "@/pages/profile/address";
+import Corporation from "@/pages/profile/corporation";
+import Directors from "@/pages/profile/directors";
+import GenerateTaxCertificate from "@/pages/profile/generate-tax-certificate";
+import ChangePassword from "@/pages/profile/password";
+import Payroll from "@/pages/profile/payroll";
+import FamilyRelations from "@/pages/profile/relations";
+import SupportStaff from "@/pages/profile/staff";
 
 const AppRoutes = () => {
   return (
@@ -74,6 +84,24 @@ const AppRoutes = () => {
       >
         <Route path="home" element={<DashboardHome />} />
         <Route path="quick-menu" element={<QuickMenu />} />
+        <Route path="profile/generate-tax-certificate" element={<GenerateTaxCertificate />} />
+        <Route
+          path="profile"
+          element={
+            <ProfileLayout>
+              <Outlet />
+            </ProfileLayout>
+          }
+        >
+          <Route index element={<MyProfile />} />
+          <Route path="relations" element={<FamilyRelations />} />
+          <Route path="staff" element={<SupportStaff />} />
+          <Route path="directors" element={<Directors />} />
+          <Route path="corporation" element={<Corporation />} />
+          <Route path="payroll" element={<Payroll />} />
+          <Route path="password" element={<ChangePassword />} />
+          <Route path="address" element={<Address />} />
+        </Route>
         <Route path="returns" element={<Outlet />}></Route>
         <Route index element={<Navigate replace to="/app/quick-menu" />} />
         <Route path="*" element={<Error404 />} />

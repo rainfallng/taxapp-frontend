@@ -6,21 +6,30 @@ import {
 } from "@mui/material";
 import { FC } from "react";
 
-const createStyles: (props: ButtonProps) => SxProps<Theme> = (props) => ({
+export interface IButtonProps extends ButtonProps {
+  rounded?: boolean;
+}
+
+const createStyles: (props: IButtonProps) => SxProps<Theme> = (props) => ({
   boxShadow: "none",
   fontWeight: 500,
   textTransform: "capitalize",
+  fontSize: "1.4rem",
+  px: "2.4rem",
+  ...(props?.rounded ? { borderRadius: "5rem" } : {}),
   ...(props?.sx ?? {}),
   "&:hover": {
     opacity: 0.8,
     boxShadow: "none",
     bgcolor: (theme) =>
-      (!props.variant || props.variant === "contained") ? theme.palette.primary.main : "auto",
+      !props.variant || props.variant === "contained"
+        ? theme.palette.primary.main
+        : "auto",
   },
 });
 
-const Button: FC<ButtonProps> = ({ variant, sx, ...rest }) => {
-  const styles = createStyles({ variant, sx, ...rest });
+const Button: FC<IButtonProps> = ({ variant, rounded, sx, ...rest }) => {
+  const styles = createStyles({ variant, sx, rounded, ...rest });
 
   return <MuiButton variant={variant ?? "contained"} sx={styles} {...rest} />;
 };

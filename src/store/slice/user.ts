@@ -33,6 +33,7 @@ export const userSlice: StateCreator<IUserSlice> = (set) => ({
     },
   },
   user: {
+    id: "",
     pk: "",
     first_name: "",
     last_name: "",
