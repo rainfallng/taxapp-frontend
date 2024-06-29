@@ -1,0 +1,1 @@
+export type IAnnualReturnStage = "id" | "income" | "accomodation";

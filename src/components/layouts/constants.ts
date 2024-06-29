@@ -81,20 +81,12 @@ export const SIDEBAR_LINKS: Record<string, ISidebar[]> = {
       icon: FilePresentOutlinedIcon,
       subs: [
         {
-          title: "Payments",
+          title: "Returns",
           link: "/app/returns",
         },
         {
-          title: "Personal Income Tax Filing",
-          link: "/app/returns/personal",
-        },
-        {
-          title: "VAT Filing",
-          link: "/app/returns/vat",
-        },
-        {
-          title: "Company Income Tax Filing",
-          link: "/app/returns/company",
+          title: "Annual Return",
+          link: "/app/returns/annual",
         },
         {
           title: "Filing History",
