@@ -32,6 +32,9 @@ import ChangePassword from "@/pages/profile/password";
 import Payroll from "@/pages/profile/payroll";
 import FamilyRelations from "@/pages/profile/relations";
 import SupportStaff from "@/pages/profile/staff";
+import FileReturns from "@/pages/returns";
+import AnnualReturn from "@/pages/returns/annual";
+import FilingHistory from "@/pages/returns/filing-history";
 
 const AppRoutes = () => {
   return (
@@ -84,7 +87,10 @@ const AppRoutes = () => {
       >
         <Route path="home" element={<DashboardHome />} />
         <Route path="quick-menu" element={<QuickMenu />} />
-        <Route path="profile/generate-tax-certificate" element={<GenerateTaxCertificate />} />
+        <Route
+          path="profile/generate-tax-certificate"
+          element={<GenerateTaxCertificate />}
+        />
         <Route
           path="profile"
           element={
@@ -102,7 +108,11 @@ const AppRoutes = () => {
           <Route path="password" element={<ChangePassword />} />
           <Route path="address" element={<Address />} />
         </Route>
-        <Route path="returns" element={<Outlet />}></Route>
+        <Route path="returns" element={<Outlet />}>
+          <Route index element={<FileReturns />} />
+          <Route path="annual" element={<AnnualReturn />} />
+          <Route path="history" element={<FilingHistory />} />
+        </Route>
         <Route index element={<Navigate replace to="/app/quick-menu" />} />
         <Route path="*" element={<Error404 />} />
       </Route>

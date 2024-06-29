@@ -12,7 +12,7 @@ import Button from "../ui/button";
 import { SIDEBAR_LINKS } from "./constants";
 import { useState } from "react";
 import { ISidebar } from "@/types";
-import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutlined';
+import KeyboardArrowUpOutlinedIcon from "@mui/icons-material/KeyboardArrowUpOutlined";
 import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
 import SegmentOutlinedIcon from "@mui/icons-material/SegmentOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
@@ -22,8 +22,11 @@ import { useStore } from "@/store";
 import Search from "../ui/search";
 
 const SidebarItem = ({ item }: { item: ISidebar }) => {
-  const [open, setOpen] = useState(false);
   const location = useLocation();
+  const isSubActive = item?.subs?.some((s) =>
+    location.pathname.startsWith(s.link)
+  );
+  const [open, setOpen] = useState(isSubActive);
   const theme = useTheme();
 
   const Icon = item.icon;
@@ -39,7 +42,6 @@ const SidebarItem = ({ item }: { item: ISidebar }) => {
 
   const hoverStyle = {
     bgcolor: theme.palette.grey[400],
-    // color: theme.palette.primary.contrastText,
   };
 
   return (
@@ -56,12 +58,13 @@ const SidebarItem = ({ item }: { item: ISidebar }) => {
           alignItems: "center",
           borderTopRightRadius: "0.5rem",
           borderBottomRightRadius: "0.5rem",
+          cursor: "pointer",
           borderColor: theme.palette.success.main,
           "&:hover": hoverStyle,
           ...(location.pathname.startsWith(item?.link ?? "") &&
             !item?.subs &&
             activeStyle),
-          ...(open && {
+          ...(isSubActive && {
             borderWidth: "0.2rem",
             borderStyle: "solid",
             borderLeft: "none",
