@@ -6,8 +6,10 @@ import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import DetailsMode from "./details-personal-info";
 import EditMode from "./edit-personal-info";
 import { FC } from "react";
+import { UseFormReturn } from "react-hook-form";
+import { IIndividualProfile } from "@/types/form";
 
-const PersonalInfo: FC<{ editMode: boolean; setEditMode: () => void }> = ({ editMode, setEditMode }) => {
+const PersonalInfo: FC<{ editMode: boolean; setEditMode: () => void; form: UseFormReturn<Partial<IIndividualProfile>> }> = ({ editMode, setEditMode, form }) => {
   const theme = useTheme();
 
   return (
@@ -94,7 +96,7 @@ const PersonalInfo: FC<{ editMode: boolean; setEditMode: () => void }> = ({ edit
           </Box>
         </Box>
         <Box sx={{ width: "calc(100% - 9.6rem - 6.4rem)" }}>
-          {editMode ? <EditMode /> : <DetailsMode />}
+          {editMode ? <EditMode form={form} /> : <DetailsMode />}
         </Box>
       </Box>
     </Box>

@@ -1,10 +1,23 @@
+import { useAPI } from "@/hooks/useApi";
+import { useLoader } from "@/hooks/useLoader";
+import { QueryKeys } from "@/lib/queryKeys";
 import { getValue } from "@/lib/utils";
 import { useStore } from "@/store";
+import { EmploymentStatusType } from "@/types";
 import { Grid, Typography, useTheme } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
 
 const DetailsMode = () => {
   const theme = useTheme();
   const user = useStore((s) => s.user);
+  const { api } = useAPI();
+
+  const { data: states, isLoading: isLoadingStates } = useQuery({
+    queryKey: [QueryKeys.STATES],
+    queryFn: api.getStates,
+  });
+
+  useLoader(isLoadingStates, "Please wait...");
 
   return (
     <Grid container spacing={2} rowGap="2rem">
@@ -236,7 +249,13 @@ const DetailsMode = () => {
             wordBreak: "break-all",
           }}
         >
-          {getValue(user?.tin_profile?.employment_status as unknown as string)}
+          {getValue(
+            user?.tin_profile?.employment_status
+              ? (EmploymentStatusType as Record<string, string>)?.[
+                  user?.tin_profile?.employment_status as unknown as string
+                ]
+              : ""
+          )}
         </Typography>
       </Grid>
       <Grid item md={4}>
@@ -299,7 +318,13 @@ const DetailsMode = () => {
             wordBreak: "break-all",
           }}
         >
-          {getValue(user?.tin_profile?.state_of_origin)}
+          {getValue(
+            user?.tin_profile?.state_of_origin
+              ? states?.find(
+                  (s) => s.id === Number(user?.tin_profile?.state_of_origin)
+                )?.name
+              : ""
+          )}
         </Typography>
       </Grid>
     </Grid>

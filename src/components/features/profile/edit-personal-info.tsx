@@ -5,11 +5,21 @@ import Select, { MenuItem } from "@/components/ui/select";
 import { useAPI } from "@/hooks/useApi";
 import { useLoader } from "@/hooks/useLoader";
 import { QueryKeys } from "@/lib/queryKeys";
-import { GenderType, MaritalStatusType } from "@/types";
-import { Grid } from "@mui/material";
+import {
+  EmploymentStatusType,
+  GenderType,
+  MaritalStatusType,
+  TitleType,
+} from "@/types";
+import { IIndividualProfile } from "@/types/form";
+import { Grid, capitalize } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
+import { FC } from "react";
+import { UseFormReturn } from "react-hook-form";
 
-const EditMode = () => {
+const EditMode: FC<{ form: UseFormReturn<Partial<IIndividualProfile>> }> = ({
+  form,
+}) => {
   const { api } = useAPI();
   const { data: states, isLoading: isLoadingStates } = useQuery({
     queryKey: [QueryKeys.STATES],
@@ -21,18 +31,27 @@ const EditMode = () => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={4}>
-        <Input label="First Name" />
+        <Input label="First Name" name="first_name" form={form} />
       </Grid>
       <Grid item xs={4}>
-        <Input label="Last Name" />
+        <Input label="Last Name" name="last_name" form={form} />
       </Grid>
       <Grid item xs={4}>
-        <Input label="Other Names" />
+        <Input label="Other Names" name="middle_name" form={form} />
       </Grid>
       <Grid item xs={4}>
-        <Select sx={{ height: "5.6rem" }} placeholder="Title">
-          <MenuItem>Mr</MenuItem>
-          <MenuItem>Mrs</MenuItem>
+        <Select
+          sx={{ height: "5.6rem" }}
+          placeholder="Title"
+          value={form.watch("title")}
+          {...form.register("title")}
+          errorMessage={form.formState.errors.title?.message}
+        >
+          {Object.entries(TitleType).map(([key, val]) => (
+            <MenuItem key={key} value={val}>
+              {val}
+            </MenuItem>
+          ))}
         </Select>
       </Grid>
       <Grid item xs={4}>
@@ -40,10 +59,17 @@ const EditMode = () => {
           label="Date of Birth"
           name="date_of_birth"
           format="YYYY-MM-DD"
+          form={form}
         />
       </Grid>
       <Grid item xs={4}>
-        <Select sx={{ height: "5.6rem" }} placeholder="Marital Status">
+        <Select
+          sx={{ height: "5.6rem" }}
+          placeholder="Marital Status"
+          value={form.watch("marital_status")}
+          {...form.register("marital_status")}
+          errorMessage={form.formState.errors.marital_status?.message}
+        >
           {Object.entries(MaritalStatusType).map(([key, value]) => (
             <MenuItem key={key} value={key}>
               {value}
@@ -52,25 +78,50 @@ const EditMode = () => {
         </Select>
       </Grid>
       <Grid item xs={4}>
-        <PhoneInput onChange={console.log} label="Enter Number" />
+        <PhoneInput
+          value={form.watch("phone_number_1")}
+          onChange={(value) => form.setValue("phone_number_1", value)}
+          errorMessage={form.formState.errors.phone_number_1?.message}
+          label="Enter Number"
+        />
       </Grid>
       <Grid item xs={4}>
-        <Input type="email" label="Email Address" />
+        <Input
+          type="email"
+          label="Email Address"
+          name="email_address"
+          form={form}
+        />
       </Grid>
       <Grid item xs={4}>
         <Input label="Nationality" />
       </Grid>
       <Grid item xs={4}>
-        <Select sx={{ height: "5.6rem" }} placeholder="Employment Status">
-          <MenuItem>Employed</MenuItem>
-          <MenuItem>Unemployed</MenuItem>
+        <Select
+          sx={{ height: "5.6rem" }}
+          placeholder="Employment Status"
+          value={form.watch("employment_status")}
+          {...form.register("employment_status")}
+          errorMessage={form.formState.errors.employment_status?.message}
+        >
+          {Object.entries(EmploymentStatusType).map(([key, val]) => (
+            <MenuItem key={key} value={capitalize(key)}>
+              {val}
+            </MenuItem>
+          ))}
         </Select>
       </Grid>
       <Grid item xs={4}>
-        <Input label="Occupation" />
+        <Input label="Occupation" name="occupation" form={form} />
       </Grid>
       <Grid item xs={4}>
-        <Select sx={{ height: "5.6rem" }} placeholder="Gender">
+        <Select
+          sx={{ height: "5.6rem" }}
+          placeholder="Gender"
+          value={form.watch("gender")}
+          {...form.register("gender")}
+          errorMessage={form.formState.errors.gender?.message}
+        >
           {Object.entries(GenderType).map(([key, value]) => (
             <MenuItem key={key} value={key}>
               {value}
@@ -79,7 +130,13 @@ const EditMode = () => {
         </Select>
       </Grid>
       <Grid item xs={4}>
-        <Select sx={{ height: "5.6rem" }} placeholder="State of Origin">
+        <Select
+          sx={{ height: "5.6rem" }}
+          placeholder="State of Origin"
+          value={form.watch("state_of_origin")}
+          {...form.register("state_of_origin")}
+          errorMessage={form.formState.errors.state_of_origin?.message}
+        >
           {states?.map((state) => (
             <MenuItem key={state.id} value={state.id}>
               {state.name}

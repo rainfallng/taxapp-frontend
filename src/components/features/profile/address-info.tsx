@@ -10,11 +10,14 @@ import { useLoader } from "@/hooks/useLoader";
 import Select, { MenuItem } from "@/components/ui/select";
 import { useStore } from "@/store";
 import { getValue } from "@/lib/utils";
+import { UseFormReturn } from "react-hook-form";
+import { IIndividualProfile } from "@/types/form";
 
-const AddressInfo: FC<{ editMode: boolean; setEditMode: () => void }> = ({
-  editMode,
-  setEditMode,
-}) => {
+const AddressInfo: FC<{
+  editMode: boolean;
+  setEditMode: () => void;
+  form: UseFormReturn<Partial<IIndividualProfile>>;
+}> = ({ editMode, setEditMode, form }) => {
   const user = useStore((s) => s.user);
   const { api } = useAPI();
   const { data: states, isLoading: isLoadingStates } = useQuery({
@@ -23,9 +26,9 @@ const AddressInfo: FC<{ editMode: boolean; setEditMode: () => void }> = ({
   });
 
   const { data: lgas, isLoading: isLoadingLgas } = useQuery({
-    queryKey: [QueryKeys.LGA, 1],
-    queryFn: () => api.getLGAs(1),
-    enabled: false,
+    queryKey: [QueryKeys.LGA, form.watch("state_of_residence")],
+    queryFn: () => api.getLGAs(Number(form.watch("state_of_residence"))),
+    enabled: Boolean(form.watch("state_of_residence")),
   });
   const theme = useTheme();
 
@@ -73,7 +76,7 @@ const AddressInfo: FC<{ editMode: boolean; setEditMode: () => void }> = ({
       <Grid container spacing={2}>
         <Grid item xs={3}>
           {editMode ? (
-            <Input label="First Name" />
+            <Input label="Street No." name="house_number" form={form} />
           ) : (
             <>
               <Typography
@@ -99,7 +102,7 @@ const AddressInfo: FC<{ editMode: boolean; setEditMode: () => void }> = ({
         </Grid>
         <Grid item xs={3}>
           {editMode ? (
-            <Input label="Street Name" />
+            <Input label="Street Name" name="street" form={form} />
           ) : (
             <>
               <Typography
@@ -123,42 +126,16 @@ const AddressInfo: FC<{ editMode: boolean; setEditMode: () => void }> = ({
             </>
           )}
         </Grid>
-        <Grid item xs={3}>
-          {editMode ? (
-            <Select sx={{ height: "5.6rem" }} placeholder="City">
-              {lgas?.map((lga) => (
-                <MenuItem key={lga.id} value={lga.id}>
-                  {lga.name}
-                </MenuItem>
-              ))}
-            </Select>
-          ) : (
-            <>
-              <Typography
-                sx={{
-                  color: theme.palette.grey[400],
-                  fontSize: "1.8rem",
-                  mb: "0.8rem",
-                }}
-              >
-                LGA
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: "1.8rem",
-                  color: theme.palette.grey[800],
-                  fontWeight: 500,
-                }}
-              >
-                {getValue(user?.tin_profile?.lga_of_residence)}
-              </Typography>
-            </>
-          )}
-        </Grid>
 
         <Grid item xs={3}>
           {editMode ? (
-            <Select sx={{ height: "5.6rem" }} placeholder="State">
+            <Select
+              sx={{ height: "5.6rem" }}
+              placeholder="State"
+              value={form.watch("state_of_residence")}
+              {...form.register("state_of_residence")}
+              errorMessage={form.formState.errors.state_of_residence?.message}
+            >
               {states?.map((state) => (
                 <MenuItem key={state.id} value={state.id}>
                   {state.name}
@@ -183,14 +160,68 @@ const AddressInfo: FC<{ editMode: boolean; setEditMode: () => void }> = ({
                   fontWeight: 500,
                 }}
               >
-                {getValue(user?.tin_profile?.state_of_residence)}
+                {getValue(
+                  user?.tin_profile?.state_of_residence
+                    ? states?.find(
+                        (s) =>
+                          s.id === Number(user?.tin_profile?.state_of_residence)
+                      )?.name
+                    : ""
+                )}
               </Typography>
             </>
           )}
         </Grid>
+
+        <Grid item xs={3}>
+          {editMode ? (
+            <Select
+              sx={{ height: "5.6rem" }}
+              placeholder="LGA"
+              value={form.watch("lga_of_residence")}
+              {...form.register("lga_of_residence")}
+              errorMessage={form.formState.errors.lga_of_residence?.message}
+            >
+              {lgas?.map((lga) => (
+                <MenuItem key={lga.id} value={lga.id}>
+                  {lga.name}
+                </MenuItem>
+              ))}
+            </Select>
+          ) : (
+            <>
+              <Typography
+                sx={{
+                  color: theme.palette.grey[400],
+                  fontSize: "1.8rem",
+                  mb: "0.8rem",
+                }}
+              >
+                LGA
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.8rem",
+                  color: theme.palette.grey[800],
+                  fontWeight: 500,
+                }}
+              >
+                {getValue(
+                  user?.tin_profile?.lga_of_residence
+                    ? lgas?.find(
+                        (l) =>
+                          l.id === Number(user?.tin_profile?.lga_of_residence)
+                      )?.name
+                    : ""
+                )}
+              </Typography>
+            </>
+          )}
+        </Grid>
+
         <Grid item md={2}>
           {editMode ? (
-            <Input label="Street Name" />
+            <Input label="LCDA" name="lcda" form={form} />
           ) : (
             <>
               <Typography

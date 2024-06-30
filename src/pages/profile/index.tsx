@@ -7,14 +7,11 @@ import { individualProfileSchema } from "@/lib/schemas/profile/individual-profil
 import { handleFormToastErrors } from "@/lib/utils";
 import { useStore } from "@/store";
 import { IIndividualOnboarding, UserType } from "@/types";
-// import { IIndividualProfile } from "@/types/form";
+import { IIndividualProfile } from "@/types/form";
 import { Box, Typography, useTheme } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
-import {
-  // useEffect, useMemo,
-  useState,
-} from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useMemo, useState } from "react";
+import { WatchObserver, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
 type EditMode = "personal" | "address" | null;
@@ -23,12 +20,13 @@ const MyProfile = () => {
   const theme = useTheme();
   const { api } = useAPI();
   const [editMode, setEditMode] = useState<EditMode>(null);
-  const { user } = useStore();
+  const { user, setUser } = useStore();
   const form = useForm(individualProfileSchema);
 
   const { mutateAsync: updateIndividualProfile } = useMutation({
     mutationFn: api.updateIndividual,
-    onSuccess() {
+    onSuccess(data) {
+      setUser({ tin_profile: data?.data });
       setEditMode(null);
     },
   });
@@ -41,40 +39,22 @@ const MyProfile = () => {
     });
   };
 
-  // const getFieldValue = useMemo(() => {
-  //   const defaultValue: IIndividualProfile = {
-  //     first_name: "",
-  //     last_name: "",
-  //     middle_name: "",
-  //     title: "",
-  //     marital_status: "",
-  //     employment_status: "",
-  //     nationality: "",
-  //     place_of_birth: "",
-  //     gender: "",
-  //     state_of_origin: "",
-  //     lga_of_residence: "",
-  //     business_type: "",
-  //     lcda: "",
-  //     occupation: "",
-  //     phone_number_1: "",
-  //     email_address: "",
-  //     house_number: 0,
-  //     street: "",
-  //   };
-  //   const profile = user?.tin_profile as unknown as { [key: string]: string }
-  //   return Object.keys(defaultValue).reduce(
-  //     (res, key) => ({
-  //       ...res,
-  //       [key]: profile?.[key] ?? form.watch(key),
-  //     }),
-  //     {} as Partial<IIndividualOnboarding>
-  //   );
-  // }, [user?.tin_profile]);
+  const getFieldValue = useMemo(() => {
+    const profile = user?.tin_profile as unknown as { [key: string]: string };
+    return Object.keys(individualProfileSchema.defaultValues).reduce(
+      (res, key) => ({
+        ...res,
+        [key]:
+          profile?.[key] ??
+          form.watch(key as unknown as WatchObserver<IIndividualProfile>),
+      }),
+      {} as Partial<IIndividualOnboarding>
+    );
+  }, [user?.tin_profile]);
 
-  // useEffect(() => {
-  //   form.reset(getFieldValue);
-  // }, [getFieldValue]);
+  useEffect(() => {
+    form.reset(getFieldValue);
+  }, [getFieldValue]);
 
   return (
     <form
@@ -111,6 +91,7 @@ const MyProfile = () => {
       </Box>
       {user.user_type === UserType.INDIVIDUAL ? (
         <PersonalInfo
+          form={form}
           editMode={editMode === "personal"}
           setEditMode={() => setEditMode("personal")}
         />
@@ -121,6 +102,7 @@ const MyProfile = () => {
         />
       )}
       <AddressInfo
+        form={form}
         editMode={editMode === "address"}
         setEditMode={() => setEditMode("address")}
       />

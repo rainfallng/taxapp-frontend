@@ -37,10 +37,10 @@ export interface IIndividualProfile {
   marital_status: string;
   employment_status: string;
   nationality: string;
-  place_of_birth: string;
+  date_of_birth: string;
   gender: string;
-  state_of_origin: string;
-  lga_of_residence: string;
+  state_of_origin: string | number;
+  lga_of_residence: string | number;
   business_type: string;
   lcda: string;
   occupation: string;
@@ -48,4 +48,5 @@ export interface IIndividualProfile {
   email_address: string;
   house_number: number | null;
   street: string;
+  state_of_residence: string | number;
 }

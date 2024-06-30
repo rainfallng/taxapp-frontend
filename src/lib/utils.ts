@@ -68,4 +68,4 @@ export const handleFormToastErrors = (
   (error.response?.data?.message as string) ||
   message;
 
-export const getValue = (value?: string | number) => value ?? "--";
+export const getValue = (value?: string | number) => value || "--";

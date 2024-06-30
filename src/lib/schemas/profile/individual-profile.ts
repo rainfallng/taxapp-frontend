@@ -1,4 +1,5 @@
 import { resolveSchema } from "@/lib/utils";
+import { IIndividualProfile } from "@/types/form";
 import * as yup from "yup";
 
 const personalInfoSchemaObject = yup.object({
@@ -9,10 +10,11 @@ const personalInfoSchemaObject = yup.object({
   marital_status: yup.string(),
   employment_status: yup.string(),
   nationality: yup.string(),
-  place_of_birth: yup.string(),
+  date_of_birth: yup.string(),
   gender: yup.string(),
   state_of_origin: yup.string(),
   lga_of_residence: yup.string(),
+  state_of_residence: yup.string(),
   business_type: yup.string(),
   lcda: yup.string(),
   occupation: yup.string(),
@@ -24,7 +26,7 @@ const personalInfoSchemaObject = yup.object({
   street: yup.string()
   });
   
-  const personalInfoDefaultValues = {
+  const personalInfoDefaultValues: Partial<IIndividualProfile> = {
     first_name: "",
     last_name: "",
     middle_name: "",
@@ -32,7 +34,7 @@ const personalInfoSchemaObject = yup.object({
     marital_status: "",
     employment_status: "",
     nationality: "",
-    place_of_birth: "",
+    date_of_birth: "",
     gender: "",
     state_of_origin: "",
     lga_of_residence: "",
@@ -42,7 +44,8 @@ const personalInfoSchemaObject = yup.object({
     phone_number_1: "",
     email_address: "",
     house_number: 0,
-    street: ""
+    street: "",
+    state_of_residence: ""
   };
   
   export const individualProfileSchema = resolveSchema({
