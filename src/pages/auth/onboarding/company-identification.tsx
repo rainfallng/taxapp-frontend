@@ -1,7 +1,6 @@
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
 import { useAPI } from "@/hooks/useApi";
-import { useLoader } from "@/hooks/useLoader";
 import { identificationSchema } from "@/lib/schemas/onboarding/company-identification";
 import { handleFormErrors, handleFormToastErrors } from "@/lib/utils";
 import { useStore } from "@/store";
@@ -36,8 +35,6 @@ const CompanyIdentification = () => {
       error: (error) => handleFormToastErrors(error, "Identification failed"),
     });
   };
-
-  useLoader(isPending, "Please wait...");
 
   return (
     <Box component="form" onSubmit={form.handleSubmit(onSubmit)} sx={{ width: { lg: "54.5rem" } }}>

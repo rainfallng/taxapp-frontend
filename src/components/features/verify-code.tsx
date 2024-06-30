@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { FC, Fragment, useLayoutEffect, useState } from "react";
+import { FC, useLayoutEffect, useState } from "react";
 import Input from "../ui/input";
 import Button from "../ui/button";
 import toast from "react-hot-toast";
@@ -49,7 +49,11 @@ const VerifyCode: FC<{
   }, []);
 
   return (
-    <Fragment>
+    <Box
+      sx={{
+        maxWidth: "40.9rem",
+      }}
+    >
       <Typography
         sx={{
           maxWidth: "30rem",
@@ -134,7 +138,7 @@ const VerifyCode: FC<{
       >
         I didn't get a text message
       </Button>
-    </Fragment>
+    </Box>
   );
 };
 

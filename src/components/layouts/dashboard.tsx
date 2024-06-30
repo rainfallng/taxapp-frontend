@@ -1,126 +1,16 @@
-import {
-  Link,
-  Navigate,
-  Outlet,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import Protected from "./protected";
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import Button from "../ui/button";
 import { SIDEBAR_LINKS } from "./constants";
-import { useState } from "react";
-import { ISidebar } from "@/types";
-import KeyboardArrowUpOutlinedIcon from "@mui/icons-material/KeyboardArrowUpOutlined";
-import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
 import SegmentOutlinedIcon from "@mui/icons-material/SegmentOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import PersonIcon from "@mui/icons-material/Person";
 import { clearLS } from "@/lib/utils";
 import { useStore } from "@/store";
 import Search from "../ui/search";
-
-const SidebarItem = ({ item }: { item: ISidebar }) => {
-  const location = useLocation();
-  const isSubActive = item?.subs?.some((s) =>
-    location.pathname.startsWith(s.link)
-  );
-  const [open, setOpen] = useState(isSubActive);
-  const theme = useTheme();
-
-  const Icon = item.icon;
-
-  const CaretIcon = open
-    ? KeyboardArrowUpOutlinedIcon
-    : KeyboardArrowDownOutlinedIcon;
-
-  const activeStyle = {
-    bgcolor: theme.palette.success.main,
-    color: theme.palette.primary.contrastText,
-  };
-
-  const hoverStyle = {
-    bgcolor: theme.palette.grey[400],
-  };
-
-  return (
-    <div>
-      <Box
-        {...(item?.link ? { component: Link, to: item?.link ?? "" } : {})}
-        sx={{
-          textDecoration: "none",
-          color: theme.palette.grey[600],
-          fontSize: "1.5rem",
-          padding: "1.2rem 1.9rem",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          borderTopRightRadius: "0.5rem",
-          borderBottomRightRadius: "0.5rem",
-          cursor: "pointer",
-          borderColor: theme.palette.success.main,
-          "&:hover": hoverStyle,
-          ...(location.pathname.startsWith(item?.link ?? "") &&
-            !item?.subs &&
-            activeStyle),
-          ...(isSubActive && {
-            borderWidth: "0.2rem",
-            borderStyle: "solid",
-            borderLeft: "none",
-          }),
-        }}
-        onClick={(e) => {
-          if (item?.subs?.length) {
-            e.preventDefault();
-            setOpen((prev) => !prev);
-          }
-        }}
-      >
-        <Box
-          component="span"
-          sx={{ display: "flex", alignItems: "center", gap: "1.2rem" }}
-        >
-          <Icon sx={{ fontSize: "2rem" }} />
-          <span>{item.title}</span>
-        </Box>
-        {item?.subs && <CaretIcon sx={{ fontSize: "1.6rem" }} />}
-      </Box>
-      {item?.subs && open && (
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "1.2rem",
-            mt: "1rem",
-          }}
-        >
-          {item.subs.map((sub) => (
-            <Box
-              component={Link}
-              to={sub.link}
-              key={sub.title}
-              sx={{
-                textDecoration: "none",
-                color: theme.palette.grey[600],
-                fontSize: "1.4rem",
-                padding: "1rem 1.9rem",
-                display: "flex",
-                alignItems: "center",
-                borderTopRightRadius: "0.5rem",
-                borderBottomRightRadius: "0.5rem",
-                "&:hover": hoverStyle,
-                ...(location.pathname === sub?.link ? activeStyle : {}),
-              }}
-            >
-              <span>{sub.title}</span>
-            </Box>
-          ))}
-        </Box>
-      )}
-    </div>
-  );
-};
+import SidebarItem from "../features/layouts/dashboard-side-item";
 
 const DashboardLayout = () => {
   const navigate = useNavigate();
@@ -269,7 +159,7 @@ const DashboardLayout = () => {
                     color: (theme) => theme.palette.grey[800],
                   }}
                 >
-                  {user.first_name} {user.last_name}
+                  {user?.tin_profile?.first_name} {user?.tin_profile?.last_name}
                 </Typography>
               </Box>
             </Box>

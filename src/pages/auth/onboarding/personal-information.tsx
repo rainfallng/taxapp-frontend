@@ -25,6 +25,7 @@ import {
   Radio,
   RadioGroup,
   Typography,
+  capitalize,
   useTheme,
 } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -80,7 +81,7 @@ const Personalinformation = () => {
     });
   };
 
-  useLoader(isLoadingStates || isPending, "Please wait...");
+  useLoader(isLoadingStates, "Please wait...");
 
   useEffect(() => {
     reset({
@@ -269,7 +270,7 @@ const Personalinformation = () => {
               errorMessage={errors?.place_of_birth?.message}
             >
               {states?.map((state) => (
-                <MenuItem key={state.id} value={state.id}>
+                <MenuItem key={state.id} value={state.name}>
                   {state.name}
                 </MenuItem>
               ))}
@@ -411,7 +412,11 @@ const Personalinformation = () => {
           </FormLabel>
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <Input label="Enter House Number" name="house_number" form={form} />
+              <Input
+                label="Enter House Number"
+                name="house_number"
+                form={form}
+              />
             </Grid>
             <Grid item xs={6}>
               <Input label="Enter Street Name" name="street" form={form} />
@@ -511,7 +516,7 @@ const Personalinformation = () => {
               errorMessage={errors?.employment_status?.message}
             >
               {Object.entries(EmploymentStatusType).map(([key, val]) => (
-                <MenuItem key={key} value={key}>
+                <MenuItem key={key} value={capitalize(key)}>
                   {val}
                 </MenuItem>
               ))}
@@ -578,8 +583,14 @@ const Personalinformation = () => {
                   }
                   errorMessage={errors?.business_sector?.message}
                 >
-                  {Object.entries(TitleType).map(([key, val]) => (
-                    <MenuItem key={key} value={val}>
+                  {[
+                    "Trading",
+                    "Agriculture",
+                    "Information and Communication",
+                    "Media and Entertainment",
+                    "Others",
+                  ].map((val) => (
+                    <MenuItem key={val} value={val}>
                       {val}
                     </MenuItem>
                   ))}
@@ -602,21 +613,7 @@ const Personalinformation = () => {
             >
               Nationality
             </FormLabel>
-            <Select
-              sx={{ height: "5.6rem" }}
-              placeholder="Nationality"
-              value={watch("nationality")}
-              onChange={({ target: { value } }) =>
-                setValue("nationality", value as string)
-              }
-              errorMessage={errors?.nationality?.message}
-            >
-              {Object.entries(TitleType).map(([key, val]) => (
-                <MenuItem key={key} value={val}>
-                  {val}
-                </MenuItem>
-              ))}
-            </Select>
+            <Input label="Nationality" name="nationality" form={form} />
           </Grid>
           <Grid item xs={4}>
             <FormLabel
@@ -639,8 +636,13 @@ const Personalinformation = () => {
               }
               errorMessage={errors?.business_type?.message}
             >
-              {Object.entries(TitleType).map(([key, val]) => (
-                <MenuItem key={key} value={val}>
+              {[
+                "NGO",
+                "Cooperative",
+                "Sole proprietorship",
+                "Limited Liability Company",
+              ].map((val) => (
+                <MenuItem key={val} value={val}>
                   {val}
                 </MenuItem>
               ))}
@@ -685,6 +687,7 @@ const Personalinformation = () => {
         </Button> */}
         <Button
           type="submit"
+          disabled={isPending}
           sx={{
             fontSize: "1.8rem",
             fontWeight: 500,

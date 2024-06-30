@@ -3,7 +3,6 @@ import DatePicker from "@/components/ui/date-picker";
 import Input from "@/components/ui/input";
 import Select, { MenuItem } from "@/components/ui/select";
 import { useAPI } from "@/hooks/useApi";
-import { useLoader } from "@/hooks/useLoader";
 import { identificationSchema } from "@/lib/schemas/onboarding/identification";
 import { handleFormErrors, handleFormToastErrors } from "@/lib/utils";
 import { useStore } from "@/store";
@@ -41,8 +40,6 @@ const Identification = () => {
       error: (error) => handleFormToastErrors(error, "Identification failed"),
     });
   };
-
-  useLoader(isPending, "Please wait...");
 
   return (
     <Box

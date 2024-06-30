@@ -32,12 +32,12 @@ export const SubmissionModeType = {
 export const IndentificationType = {
   NIN: "NIN",
   BVN: "BVN",
-  "TIN-MANUAL": "TIN-MANUAL",
 } as const;
 
 export const EmploymentStatusType = {
   EMPLOYED: "Employed",
   UNEMPLOYED: "Unemployed",
+  SELFEMPLOYED: "Self Employed"
 } as const;
 
 export interface IRegister {
@@ -60,6 +60,10 @@ export interface IToken {
 
 export interface ITINProfile {
   id: number;
+  age: number;
+  nationality: string;
+  lcda: string;
+  employment_status: typeof EmploymentStatusType;
   icode: string;
   created: string;
   modified: string;
@@ -109,6 +113,11 @@ export interface ITINProfile {
   state_of_origin: string;
   state_of_residence: string;
   lga_of_residence: string;
+  verification: {
+    id_type: typeof IndentificationType;
+    id_number: string;
+    tax_office: string | null;
+  };
 }
 
 export interface IUser {
@@ -132,7 +141,7 @@ export interface IIndividualOnboarding {
   title: string;
   marital_status: string;
   date_of_birth: string;
-  place_of_birth: string | number;
+  place_of_birth: string;
   gender: string;
   house_number: number | null;
   street: string;

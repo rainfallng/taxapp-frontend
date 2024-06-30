@@ -8,11 +8,14 @@ import { useQuery } from "@tanstack/react-query";
 import { QueryKeys } from "@/lib/queryKeys";
 import { useLoader } from "@/hooks/useLoader";
 import Select, { MenuItem } from "@/components/ui/select";
+import { useStore } from "@/store";
+import { getValue } from "@/lib/utils";
 
 const AddressInfo: FC<{ editMode: boolean; setEditMode: () => void }> = ({
   editMode,
   setEditMode,
 }) => {
+  const user = useStore((s) => s.user);
   const { api } = useAPI();
   const { data: states, isLoading: isLoadingStates } = useQuery({
     queryKey: [QueryKeys.STATES],
@@ -89,7 +92,7 @@ const AddressInfo: FC<{ editMode: boolean; setEditMode: () => void }> = ({
                   fontWeight: 500,
                 }}
               >
-                John
+                {getValue(user?.tin_profile?.house_number)}
               </Typography>
             </>
           )}
@@ -115,7 +118,7 @@ const AddressInfo: FC<{ editMode: boolean; setEditMode: () => void }> = ({
                   fontWeight: 500,
                 }}
               >
-                John
+                {getValue(user?.tin_profile?.street)}
               </Typography>
             </>
           )}
@@ -138,7 +141,7 @@ const AddressInfo: FC<{ editMode: boolean; setEditMode: () => void }> = ({
                   mb: "0.8rem",
                 }}
               >
-                City
+                LGA
               </Typography>
               <Typography
                 sx={{
@@ -147,7 +150,7 @@ const AddressInfo: FC<{ editMode: boolean; setEditMode: () => void }> = ({
                   fontWeight: 500,
                 }}
               >
-                John
+                {getValue(user?.tin_profile?.lga_of_residence)}
               </Typography>
             </>
           )}
@@ -180,7 +183,34 @@ const AddressInfo: FC<{ editMode: boolean; setEditMode: () => void }> = ({
                   fontWeight: 500,
                 }}
               >
-                John
+                {getValue(user?.tin_profile?.state_of_residence)}
+              </Typography>
+            </>
+          )}
+        </Grid>
+        <Grid item md={2}>
+          {editMode ? (
+            <Input label="Street Name" />
+          ) : (
+            <>
+              <Typography
+                sx={{
+                  color: theme.palette.grey[400],
+                  fontSize: "1.8rem",
+                  mb: "0.8rem",
+                }}
+              >
+                LCDA
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.8rem",
+                  color: theme.palette.grey[800],
+                  fontWeight: 500,
+                  wordBreak: "break-all",
+                }}
+              >
+                {getValue(user?.tin_profile?.lcda)}
               </Typography>
             </>
           )}

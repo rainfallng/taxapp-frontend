@@ -6,7 +6,7 @@ const personalInfoSchemaObject = yup.object({
   marital_status: yup.string().required("Select marital status"),
   employment_status: yup.string().required("Select employment status"),
   business_sector: yup.string().required("Select business sector"),
-  nationality: yup.string().required("Select nationality"),
+  nationality: yup.string().required("Nationality is a required field"),
   place_of_birth: yup.string().required("Select a state"),
   gender: yup.string().required("Select a gender"),
   state_of_origin: yup.string().required("Select a state"),

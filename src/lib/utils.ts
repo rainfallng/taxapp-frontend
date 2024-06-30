@@ -48,7 +48,7 @@ export const handleFormErrors = <T extends FieldValues>(
 ) => {
   const errorData = error.response?.data;
   if (error.response?.status === 400 && errorData) {
-    const errorsObj = errorData?.errors ?? errorData
+    const errorsObj = errorData?.errors ?? errorData;
     Object.entries(errorsObj).forEach(([key, val]) => {
       const errMsg = Array.isArray(val) ? val[0] : val;
       if (Object.keys(errorsObj).includes(key))
@@ -67,3 +67,5 @@ export const handleFormToastErrors = (
   error.response?.data?.non_field_errors?.[0] ||
   (error.response?.data?.message as string) ||
   message;
+
+export const getValue = (value?: string | number) => value ?? "--";

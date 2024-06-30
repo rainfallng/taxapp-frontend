@@ -5,18 +5,14 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Input from "@/components/ui/input";
 import { useMutation } from "@tanstack/react-query";
-import { useStore } from "@/store";
 import { useAPI } from "@/hooks/useApi";
 import { handleFormToastErrors } from "@/lib/utils";
 import toast from "react-hot-toast";
-import { useLoader } from "@/hooks/useLoader";
-import { UserType } from "@/types";
 
 const InitialOnboarding = () => {
   const [firstCheck, setFirstCheck] = useState<number | null>(null);
   const [tin, setTIN] = useState("");
   const navigate = useNavigate();
-  const { user } = useStore();
   const { api } = useAPI();
 
   const onCheck = (value: number, level = 0) => {
@@ -37,19 +33,13 @@ const InitialOnboarding = () => {
   });
 
   const onSubmit = () => {
-    const link =
-      user.user_type === UserType.INDIVIDUAL
-        ? "/auth/onboarding/personal-info"
-        : "/auth/onboarding/company-info";
-    if (firstCheck === 1) return navigate(link);
+    if (firstCheck === 1) return navigate("/auth/onboarding/success");
     toast.promise(verifyTIN(), {
       success: "Update successful",
       loading: "Please wait...",
       error: (error) => handleFormToastErrors(error, "Update failed"),
     });
   };
-
-  useLoader(isPending, "Please wait...");
 
   return (
     <Box>
@@ -79,7 +69,6 @@ const InitialOnboarding = () => {
                 label="Enter Taxpayer ID/Tax Identification Number"
                 value={tin}
                 onChange={({ target: { value } }) => {
-                  if (Number.isNaN(Number(value))) return;
                   setTIN(value);
                 }}
               />
@@ -121,7 +110,7 @@ const InitialOnboarding = () => {
         </Button> */}
         <Button
           sx={{ fontSize: "1.8rem", p: "1rem 2.4rem", borderRadius: "5rem" }}
-          disabled={!isValid}
+          disabled={!isValid || isPending}
           onClick={onSubmit}
         >
           Save and Continue

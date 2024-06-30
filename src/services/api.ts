@@ -1,7 +1,7 @@
 import { getStore } from "@/lib/utils";
 import {
   ICompanyOnboarding,
-  IIndividualOnboarding as OldIIndividualOnboarding,
+  IIndividualOnboarding as IIndividualProfileOnboarding,
   ILGAs,
   ILogin,
   IRegister,
@@ -102,7 +102,7 @@ export class APIRequest {
   };
 
   completeIndividualOnboarding = async (
-    body: Partial<OldIIndividualOnboarding>
+    body: Partial<IIndividualProfileOnboarding>
   ) => {
     const { data } = await axios.post(`/api/v1/tin/profile/individual/`, body, {
       headers: {
@@ -153,7 +153,7 @@ export class APIRequest {
     return data;
   };
 
-  updateIndividual = async (body: Partial<IIndividualOnboarding>) => {
+  updateIndividual = async (body: Partial<IIndividualProfileOnboarding>) => {
     const { data } = await axios.patch(`/api/v1/tin/individual/profile/`, body, {
       headers: {
         Authorization: `JWT ${this.accessToken}`,

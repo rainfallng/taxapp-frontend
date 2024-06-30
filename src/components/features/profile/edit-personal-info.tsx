@@ -58,10 +58,7 @@ const EditMode = () => {
         <Input type="email" label="Email Address" />
       </Grid>
       <Grid item xs={4}>
-        <Select sx={{ height: "5.6rem" }} placeholder="Nationality">
-          <MenuItem>Nigerian</MenuItem>
-          <MenuItem>Ghanian</MenuItem>
-        </Select>
+        <Input label="Nationality" />
       </Grid>
       <Grid item xs={4}>
         <Select sx={{ height: "5.6rem" }} placeholder="Employment Status">

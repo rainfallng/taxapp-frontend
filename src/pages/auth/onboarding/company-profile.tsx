@@ -44,7 +44,7 @@ const CompanyProfile = () => {
       api.updateCompany(variables as Partial<ICompanyOnboarding>),
     onSuccess(data) {
       setUser({ tin_profile: data?.data });
-      navigate("/auth/onboarding/success");
+      navigate("/auth/onboarding/tin");
     },
     onError: (error: AxiosError<{ [message: string]: string | string[] }>) =>
       handleFormErrors(error, form.setError),
@@ -58,7 +58,7 @@ const CompanyProfile = () => {
     });
   };
 
-  useLoader(isLoadingStates || isPending, "Please wait...");
+  useLoader(isLoadingStates, "Please wait...");
 
   return (
     <Box
@@ -135,8 +135,13 @@ const CompanyProfile = () => {
               }
               errorMessage={errors?.business_type?.message}
             >
-              {Object.entries(BusinessType).map(([key, val]) => (
-                <MenuItem key={key} value={val}>
+              {[
+                "NGO",
+                "Cooperative",
+                "Sole proprietorship",
+                "Limited Liability Company",
+              ].map((val) => (
+                <MenuItem key={val} value={val}>
                   {val}
                 </MenuItem>
               ))}
@@ -166,13 +171,13 @@ const CompanyProfile = () => {
             <Input
               sx={{ height: "5.6rem" }}
               label="Enter Street Number"
-              name="house_number"
+              name="street_number"
               form={form}
             />
             <Input
               sx={{ height: "5.6rem" }}
               label="Enter Street Name"
-              name="street"
+              name="street_name"
               form={form}
             />
           </Box>
