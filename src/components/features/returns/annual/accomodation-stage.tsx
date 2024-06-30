@@ -59,7 +59,7 @@ const AccomodationStage: FC<{
             // {...form.register("id_type")}
             // errorMessage={form.formState.errors.id_type?.message}
           >
-            {["2023", "2022"].map((val) => (
+            {["Apartment", "Hotel", "Hostel"].map((val) => (
               <MenuItem key={val} value={val}>
                 {val}
               </MenuItem>

@@ -5,4 +5,5 @@ export const QueryKeys = {
   LGA: "LGA",
   INDIVIDUAL: "INDIVIDUAL",
   COMPANY: "COMPANY",
+  RETURNS: "RETURNS",
 };

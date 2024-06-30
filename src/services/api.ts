@@ -192,4 +192,24 @@ export class APIRequest {
 
     return data;
   };
+  
+  getIndividualReturns = async () => {
+    const { data } = await axios.get(`/api/v1/returns/individual/`, {
+      headers: {
+        Authorization: `JWT ${this.accessToken}`,
+      },
+    });
+
+    return data;
+  };
+
+  postIndividualReturns = async (body: IVerifyCAC) => {
+    const { data } = await axios.post(`/api/v1/returns/individual/`, body, {
+      headers: {
+        Authorization: `JWT ${this.accessToken}`,
+      },
+    });
+
+    return data;
+  };
 }

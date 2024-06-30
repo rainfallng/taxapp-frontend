@@ -1,9 +1,23 @@
+import { useAPI } from "@/hooks/useApi";
+import { useLoader } from "@/hooks/useLoader";
+import { QueryKeys } from "@/lib/queryKeys";
 import { Box, Grid, Typography, useTheme } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 const FileReturns = () => {
   const { palette } = useTheme();
   const navigate = useNavigate();
+  const { api } = useAPI();
+
+  const { data, isLoading } = useQuery({
+    queryKey: [QueryKeys.RETURNS],
+    queryFn: api.getIndividualReturns,
+  });
+
+  useLoader(isLoading, "Loading file returns");
+
+  console.log({ data })
 
   return (
     <Box sx={{ p: "4rem" }}>
@@ -56,7 +70,7 @@ const FileReturns = () => {
                   borderRadius: "10rem",
                   height: "fit-content",
                   fontWeight: 500,
-                  fontSize: "1.4rem"
+                  fontSize: "1.4rem",
                 }}
               >
                 Not filed

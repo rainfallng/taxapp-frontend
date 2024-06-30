@@ -1,18 +1,28 @@
 import { FileUpload } from "@/components/ui/file-upload";
 import { Box, FormLabel, Grid, Typography, useTheme } from "@mui/material";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UploadOutlinedIcon from "@mui/icons-material/UploadOutlined";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import Input from "@/components/ui/input";
 import Button from "@/components/ui/button";
 import { IAnnualReturnStage } from "@/types/returns";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 
 const IncomeStage: FC<{ setStage: (stage: IAnnualReturnStage) => void }> = ({
   setStage,
 }) => {
   const navigate = useNavigate();
   const theme = useTheme();
+  const [additionalIncome, setAdditionalIncome] = useState<
+    { name: string; amount: string }[]
+  >([]);
+
+  const removeAdditionalIncome = (index: number) => {
+    const filter = additionalIncome.filter((_, key) => key !== index);
+
+    setAdditionalIncome(filter);
+  };
 
   return (
     <>
@@ -213,9 +223,43 @@ const IncomeStage: FC<{ setStage: (stage: IAnnualReturnStage) => void }> = ({
         }}
       >
         <Typography sx={{ fontSize: "2rem" }}>Other Income(s)</Typography>
-        <Button variant="text">
+        <Button
+          type="button"
+          variant="text"
+          onClick={() =>
+            setAdditionalIncome([...additionalIncome, { name: "", amount: "" }])
+          }
+        >
           <AddCircleOutlineOutlinedIcon sx={{ mr: "1.5rem" }} /> Add Income
         </Button>
+      </Box>
+      <Box
+        sx={{
+          mt: "1.6rem",
+          display: "flex",
+          flexDirection: "column",
+          gap: "1.6rem",
+        }}
+      >
+        {additionalIncome.map((_, key) => (
+          <Grid container key={key} spacing={1.6}>
+            <Grid item xs={4}>
+              <Input name="name" label="Name" />
+            </Grid>
+            <Grid item xs={4}>
+              <Input name="amount" label="Enter Amount" />
+            </Grid>
+            <Grid item xs={4} sx={{ display: "flex", alignItems: "center" }}>
+              <Button
+                variant="text"
+                type="button"
+                onClick={() => removeAdditionalIncome(key)}
+              >
+                <CloseOutlinedIcon color="error" />
+              </Button>
+            </Grid>
+          </Grid>
+        ))}
       </Box>
       <Box
         sx={{
