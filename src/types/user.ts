@@ -37,7 +37,7 @@ export const IndentificationType = {
 export const EmploymentStatusType = {
   EMPLOYED: "Employed",
   UNEMPLOYED: "Unemployed",
-  SELFEMPLOYED: "Self Employed"
+  SELFEMPLOYED: "Self Employed",
 } as const;
 
 export interface IRegister {
@@ -56,6 +56,40 @@ export interface ILogin {
 export interface IToken {
   access: string | null;
   refresh: string | null;
+}
+
+export interface ICompanyProfile {
+  id: number;
+  icode: string;
+  company_verification: {
+    rc_number: string;
+  };
+  created: string;
+  modified: string;
+  is_active: boolean;
+  tin: string | null;
+  tax_payer_number: string | null;
+  vtin: string | null;
+  submission_mode: typeof SubmissionModeType;
+  completion_status: "DRAFT";
+  tax_station: string | null;
+  first_time_filling: string | null;
+  past_tax_filling: string | null;
+  name: string;
+  email: string | null;
+  business_type: string | null;
+  phone_number: string | null;
+  number_of_employees: string | null;
+  number_of_directors: string | null;
+  place_of_business: string;
+  street_number: string | null;
+  street_name: string | null;
+  city: string;
+  lcda: string | null;
+  created_by: string | null;
+  modified_by: string | null;
+  state: string | null;
+  lga: string | null;
 }
 
 export interface ITINProfile {
@@ -128,7 +162,7 @@ export interface IUser {
   email: string;
   phone: string;
   user_type: string;
-  tin_profile: ITINProfile | null;
+  tin_profile: (ITINProfile & ICompanyProfile) | null;
 }
 
 export interface IIndividualOnboarding {

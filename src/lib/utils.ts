@@ -66,6 +66,16 @@ export const handleFormToastErrors = (
 ) =>
   error.response?.data?.non_field_errors?.[0] ||
   (error.response?.data?.message as string) ||
-  message;
+  typeof error.response?.data === "object"
+    ? Object.values(error.response?.data ?? {})?.[0]?.[0]
+    : message;
 
 export const getValue = (value?: string | number) => value || "--";
+
+export const toBase64 = (file: File) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+  });

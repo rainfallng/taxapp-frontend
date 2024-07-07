@@ -110,7 +110,8 @@ const AppRoutes = () => {
         </Route>
         <Route path="returns" element={<Outlet />}>
           <Route index element={<FileReturns />} />
-          <Route path="annual" element={<AnnualReturn />} />
+          <Route path=":year" element={<AnnualReturn />} />
+          {/* <Route path="annual" element={<AnnualReturn />} /> */}
           <Route path="history" element={<FilingHistory />} />
         </Route>
         <Route index element={<Navigate replace to="/app/quick-menu" />} />

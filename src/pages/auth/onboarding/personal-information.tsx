@@ -416,6 +416,7 @@ const Personalinformation = () => {
                 label="Enter House Number"
                 name="house_number"
                 form={form}
+                isNumber
               />
             </Grid>
             <Grid item xs={6}>

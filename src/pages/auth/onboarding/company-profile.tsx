@@ -169,6 +169,7 @@ const CompanyProfile = () => {
             }}
           >
             <Input
+              isNumber
               sx={{ height: "5.6rem" }}
               label="Enter Street Number"
               name="street_number"
