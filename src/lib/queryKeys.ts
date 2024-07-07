@@ -6,4 +6,5 @@ export const QueryKeys = {
   INDIVIDUAL: "INDIVIDUAL",
   COMPANY: "COMPANY",
   RETURNS: "RETURNS",
+  BILL: "BILL"
 };

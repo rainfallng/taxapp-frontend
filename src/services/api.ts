@@ -8,6 +8,7 @@ import {
   IState,
 } from "@/types";
 import { IIndividualAnnualAccomodation, IIndividualAnnualIncome, IIndividualOnboarding, IIndividualReturn, IVerifyCAC } from "@/types/form";
+import { BillList } from "@/types/returns";
 import axios, { AxiosInstance } from "axios";
 
 export class APIRequest {
@@ -235,5 +236,25 @@ export class APIRequest {
     });
 
     return data;
+  };
+  
+  getIndividualBill = async (billId: string) => {
+    const { data } = await axios.get(`/api/v1/invoices/bills/${billId}/`, {
+      headers: {
+        Authorization: `JWT ${this.accessToken}`,
+      },
+    });
+
+    return data;
+  };
+  
+  getIndividualBillList = async () => {
+    const { data } = await axios.get(`/api/v1/invoices/bills/`, {
+      headers: {
+        Authorization: `JWT ${this.accessToken}`,
+      },
+    });
+
+    return data as BillList;
   };
 }
