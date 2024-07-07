@@ -12,10 +12,25 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
+import { useAPI } from "@/hooks/useApi";
+import { QueryKeys } from "@/lib/queryKeys";
+import { useQuery } from "@tanstack/react-query";
+import { useLoader } from "@/hooks/useLoader";
+import dayjs from "dayjs";
 
 const FilingHistory = () => {
   const navigate = useNavigate();
   const theme = useTheme();
+  const { api } = useAPI();
+
+  const { data, isPending } = useQuery({
+    queryKey: [QueryKeys.BILL],
+    queryFn: api.getIndividualBillList,
+  });
+
+  console.log({ data });
+
+  useLoader(isPending, "Fetching history...");
 
   return (
     <Box sx={{ py: "4.6rem", px: "3.2rem" }}>
@@ -39,53 +54,118 @@ const FilingHistory = () => {
           <TableHead>
             <TableRow sx={{ bgcolor: theme.palette.grey[50], px: "3.2rem" }}>
               <TableCell
-                sx={{ color: theme.palette.grey[800], fontSize: "1.6rem", width: "30%" }}
+                sx={{
+                  color: theme.palette.grey[800],
+                  fontSize: "1.6rem",
+                  width: "25%",
+                }}
               >
                 Date
               </TableCell>
               <TableCell
-                sx={{ color: theme.palette.grey[800], fontSize: "1.6rem", width: "25%" }}
+                sx={{
+                  color: theme.palette.grey[800],
+                  fontSize: "1.6rem",
+                  width: "20%",
+                }}
               >
                 Amount
               </TableCell>
               <TableCell
-                sx={{ color: theme.palette.grey[800], fontSize: "1.6rem", width: "25%" }}
+                sx={{
+                  color: theme.palette.grey[800],
+                  fontSize: "1.6rem",
+                  width: "20%",
+                }}
               >
                 Reference No
               </TableCell>
               <TableCell
-                sx={{ color: theme.palette.grey[800], fontSize: "1.6rem", width: "20%" }}
+                sx={{
+                  color: theme.palette.grey[800],
+                  fontSize: "1.6rem",
+                  width: "15%",
+                }}
+              >
+                Status
+              </TableCell>
+              <TableCell
+                sx={{
+                  color: theme.palette.grey[800],
+                  fontSize: "1.6rem",
+                  width: "20%",
+                }}
               >
                 Uploaded File
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            <TableRow>
-              <TableCell
-                sx={{ color: theme.palette.grey[800], fontSize: "1.6rem", width: "30%" }}
+            {data?.results?.map((res, key) => (
+              <TableRow
+                key={res.id}
+                sx={{
+                  ...(key % 2 === 1
+                    ? { bgcolor: (theme) => theme.palette.grey.A200 }
+                    : {}),
+                }}
               >
-                10/04/2023
-              </TableCell>
-              <TableCell
-                sx={{ color: theme.palette.grey[800], fontSize: "1.6rem", width: "25%" }}
-              >
-                ₦100,000.00
-              </TableCell>
-              <TableCell
-                sx={{ color: theme.palette.grey[800], fontSize: "1.6rem", width: "25%" }}
-              >
-                26542736
-              </TableCell>
-              <TableCell
-                sx={{ color: theme.palette.grey[800], fontSize: "1.6rem", width: "20%" }}
-              >
-                <Button variant="text" sx={{ color: theme.palette.grey[800], p: 0 }}>
-                  Statement of Income{" "}
-                  <DownloadOutlinedIcon color="success" sx={{ ml: "1.6rem" }} />
-                </Button>
-              </TableCell>
-            </TableRow>
+                <TableCell
+                  sx={{
+                    color: theme.palette.grey[800],
+                    fontSize: "1.6rem",
+                    width: "25%",
+                  }}
+                >
+                  {dayjs(res.created).format("DD/MM/YYYY")}
+                </TableCell>
+                <TableCell
+                  sx={{
+                    color: theme.palette.grey[800],
+                    fontSize: "1.6rem",
+                    width: "20%",
+                  }}
+                >
+                  ₦{Number(res?.amount ?? "0").toLocaleString()}
+                </TableCell>
+                <TableCell
+                  sx={{
+                    color: theme.palette.grey[800],
+                    fontSize: "1.6rem",
+                    width: "20%",
+                  }}
+                >
+                  {res.icode}
+                </TableCell>
+                <TableCell
+                  sx={{
+                    color: theme.palette.grey[800],
+                    fontSize: "1.6rem",
+                    width: "15%",
+                  }}
+                >
+                  {res.status}
+                </TableCell>
+                <TableCell
+                  sx={{
+                    color: theme.palette.grey[800],
+                    fontSize: "1.6rem",
+                    width: "20%",
+                  }}
+                >
+                  <Button
+                    variant="text"
+                    sx={{ color: theme.palette.grey[800], p: 0 }}
+                  >
+                    Statement of Income{" "}
+                    <DownloadOutlinedIcon
+                      color="success"
+                      sx={{ ml: "1.6rem" }}
+                    />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>

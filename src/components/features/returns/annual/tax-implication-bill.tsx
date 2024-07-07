@@ -1,12 +1,27 @@
 import Button from "@/components/ui/button";
+import { useAPI } from "@/hooks/useApi";
+import { useLoader } from "@/hooks/useLoader";
+import { QueryKeys } from "@/lib/queryKeys";
+import { useStore } from "@/store";
 import { Box, Grid, Typography, useTheme } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import dayjs from "dayjs";
+import { useNavigate, useParams } from "react-router-dom";
 
 const TaxImplicationBill = ({ billId }: { billId: string }) => {
   const theme = useTheme();
   const navigate = useNavigate();
+  const { api } = useAPI();
+  const { user } = useStore();
+  const { year = "" } = useParams();
 
-  console.log({ billId })
+  const { data, isPending } = useQuery({
+    queryKey: [QueryKeys.BILL, billId],
+    queryFn: () => api.getIndividualBill(billId),
+    enabled: !!billId,
+  });
+
+  useLoader(isPending, "Please wait...")
 
   return (
     <Box sx={{ p: "4rem" }}>
@@ -35,7 +50,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
             fontWeight: 500,
           }}
         >
-          Tax Implication Total: ₦12,845.00
+          Tax Implication Total: ₦{Number(data?.amount ?? "0").toLocaleString()}
         </Typography>
       </Box>
       <Grid container columnSpacing={2} rowSpacing="4.8rem">
@@ -56,7 +71,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            2345129084783930
+            {data?.icode}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -76,7 +91,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            15/06/2024
+            {dayjs(data?.created).format('DD/MM/YYYY')}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -96,7 +111,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            TIN-98763
+            {user.tin_profile?.tin ?? '--'}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -136,7 +151,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            2023
+            {year}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -156,7 +171,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            Agbor Osade Wilfred
+            {user.tin_profile?.first_name} {user.tin_profile?.last_name}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -176,7 +191,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            ₦70.00
+            ₦{Number(data?.charge ?? "0").toLocaleString()}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -196,7 +211,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            +234 901 2345 678
+            {user.phone}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -216,7 +231,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            agbor@osade.com
+            {user.email}
           </Typography>
         </Grid>
       </Grid>
@@ -228,7 +243,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
           mt: "5rem",
         }}
       >
-        Amount Due: N12,915.00
+        Amount Due: ₦{Number(data?.amount ?? "0").toLocaleString()}
       </Typography>
       <Box
         sx={{
@@ -243,6 +258,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
         </Button>
         <Button
           rounded
+          disabled={isPending}
           sx={{ width: "50%" }}
           onClick={() => navigate("/app/returns/history")}
         >
