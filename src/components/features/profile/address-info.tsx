@@ -76,7 +76,7 @@ const AddressInfo: FC<{
       <Grid container spacing={2}>
         <Grid item xs={3}>
           {editMode ? (
-            <Input label="Street No." name="house_number" form={form} />
+            <Input isNumber label="Street No." name="house_number" form={form} />
           ) : (
             <>
               <Typography

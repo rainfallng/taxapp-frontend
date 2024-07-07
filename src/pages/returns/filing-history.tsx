@@ -29,7 +29,7 @@ const FilingHistory = () => {
       >
         <Box></Box>
         <Box>
-          <Button rounded onClick={() => navigate("/app/returns/annual")}>
+          <Button rounded onClick={() => navigate("/app/returns")}>
             New Filing
           </Button>
         </Box>

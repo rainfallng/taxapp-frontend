@@ -9,7 +9,7 @@ const TenantCheck = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const hostWrapper: Record<string, string> = {
-      "localhost:5173": "lagos.taxapp.ng",
+      "localhost:5174": "lagos.taxapp.ng",
     };
 
     const originName = origin.replace("http://", "").replace("https://", "");

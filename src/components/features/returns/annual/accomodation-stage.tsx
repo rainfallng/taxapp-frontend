@@ -2,6 +2,10 @@ import Button from "@/components/ui/button";
 import DatePicker from "@/components/ui/date-picker";
 import Input from "@/components/ui/input";
 import Select from "@/components/ui/select";
+import { useAPI } from "@/hooks/useApi";
+import { individualAccomodationSchema } from "@/lib/schemas/returns/individual/accomodation";
+import { handleFormToastErrors } from "@/lib/utils";
+import { IIndividualAnnualAccomodation } from "@/types/form";
 import {
   Box,
   FormLabel,
@@ -10,23 +14,49 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import dayjs from "dayjs";
+import { useMutation } from "@tanstack/react-query";
 import { FC } from "react";
-import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
+import Modal from "../../modals";
 
 const AccomodationStage: FC<{
-  checkSummary: () => void
-}> = ({ checkSummary }) => {
+  incomeId: string;
+  billId: string;
+}> = ({ incomeId, billId }) => {
   const theme = useTheme();
   const navigate = useNavigate();
+  const { year = "" } = useParams();
+  const { api } = useAPI();
+
+  const form = useForm(individualAccomodationSchema);
+
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: (variables: IIndividualAnnualAccomodation) =>
+      api.postIndividualAccomodation(incomeId, variables),
+    onSuccess() {
+      navigate(`/app/returns/${year}?id=${incomeId}&billId=${billId}&showBill=true`)
+    },
+  });
+
+  const onSubmit = (values: IIndividualAnnualAccomodation) => {
+    toast.promise(mutateAsync(values), {
+      success: "Successful",
+      loading: "Please wait...",
+      error: (error) => handleFormToastErrors(error, "Failed"),
+    });
+  };
+
+  if (!incomeId) <Navigate to="/app/returns" />;
 
   return (
-    <>
+    <form onSubmit={form.handleSubmit(onSubmit)}>
       <Typography sx={{ mb: "4rem", fontSize: "2rem", fontWeight: 500 }}>
         Statement of Income (Gross Annual Income)
       </Typography>
       <Grid container columnSpacing={3.2} rowSpacing={2.4}>
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <FormLabel
             sx={{
               fontSize: "2rem",
@@ -38,8 +68,8 @@ const AccomodationStage: FC<{
           >
             Address
           </FormLabel>
-          <Input name="address" label="Enter Address" />
-        </Grid>
+          <Input name="owner_address" label="Enter Address" form={form} />
+        </Grid> */}
         <Grid item xs={12} sm={6}>
           <FormLabel
             sx={{
@@ -55,9 +85,9 @@ const AccomodationStage: FC<{
           <Select
             sx={{ height: "5.6rem" }}
             placeholder="Select Type"
-            // value={form.watch("id_type")}
-            // {...form.register("id_type")}
-            // errorMessage={form.formState.errors.id_type?.message}
+            value={form.watch("accommodation_type")}
+            {...form.register("accommodation_type")}
+            errorMessage={form.formState.errors.accommodation_type?.message}
           >
             {["Apartment", "Hotel", "Hostel"].map((val) => (
               <MenuItem key={val} value={val}>
@@ -81,12 +111,12 @@ const AccomodationStage: FC<{
           <Select
             sx={{ height: "5.6rem" }}
             placeholder="Select Type"
-            // value={form.watch("id_type")}
-            // {...form.register("id_type")}
-            // errorMessage={form.formState.errors.id_type?.message}
+            value={form.watch("ownership_type")}
+            {...form.register("ownership_type")}
+            errorMessage={form.formState.errors.ownership_type?.message}
           >
-            {["Tenant", "Landlord", "Others"].map((val) => (
-              <MenuItem key={val} value={val}>
+            {["Tenant", "Owner"].map((val) => (
+              <MenuItem key={val} value={val.toUpperCase()}>
                 {val}
               </MenuItem>
             ))}
@@ -104,7 +134,7 @@ const AccomodationStage: FC<{
           >
             Owner Name
           </FormLabel>
-          <Input name="owner_name" label="Enter Name" />
+          <Input name="owner_name" label="Enter Name" form={form} />
         </Grid>
         <Grid item xs={12} sm={6}>
           <FormLabel
@@ -118,7 +148,11 @@ const AccomodationStage: FC<{
           >
             Owner Taxpayer ID
           </FormLabel>
-          <Input name="owner_payer_id" label="Enter Taxpayer ID" />
+          <Input
+            name="owner_tax_payer_number"
+            label="Enter Taxpayer ID"
+            form={form}
+          />
         </Grid>
         <Grid item xs={12}>
           <FormLabel
@@ -132,7 +166,7 @@ const AccomodationStage: FC<{
           >
             Owner Address
           </FormLabel>
-          <Input name="address" label="Enter Address" />
+          <Input name="owner_address" label="Enter Address" form={form} />
         </Grid>
         <Grid item xs={12} sm={6}>
           <FormLabel
@@ -146,7 +180,7 @@ const AccomodationStage: FC<{
           >
             Rent Paid
           </FormLabel>
-          <Input name="rent_paid" label="Enter Amount" />
+          <Input name="rent_paid" label="Enter Amount" isNumber form={form} />
         </Grid>
         <Grid item xs={12} sm={6}>
           <FormLabel
@@ -160,7 +194,12 @@ const AccomodationStage: FC<{
           >
             Rent Paid By Employer
           </FormLabel>
-          <Input name="rent_paid_employer" label="Enter Amount" />
+          <Input
+            name="rent_paid_by_employer"
+            label="Enter Amount"
+            isNumber
+            form={form}
+          />
         </Grid>
         <Grid item xs={12} sm={6}>
           <FormLabel
@@ -174,13 +213,7 @@ const AccomodationStage: FC<{
           >
             Date Started
           </FormLabel>
-          <DatePicker
-            name="date_started"
-            label=""
-            format="YYYY-MM-DD"
-            value={dayjs()}
-            disabled
-          />
+          <DatePicker name="start_date" format="YYYY-MM-DD" form={form} />
         </Grid>
         <Grid item xs={12} sm={6}>
           <FormLabel
@@ -194,13 +227,7 @@ const AccomodationStage: FC<{
           >
             Date End
           </FormLabel>
-          <DatePicker
-            name="date_end"
-            label=""
-            format="YYYY-MM-DD"
-            value={dayjs()}
-            disabled
-          />
+          <DatePicker name="end_date" format="YYYY-MM-DD" form={form} />
         </Grid>
       </Grid>
       <Box
@@ -216,13 +243,40 @@ const AccomodationStage: FC<{
           rounded
           onClick={() => navigate("/app/returns")}
         >
-          Save Draft
+          Cancel
         </Button>
-        <Button rounded onClick={checkSummary}>
+        <Button rounded type="submit">
           Next
         </Button>
       </Box>
-    </>
+      <Modal sx={{ py: "11.4rem" }} open={isPending}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "2.4rem",
+          }}
+        >
+          <Box
+            component="img"
+            src="/assets/svgs/calculate.svg"
+            alt=""
+            sx={{ width: "9.6rem", height: "9.6rem" }}
+          />
+          <Typography
+            sx={{
+              fontWeight: 500,
+              fontSize: "2.2rem",
+              color: theme.palette.grey[800],
+              textAlign: "center",
+            }}
+          >
+            Calculating Tax Implication...
+          </Typography>
+        </Box>
+      </Modal>
+    </form>
   );
 };
 

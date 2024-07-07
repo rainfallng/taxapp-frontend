@@ -7,7 +7,7 @@ import {
   IRegister,
   IState,
 } from "@/types";
-import { IIndividualOnboarding, IVerifyCAC } from "@/types/form";
+import { IIndividualAnnualAccomodation, IIndividualAnnualIncome, IIndividualOnboarding, IIndividualReturn, IVerifyCAC } from "@/types/form";
 import axios, { AxiosInstance } from "axios";
 
 export class APIRequest {
@@ -193,8 +193,18 @@ export class APIRequest {
     return data;
   };
   
-  getIndividualReturns = async () => {
-    const { data } = await axios.get(`/api/v1/returns/individual/`, {
+  getIndividualReturnYears = async () => {
+    const { data } = await axios.get(`/api/v1/returns/individual/years/`, {
+      headers: {
+        Authorization: `JWT ${this.accessToken}`,
+      },
+    });
+
+    return data as { data: number[] };
+  };
+
+  postIndividualReturns = async (body: IIndividualReturn) => {
+    const { data } = await axios.post(`/api/v1/returns/individual/`, body, {
       headers: {
         Authorization: `JWT ${this.accessToken}`,
       },
@@ -202,9 +212,23 @@ export class APIRequest {
 
     return data;
   };
+  
 
-  postIndividualReturns = async (body: IVerifyCAC) => {
-    const { data } = await axios.post(`/api/v1/returns/individual/`, body, {
+  postIndividualIncome = async (body: IIndividualAnnualIncome) => {
+    const { statement_of_income, ...rest } = body
+    console.log(statement_of_income)
+    const { data } = await axios.post(`/api/v1/returns/individual/income/`, rest, {
+      headers: {
+        Authorization: `JWT ${this.accessToken}`,
+      },
+    });
+
+    return data;
+  };
+  
+
+  postIndividualAccomodation = async (incomeId: string, body: IIndividualAnnualAccomodation) => {
+    const { data } = await axios.post(`/api/v1/returns/individual/${incomeId}/accommodation/`, body, {
       headers: {
         Authorization: `JWT ${this.accessToken}`,
       },

@@ -3,11 +3,15 @@ import Input from "@/components/ui/input";
 import Select, { MenuItem } from "@/components/ui/select";
 import { useAPI } from "@/hooks/useApi";
 import { postReturnSchema } from "@/lib/schemas/returns/post-return";
+import { handleFormErrors, handleFormToastErrors } from "@/lib/utils";
+import { IIndividualReturn } from "@/types/form";
 import { IAnnualReturnStage } from "@/types/returns";
 import { Box, FormLabel, Grid } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { FC } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 const IDStage: FC<{ setStage: (stage: IAnnualReturnStage) => void }> = ({
@@ -17,12 +21,21 @@ const IDStage: FC<{ setStage: (stage: IAnnualReturnStage) => void }> = ({
   const { api } = useAPI();
   const form = useForm(postReturnSchema);
 
-  const { isPending } = useMutation({
+  const { isPending, mutateAsync } = useMutation({
     mutationFn: api.postIndividualReturns,
+    onSuccess() {
+      setStage("income");
+    },
+    onError: (error: AxiosError<{ [message: string]: string | string[] }>) =>
+      handleFormErrors(error, form.setError),
   });
 
-  const onSubmit = () => {
-    setStage("income");
+  const onSubmit = (values: IIndividualReturn) => {
+    toast.promise(mutateAsync(values), {
+      success: "Successful",
+      loading: "Please wait...",
+      error: (error) => handleFormToastErrors(error, "Failed"),
+    });
   };
 
   return (

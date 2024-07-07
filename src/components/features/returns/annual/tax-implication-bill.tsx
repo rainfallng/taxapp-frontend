@@ -2,9 +2,11 @@ import Button from "@/components/ui/button";
 import { Box, Grid, Typography, useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-const TaxImplicationBill = () => {
+const TaxImplicationBill = ({ billId }: { billId: string }) => {
   const theme = useTheme();
   const navigate = useNavigate();
+
+  console.log({ billId })
 
   return (
     <Box sx={{ p: "4rem" }}>

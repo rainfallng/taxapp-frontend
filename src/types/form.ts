@@ -50,3 +50,41 @@ export interface IIndividualProfile {
   street: string;
   state_of_residence: string | number;
 }
+
+export interface IIndividualAnnualIncome {
+  other_incomes?: {
+    name: string;
+    details?: string;
+    value: string;
+  }[];
+  salary: string;
+  commission: string;
+  trade_income: string;
+  allowance: string;
+  pension: string;
+  annuity: string;
+  gratuities: string;
+  foreign_income: string;
+  dividend: string;
+  interest: string;
+  rent: string;
+  statement_of_income: string;
+  year_in_view?: number;
+}
+
+export interface IIndividualReturn {
+  year_in_view: number | string;
+  tin: string;
+}
+
+export interface IIndividualAnnualAccomodation {
+  accommodation_type: string;
+  ownership_type: string;
+  owner_name: string;
+  owner_address: string;
+  owner_tax_payer_number: string;
+  rent_paid: string;
+  rent_paid_by_employer: string;
+  start_date: string;
+  end_date: string;
+}

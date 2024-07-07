@@ -80,14 +80,18 @@ export const SIDEBAR_LINKS: Record<string, ISidebar[]> = {
       title: "File Returns",
       icon: FilePresentOutlinedIcon,
       subs: [
+        // {
+        //   title: "Returns",
+        //   link: "/app/returns",
+        // },
         {
-          title: "Returns",
+          title: "Annual Returns",
           link: "/app/returns",
         },
-        {
-          title: "Annual Return",
-          link: "/app/returns/annual",
-        },
+        // {
+        //   title: "Annual Return",
+        //   link: "/app/returns/annual",
+        // },
         {
           title: "Filing History",
           link: "/app/returns/history",
