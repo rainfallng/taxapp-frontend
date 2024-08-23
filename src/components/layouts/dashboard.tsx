@@ -11,11 +11,14 @@ import { clearLS } from "@/lib/utils";
 import { useStore } from "@/store";
 import Search from "../ui/search";
 import SidebarItem from "../features/layouts/dashboard-side-item";
+import { ITINProfile } from "@/types";
 
 const DashboardLayout = () => {
   const navigate = useNavigate();
   const { user } = useStore();
   // const { pathname } = useLocation();
+
+  const tinProfile = user?.tin_profile as ITINProfile;
 
   const logout = () => {
     clearLS();
@@ -159,7 +162,7 @@ const DashboardLayout = () => {
                     color: (theme) => theme.palette.grey[800],
                   }}
                 >
-                  {user?.tin_profile?.first_name} {user?.tin_profile?.last_name}
+                  {tinProfile?.first_name} {tinProfile?.last_name}
                 </Typography>
               </Box>
             </Box>

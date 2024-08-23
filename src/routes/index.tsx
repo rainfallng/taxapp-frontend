@@ -35,6 +35,10 @@ import SupportStaff from "@/pages/profile/staff";
 import FileReturns from "@/pages/returns";
 import AnnualReturn from "@/pages/returns/annual";
 import FilingHistory from "@/pages/returns/filing-history";
+import PayeReturns from "@/pages/returns/paye";
+import ComputePayeReturns from "@/pages/returns/paye/compute";
+import PayeBill from "@/pages/returns/paye/bill";
+import CompanyFilingHistory from "@/pages/returns/paye/filing-history";
 
 const AppRoutes = () => {
   return (
@@ -110,9 +114,17 @@ const AppRoutes = () => {
         </Route>
         <Route path="returns" element={<Outlet />}>
           <Route index element={<FileReturns />} />
+          <Route path="history" element={<FilingHistory />} />
+          <Route path="paye" element={<Outlet />}>
+            <Route index element={<PayeReturns />} />
+            <Route path="history" element={<CompanyFilingHistory />} />
+            <Route path=":year" element={<Outlet />}>
+              <Route index element={<ComputePayeReturns />} />
+              <Route path=":month" element={<PayeBill />} />
+            </Route>
+          </Route>
           <Route path=":year" element={<AnnualReturn />} />
           {/* <Route path="annual" element={<AnnualReturn />} /> */}
-          <Route path="history" element={<FilingHistory />} />
         </Route>
         <Route index element={<Navigate replace to="/app/quick-menu" />} />
         <Route path="*" element={<Error404 />} />

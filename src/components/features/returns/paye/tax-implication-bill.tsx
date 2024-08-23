@@ -3,7 +3,7 @@ import { useAPI } from "@/hooks/useApi";
 import { useLoader } from "@/hooks/useLoader";
 import { QueryKeys } from "@/lib/queryKeys";
 import { useStore } from "@/store";
-import { ITINProfile } from "@/types";
+import { ICompanyProfile } from "@/types";
 import { Box, Grid, Typography, useTheme } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
@@ -14,9 +14,9 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
   const navigate = useNavigate();
   const { api } = useAPI();
   const { user } = useStore();
-  const { year = "" } = useParams();
+  const { month = "" } = useParams();
 
-  const tinProfile = user?.tin_profile as ITINProfile;
+  const tinProfile = user?.tin_profile as ICompanyProfile;
 
   const { data, isPending } = useQuery({
     queryKey: [QueryKeys.BILL, billId],
@@ -146,7 +146,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               mb: "0.8rem",
             }}
           >
-            Tax Year in View
+            Tax Month in View
           </Typography>
           <Typography
             sx={{
@@ -154,7 +154,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            {year}
+            {month}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -174,7 +174,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            {tinProfile?.first_name} {tinProfile?.last_name}
+            {tinProfile?.name}
           </Typography>
         </Grid>
         <Grid item md={4}>

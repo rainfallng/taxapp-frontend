@@ -71,7 +71,7 @@ export interface ICompanyProfile {
   tax_payer_number: string | null;
   vtin: string | null;
   submission_mode: typeof SubmissionModeType;
-  completion_status: "DRAFT";
+  completion_status: string;
   tax_station: string | null;
   first_time_filling: string | null;
   past_tax_filling: string | null;
@@ -162,7 +162,7 @@ export interface IUser {
   email: string;
   phone: string;
   user_type: string;
-  tin_profile: (ITINProfile & ICompanyProfile) | null;
+  tin_profile: ITINProfile | ICompanyProfile | null;
 }
 
 export interface IIndividualOnboarding {

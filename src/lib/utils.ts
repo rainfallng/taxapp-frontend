@@ -63,12 +63,13 @@ export const handleFormErrors = <T extends FieldValues>(
 export const handleFormToastErrors = (
   error: AxiosError<{ [message: string]: string | string[] }>,
   message: string = ""
-) =>
-  error.response?.data?.non_field_errors?.[0] ||
-  (error.response?.data?.message as string) ||
-  typeof error.response?.data === "object"
-    ? Object.values(error.response?.data ?? {})?.[0]?.[0]
-    : message;
+) => {
+  const err = Object.values(error.response?.data ?? {})?.[0];
+  if (err) {
+    return Array.isArray(err) ? err?.[0] : err;
+  }
+  return message;
+};
 
 export const getValue = (value?: string | number) => value || "--";
 

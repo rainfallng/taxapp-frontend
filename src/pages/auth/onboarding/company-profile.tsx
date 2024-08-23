@@ -1,5 +1,6 @@
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
+import PhoneInput from "@/components/ui/phone-input";
 import Select, { MenuItem } from "@/components/ui/select";
 import { useAPI } from "@/hooks/useApi";
 import { useLoader } from "@/hooks/useLoader";
@@ -7,7 +8,7 @@ import { QueryKeys } from "@/lib/queryKeys";
 import { companyInfoSchema } from "@/lib/schemas/onboarding/company-info";
 import { handleFormErrors, handleFormToastErrors } from "@/lib/utils";
 import { useStore } from "@/store";
-import { BusinessType, ICompanyOnboarding } from "@/types";
+import { ICompanyOnboarding, ICompanyProfile } from "@/types";
 import { ICompanyInfo } from "@/types/form";
 import { Box, FormLabel, Grid, Typography, useTheme } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -20,13 +21,15 @@ const CompanyProfile = () => {
   const theme = useTheme();
   const form = useForm(companyInfoSchema);
   const { api } = useAPI();
-  const { setUser } = useStore();
+  const { setUser, user } = useStore();
   const navigate = useNavigate();
   const {
     setValue,
     watch,
     formState: { errors },
   } = form;
+
+  const tinProfile = user?.tin_profile as ICompanyProfile;
 
   const { data: states, isLoading: isLoadingStates } = useQuery({
     queryKey: [QueryKeys.STATES],
@@ -96,16 +99,39 @@ const CompanyProfile = () => {
               sx={{ height: "5.6rem" }}
               label="Company Reg No"
               name="names"
+              value={tinProfile?.company_verification?.rc_number}
               disabled
             />
             <Input
               sx={{ height: "5.6rem" }}
               label="Company Name"
               name="names"
+              value={tinProfile?.name}
               disabled
             />
           </Box>
         </Box>
+        <Grid container columnSpacing={2}>
+          <Grid item xs={6}>
+            <Input
+              type="email"
+              label="Email Address"
+              name="email_address"
+              form={form}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <PhoneInput
+              value={form.watch("phone_number")}
+              onChange={(value) => form.setValue("phone_number", value)}
+              errorMessage={form.formState.errors.phone_number?.message}
+              label="Enter Number"
+              sx={{
+                height: "5.6rem",
+              }}
+            />
+          </Grid>
+        </Grid>
 
         <Grid container columnSpacing={2}>
           <Grid item xs={6}>
@@ -118,9 +144,9 @@ const CompanyProfile = () => {
               }
               errorMessage={errors?.place_of_business?.message}
             >
-              {Object.entries(BusinessType).map(([key, val]) => (
-                <MenuItem key={key} value={val}>
-                  {val}
+              {states?.map((state) => (
+                <MenuItem key={state.id} value={state.name}>
+                  {state.name}
                 </MenuItem>
               ))}
             </Select>

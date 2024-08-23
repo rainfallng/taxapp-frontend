@@ -18,8 +18,6 @@ const FileReturns = () => {
 
   useLoader(isLoading, "Loading file returns");
 
-  console.log({ data });
-
   return (
     <Box sx={{ p: "4rem" }}>
       <Typography
