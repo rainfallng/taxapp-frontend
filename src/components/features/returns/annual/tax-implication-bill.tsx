@@ -24,6 +24,8 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
     enabled: !!billId,
   });
 
+  const amountDue = Number(data?.amount ?? "0") - Number(data?.charge ?? "0")
+
   useLoader(isPending, "Please wait...")
 
   return (
@@ -246,7 +248,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
           mt: "5rem",
         }}
       >
-        Amount Due: ₦{Number(data?.amount ?? "0").toLocaleString()}
+        Amount Due: ₦{amountDue.toLocaleString()}
       </Typography>
       <Box
         sx={{
