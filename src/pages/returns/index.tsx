@@ -18,8 +18,6 @@ const FileReturns = () => {
 
   useLoader(isLoading, "Loading file returns");
 
-  console.log({ data });
-
   return (
     <Box sx={{ p: "4rem" }}>
       <Typography
@@ -40,7 +38,7 @@ const FileReturns = () => {
           {data?.data?.map((year) => (
             <Grid item xs={6} key={year}>
               <Box
-                onClick={() => navigate(`/app/returns/${year}`)}
+                onClick={() => navigate(`/app/returns/annual/${year}`)}
                 sx={{
                   height: "22.6rem",
                   border: "1px solid",

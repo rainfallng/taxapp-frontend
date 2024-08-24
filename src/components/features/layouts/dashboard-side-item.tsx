@@ -94,7 +94,7 @@ const SidebarItem = ({ item }: { item: ISidebar }) => {
                   borderTopRightRadius: "0.5rem",
                   borderBottomRightRadius: "0.5rem",
                   "&:hover": hoverStyle,
-                  ...(location.pathname === sub?.link ? activeStyle : {}),
+                  ...(location.pathname.startsWith(sub?.link) ? activeStyle : {}),
                 }}
               >
                 <span>{sub.title}</span>

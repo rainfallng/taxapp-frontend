@@ -24,8 +24,8 @@ export const SIDEBAR_LINKS: Record<string, ISidebar[]> = {
       icon: FileCopyOutlinedIcon,
       subs: [
         {
-          title: "Payments",
-          link: "/app/returns",
+          title: "PAYE",
+          link: "/app/returns/paye",
         },
         {
           title: "Withholding Tax Returns",
@@ -80,18 +80,10 @@ export const SIDEBAR_LINKS: Record<string, ISidebar[]> = {
       title: "File Returns",
       icon: FilePresentOutlinedIcon,
       subs: [
-        // {
-        //   title: "Returns",
-        //   link: "/app/returns",
-        // },
         {
           title: "Annual Returns",
           link: "/app/returns",
         },
-        // {
-        //   title: "Annual Return",
-        //   link: "/app/returns/annual",
-        // },
         {
           title: "Filing History",
           link: "/app/returns/history",

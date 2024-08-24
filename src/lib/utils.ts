@@ -63,12 +63,13 @@ export const handleFormErrors = <T extends FieldValues>(
 export const handleFormToastErrors = (
   error: AxiosError<{ [message: string]: string | string[] }>,
   message: string = ""
-) =>
-  error.response?.data?.non_field_errors?.[0] ||
-  (error.response?.data?.message as string) ||
-  typeof error.response?.data === "object"
-    ? Object.values(error.response?.data ?? {})?.[0]?.[0]
-    : message;
+) => {
+  const err = Object.values(error.response?.data ?? {})?.[0];
+  if (err) {
+    return Array.isArray(err) ? err?.[0] : err;
+  }
+  return message;
+};
 
 export const getValue = (value?: string | number) => value || "--";
 
@@ -79,3 +80,28 @@ export const toBase64 = (file: File) =>
     reader.onload = () => resolve(reader.result);
     reader.onerror = reject;
   });
+
+export const onDowload = async (url: string, filename: string) => {
+  const response = await fetch(url);
+  const blob = await response.blob();
+  const blobURL =
+    window.URL && window.URL.createObjectURL
+      ? window.URL.createObjectURL(blob)
+      : window.webkitURL.createObjectURL(blob);
+  const tempLink = document.createElement("a");
+  tempLink.style.display = "none";
+  tempLink.href = blobURL;
+  tempLink.setAttribute("download", filename);
+
+  if (typeof tempLink.download === "undefined") {
+    tempLink.setAttribute("target", "_blank");
+  }
+
+  document.body.appendChild(tempLink);
+  tempLink.click();
+
+  setTimeout(function () {
+    document.body.removeChild(tempLink);
+    window.URL.revokeObjectURL(blobURL);
+  }, 200);
+};

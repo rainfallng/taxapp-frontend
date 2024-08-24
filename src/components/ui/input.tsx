@@ -48,7 +48,7 @@ const Input = <T extends FieldValues>({
 
   const formValue = name ? form?.watch(name) : undefined;
   const formError = name
-    ? (form?.formState?.errors?.[name]?.message as string)
+    ? (form?.getFieldState?.(name)?.error?.message as string)
     : undefined;
 
   const value =

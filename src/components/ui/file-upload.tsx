@@ -1,14 +1,35 @@
 import { Box } from "@mui/material";
-import { FC, ReactNode } from "react";
+import { DetailedHTMLProps, FC, InputHTMLAttributes, ReactNode } from "react";
 
-interface IFileUpload {
+interface IFileUpload
+  extends DetailedHTMLProps<
+    InputHTMLAttributes<HTMLInputElement>,
+    HTMLInputElement
+  > {
   children?: ReactNode;
+  multiple?: boolean;
 }
 
-export const FileUpload: FC<IFileUpload> = ({ children }) => {
+export const FileUpload: FC<IFileUpload> = ({
+  children,
+  onChange,
+  multiple = true,
+}) => {
   return (
-    <Box component="label" id="file" display="block" width="100%" sx={{ cursor: "pointer" }}>
-      <input type="file" name="file" multiple style={{ display: "none" }} />
+    <Box
+      component="label"
+      id="file"
+      display="block"
+      width="100%"
+      sx={{ cursor: "pointer" }}
+    >
+      <input
+        type="file"
+        name="file"
+        multiple={multiple}
+        style={{ display: "none" }}
+        onChange={onChange}
+      />
       {children}
     </Box>
   );

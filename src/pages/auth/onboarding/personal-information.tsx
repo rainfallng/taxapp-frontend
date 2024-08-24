@@ -13,6 +13,7 @@ import {
   EmploymentStatusType,
   GenderType,
   IIndividualOnboarding,
+  ITINProfile,
   MaritalStatusType,
   TitleType,
 } from "@/types";
@@ -50,6 +51,8 @@ const Personalinformation = () => {
     formState: { errors },
     reset,
   } = form;
+
+  const tinProfile = user?.tin_profile as ITINProfile;
 
   const { data: states, isLoading: isLoadingStates } = useQuery({
     queryKey: [QueryKeys.STATES],
@@ -137,19 +140,19 @@ const Personalinformation = () => {
             <Input
               label="First Name"
               name="names"
-              value={user?.tin_profile?.first_name}
+              value={tinProfile?.first_name}
               disabled
             />
             <Input
               label="Surname"
               name="names"
-              value={user?.tin_profile?.last_name}
+              value={tinProfile?.last_name}
               disabled
             />
             <Input
               label="Other Names"
               name="names"
-              value={user?.tin_profile?.middle_name}
+              value={tinProfile?.middle_name}
               disabled
             />
           </Box>
@@ -177,7 +180,7 @@ const Personalinformation = () => {
             <DatePicker
               name="date_of_birth"
               format="YYYY-MM-DD"
-              value={dayjs(user?.tin_profile?.date_of_birth)}
+              value={dayjs(tinProfile?.date_of_birth)}
               disabled
             />
           </Box>

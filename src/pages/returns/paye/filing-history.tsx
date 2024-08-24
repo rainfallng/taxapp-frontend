@@ -18,7 +18,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useLoader } from "@/hooks/useLoader";
 import dayjs from "dayjs";
 
-const FilingHistory = () => {
+const CompanyFilingHistory = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const { api } = useAPI();
@@ -85,7 +85,7 @@ const FilingHistory = () => {
                   width: "15%",
                 }}
               >
-                Status
+                No of Employees
               </TableCell>
               <TableCell
                 sx={{
@@ -171,4 +171,4 @@ const FilingHistory = () => {
   );
 };
 
-export default FilingHistory;
+export default CompanyFilingHistory;

@@ -10,6 +10,11 @@ const companyInfoSchemaObject = yup.object({
   lcda: yup.string().required("LCDA is required"),
   tax_station: yup.string().required("Tax station is a required field"),
   business_type: yup.string().required("Business type is a required field"),
+  email_address: yup.string().email().required("Email is a required field"),
+  phone_number: yup
+    .string()
+    .max(15, "Phone number cannot be more than 15 characters")
+    .required("Phone number is a required field"),
   place_of_business: yup
     .string()
     .required("Place of business is a required field"),
@@ -24,6 +29,8 @@ const companyInfoDefaultValues = {
   tax_station: "",
   business_type: "",
   place_of_business: "",
+  email_address: "",
+  phone_number: ""
 };
 
 export const companyInfoSchema = resolveSchema({

@@ -8,12 +8,14 @@ import { useMutation } from "@tanstack/react-query";
 import { useAPI } from "@/hooks/useApi";
 import { handleFormToastErrors } from "@/lib/utils";
 import toast from "react-hot-toast";
+// import { useStore } from "@/store";
 
 const InitialOnboarding = () => {
   const [firstCheck, setFirstCheck] = useState<number | null>(null);
   const [tin, setTIN] = useState("");
   const navigate = useNavigate();
   const { api } = useAPI();
+  // const { user } = useStore()
 
   const onCheck = (value: number, level = 0) => {
     if (level === 0) {

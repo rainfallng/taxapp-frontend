@@ -3,7 +3,7 @@ import { useLoader } from "@/hooks/useLoader";
 import { QueryKeys } from "@/lib/queryKeys";
 import { getValue } from "@/lib/utils";
 import { useStore } from "@/store";
-import { EmploymentStatusType } from "@/types";
+import { EmploymentStatusType, ITINProfile } from "@/types";
 import { Grid, Typography, useTheme } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 
@@ -11,6 +11,8 @@ const DetailsMode = () => {
   const theme = useTheme();
   const user = useStore((s) => s.user);
   const { api } = useAPI();
+
+  const tinProfile = user?.tin_profile as ITINProfile;
 
   const { data: states, isLoading: isLoadingStates } = useQuery({
     queryKey: [QueryKeys.STATES],
@@ -39,7 +41,7 @@ const DetailsMode = () => {
             wordBreak: "break-all",
           }}
         >
-          {getValue(user?.tin_profile?.first_name)}
+          {getValue(tinProfile?.first_name)}
         </Typography>
       </Grid>
       <Grid item md={4}>
@@ -60,7 +62,7 @@ const DetailsMode = () => {
             wordBreak: "break-all",
           }}
         >
-          {getValue(user?.tin_profile?.last_name)}
+          {getValue(tinProfile?.last_name)}
         </Typography>
       </Grid>
       <Grid item md={4}>
@@ -81,7 +83,7 @@ const DetailsMode = () => {
             wordBreak: "break-all",
           }}
         >
-          {getValue(user?.tin_profile?.middle_name)}
+          {getValue(tinProfile?.middle_name)}
         </Typography>
       </Grid>
       <Grid item md={4}>
@@ -102,7 +104,7 @@ const DetailsMode = () => {
             wordBreak: "break-all",
           }}
         >
-          {getValue(user?.tin_profile?.title)}
+          {getValue(tinProfile?.title)}
         </Typography>
       </Grid>
       <Grid item md={4}>
@@ -123,7 +125,7 @@ const DetailsMode = () => {
             wordBreak: "break-all",
           }}
         >
-          {getValue(user?.tin_profile?.age)}
+          {getValue(tinProfile?.age)}
         </Typography>
       </Grid>
       <Grid item md={4}>
@@ -144,7 +146,7 @@ const DetailsMode = () => {
             wordBreak: "break-all",
           }}
         >
-          {getValue(user?.tin_profile?.date_of_birth)}
+          {getValue(tinProfile?.date_of_birth)}
         </Typography>
       </Grid>
       <Grid item md={4}>
@@ -165,7 +167,7 @@ const DetailsMode = () => {
             wordBreak: "break-all",
           }}
         >
-          {getValue(user?.tin_profile?.marital_status)}
+          {getValue(tinProfile?.marital_status)}
         </Typography>
       </Grid>
       <Grid item md={4}>
@@ -186,7 +188,7 @@ const DetailsMode = () => {
             wordBreak: "break-all",
           }}
         >
-          {getValue(user?.tin_profile?.phone_number_1)}
+          {getValue(tinProfile?.phone_number_1)}
         </Typography>
       </Grid>
       <Grid item md={4}>
@@ -207,7 +209,7 @@ const DetailsMode = () => {
             wordBreak: "break-all",
           }}
         >
-          {getValue(user?.tin_profile?.email_address ?? user?.email)}
+          {getValue(tinProfile?.email_address ?? user?.email)}
         </Typography>
       </Grid>
       <Grid item md={4}>
@@ -228,7 +230,7 @@ const DetailsMode = () => {
             wordBreak: "break-all",
           }}
         >
-          {getValue(user?.tin_profile?.nationality)}
+          {getValue(tinProfile?.nationality)}
         </Typography>
       </Grid>
       <Grid item md={4}>
@@ -250,9 +252,9 @@ const DetailsMode = () => {
           }}
         >
           {getValue(
-            user?.tin_profile?.employment_status
+            tinProfile?.employment_status
               ? (EmploymentStatusType as Record<string, string>)?.[
-                  user?.tin_profile?.employment_status as unknown as string
+                  tinProfile?.employment_status as unknown as string
                 ]
               : ""
           )}
@@ -276,7 +278,7 @@ const DetailsMode = () => {
             wordBreak: "break-all",
           }}
         >
-          {getValue(user?.tin_profile?.occupation)}
+          {getValue(tinProfile?.occupation)}
         </Typography>
       </Grid>
       <Grid item md={4}>
@@ -297,7 +299,7 @@ const DetailsMode = () => {
             wordBreak: "break-all",
           }}
         >
-          {getValue(user?.tin_profile?.gender)}
+          {getValue(tinProfile?.gender)}
         </Typography>
       </Grid>
       <Grid item md={4}>
@@ -319,9 +321,9 @@ const DetailsMode = () => {
           }}
         >
           {getValue(
-            user?.tin_profile?.state_of_origin
+            tinProfile?.state_of_origin
               ? states?.find(
-                  (s) => s.id === Number(user?.tin_profile?.state_of_origin)
+                  (s) => s.id === Number(tinProfile?.state_of_origin)
                 )?.name
               : ""
           )}

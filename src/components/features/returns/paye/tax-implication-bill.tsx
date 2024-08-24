@@ -3,8 +3,8 @@ import { useAPI } from "@/hooks/useApi";
 import { useLoader } from "@/hooks/useLoader";
 import { QueryKeys } from "@/lib/queryKeys";
 import { useStore } from "@/store";
-import { ITINProfile } from "@/types";
-import { Box, Grid, Typography, useTheme } from "@mui/material";
+import { ICompanyProfile } from "@/types";
+import { Box, capitalize, Grid, Typography, useTheme } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useNavigate, useParams } from "react-router-dom";
@@ -14,9 +14,9 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
   const navigate = useNavigate();
   const { api } = useAPI();
   const { user } = useStore();
-  const { year = "" } = useParams();
+  const { month = "" } = useParams();
 
-  const tinProfile = user?.tin_profile as ITINProfile;
+  const tinProfile = user?.tin_profile as ICompanyProfile;
 
   const { data, isPending } = useQuery({
     queryKey: [QueryKeys.BILL, billId],
@@ -76,7 +76,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            {data?.icode}
+            {data?.reference}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -116,7 +116,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            {user.tin_profile?.tin ?? '--'}
+            {tinProfile?.tin ?? '--'}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -136,7 +136,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            {data?.tax_collector}
+            LIRS
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -148,7 +148,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               mb: "0.8rem",
             }}
           >
-            Tax Year in View
+            Tax Month in View
           </Typography>
           <Typography
             sx={{
@@ -156,7 +156,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            {year}
+            {capitalize(month)}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -176,7 +176,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            {tinProfile?.first_name} {tinProfile?.last_name}
+            {tinProfile?.name}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -216,7 +216,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            {tinProfile?.phone_number_1 || user.phone}
+            {tinProfile?.phone_number}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -236,7 +236,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            {tinProfile?.email_address || user.email}
+            {tinProfile?.email || user.email}
           </Typography>
         </Grid>
       </Grid>
@@ -265,7 +265,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
           rounded
           disabled={isPending}
           sx={{ width: "50%" }}
-          onClick={() => navigate("/app/returns/history")}
+          onClick={() => navigate("/app/returns/paye")}
         >
           Proceed To Payment
         </Button>

@@ -12,6 +12,7 @@ import { useStore } from "@/store";
 import { getValue } from "@/lib/utils";
 import { UseFormReturn } from "react-hook-form";
 import { IIndividualProfile } from "@/types/form";
+import { ITINProfile } from "@/types";
 
 const AddressInfo: FC<{
   editMode: boolean;
@@ -20,6 +21,9 @@ const AddressInfo: FC<{
 }> = ({ editMode, setEditMode, form }) => {
   const user = useStore((s) => s.user);
   const { api } = useAPI();
+
+  const tinProfile = user?.tin_profile as ITINProfile;
+
   const { data: states, isLoading: isLoadingStates } = useQuery({
     queryKey: [QueryKeys.STATES],
     queryFn: api.getStates,
@@ -95,7 +99,7 @@ const AddressInfo: FC<{
                   fontWeight: 500,
                 }}
               >
-                {getValue(user?.tin_profile?.house_number)}
+                {getValue(tinProfile?.house_number)}
               </Typography>
             </>
           )}
@@ -121,7 +125,7 @@ const AddressInfo: FC<{
                   fontWeight: 500,
                 }}
               >
-                {getValue(user?.tin_profile?.street)}
+                {getValue(tinProfile?.street)}
               </Typography>
             </>
           )}
@@ -161,10 +165,10 @@ const AddressInfo: FC<{
                 }}
               >
                 {getValue(
-                  user?.tin_profile?.state_of_residence
+                  tinProfile?.state_of_residence
                     ? states?.find(
                         (s) =>
-                          s.id === Number(user?.tin_profile?.state_of_residence)
+                          s.id === Number(tinProfile?.state_of_residence)
                       )?.name
                     : ""
                 )}
@@ -207,10 +211,10 @@ const AddressInfo: FC<{
                 }}
               >
                 {getValue(
-                  user?.tin_profile?.lga_of_residence
+                  tinProfile?.lga_of_residence
                     ? lgas?.find(
                         (l) =>
-                          l.id === Number(user?.tin_profile?.lga_of_residence)
+                          l.id === Number(tinProfile?.lga_of_residence)
                       )?.name
                     : ""
                 )}
@@ -241,7 +245,7 @@ const AddressInfo: FC<{
                   wordBreak: "break-all",
                 }}
               >
-                {getValue(user?.tin_profile?.lcda)}
+                {getValue(tinProfile?.lcda)}
               </Typography>
             </>
           )}
