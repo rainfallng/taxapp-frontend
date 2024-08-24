@@ -4,7 +4,7 @@ import { useLoader } from "@/hooks/useLoader";
 import { QueryKeys } from "@/lib/queryKeys";
 import { useStore } from "@/store";
 import { ICompanyProfile } from "@/types";
-import { Box, Grid, Typography, useTheme } from "@mui/material";
+import { Box, capitalize, Grid, Typography, useTheme } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useNavigate, useParams } from "react-router-dom";
@@ -20,7 +20,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
 
   const { data, isPending } = useQuery({
     queryKey: [QueryKeys.BILL, billId],
-    queryFn: () => api.getIndividualBill(billId),
+    queryFn: () => api.getBillInvoice(billId),
     enabled: !!billId,
   });
 
@@ -74,7 +74,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            {data?.icode}
+            {data?.reference}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -114,7 +114,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            {user.tin_profile?.tin ?? '--'}
+            {tinProfile?.tin ?? '--'}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -154,7 +154,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            {month}
+            {capitalize(month)}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -214,7 +214,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            {user.phone}
+            {tinProfile?.phone_number}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -234,7 +234,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            {user.email}
+            {tinProfile?.email || user.email}
           </Typography>
         </Grid>
       </Grid>
@@ -263,7 +263,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
           rounded
           disabled={isPending}
           sx={{ width: "50%" }}
-          onClick={() => navigate("/app/returns/history")}
+          onClick={() => navigate("/app/returns/paye")}
         >
           Proceed To Payment
         </Button>

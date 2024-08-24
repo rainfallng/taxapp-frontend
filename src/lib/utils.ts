@@ -80,3 +80,28 @@ export const toBase64 = (file: File) =>
     reader.onload = () => resolve(reader.result);
     reader.onerror = reject;
   });
+
+export const onDowload = async (url: string, filename: string) => {
+  const response = await fetch(url);
+  const blob = await response.blob();
+  const blobURL =
+    window.URL && window.URL.createObjectURL
+      ? window.URL.createObjectURL(blob)
+      : window.webkitURL.createObjectURL(blob);
+  const tempLink = document.createElement("a");
+  tempLink.style.display = "none";
+  tempLink.href = blobURL;
+  tempLink.setAttribute("download", filename);
+
+  if (typeof tempLink.download === "undefined") {
+    tempLink.setAttribute("target", "_blank");
+  }
+
+  document.body.appendChild(tempLink);
+  tempLink.click();
+
+  setTimeout(function () {
+    document.body.removeChild(tempLink);
+    window.URL.revokeObjectURL(blobURL);
+  }, 200);
+};

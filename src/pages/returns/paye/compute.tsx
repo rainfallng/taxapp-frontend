@@ -10,16 +10,17 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const ComputePayeReturns = () => {
   const navigate = useNavigate();
+  const { month = "" } = useParams();
   const [isSingle, setIsSingle] = useState<boolean | null>(null);
 
   return (
     <Box sx={{ py: "4.6rem", px: "3.2rem" }}>
       <GoBack onClick={() => navigate("/app/returns/paye")}>
-        PAYE Returns 2023
+        PAYE Returns - {month}
       </GoBack>
       <Box sx={{ maxWidth: "84.4rem", mx: "auto", mt: "2rem" }}>
         <Typography
@@ -32,7 +33,7 @@ const ComputePayeReturns = () => {
           How many employees do you intend filing for?
         </Typography>
         <RadioGroup
-          sx={{ flexDirection: "row", mt: "2.5rem", gap: "4rem" }}
+          sx={{ flexDirection: "row", mt: "2.5rem", mb: "4rem", gap: "4rem" }}
           name="is_public_servant"
           value={isSingle}
         >
@@ -53,9 +54,6 @@ const ComputePayeReturns = () => {
             label="Multiple"
           />
         </RadioGroup>
-        {isSingle !== null && (
-          <Box sx={{ borderTop: "1px solid #D0D0D0", mt: "4rem" }} />
-        )}
         {isSingle && <Single />}
         {isSingle === false && <Multiple />}
       </Box>

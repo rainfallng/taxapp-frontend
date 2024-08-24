@@ -45,7 +45,7 @@ const IncomeStage: FC<{ setStage: (stage: IAnnualReturnStage) => void }> = ({ se
       }),
     onSuccess(data) {
       setStage("accomodation")
-      navigate(`/app/returns/${year}?id=${data?.data?.id}&billId=${data?.data?.bill}`)
+      navigate(`/app/returns/annual/${year}?id=${data?.data?.id}&billId=${data?.data?.bill}`)
     },
   });
 

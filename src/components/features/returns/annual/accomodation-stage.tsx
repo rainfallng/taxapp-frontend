@@ -36,7 +36,7 @@ const AccomodationStage: FC<{
     mutationFn: (variables: IIndividualAnnualAccomodation) =>
       api.postIndividualAccomodation(incomeId, variables),
     onSuccess() {
-      navigate(`/app/returns/${year}?id=${incomeId}&billId=${billId}&showBill=true`)
+      navigate(`/app/returns/annual/${year}?id=${incomeId}&billId=${billId}&showBill=true`)
     },
   });
 

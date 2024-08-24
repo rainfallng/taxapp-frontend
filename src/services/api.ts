@@ -7,8 +7,18 @@ import {
   IRegister,
   IState,
 } from "@/types";
-import { IIndividualAnnualAccomodation, IIndividualAnnualIncome, IIndividualOnboarding, IIndividualReturn, IVerifyCAC } from "@/types/form";
-import { BillList } from "@/types/returns";
+import {
+  IIndividualAnnualAccomodation,
+  IIndividualAnnualIncome,
+  IIndividualOnboarding,
+  IIndividualReturn,
+  IVerifyCAC,
+} from "@/types/form";
+import {
+  AddCompanyStaffReturn,
+  BillList,
+  CompanyReturnsList,
+} from "@/types/returns";
 import axios, { AxiosInstance } from "axios";
 
 export class APIRequest {
@@ -143,7 +153,7 @@ export class APIRequest {
 
     return data;
   };
-  
+
   getIndividual = async () => {
     const { data } = await axios.get(`/api/v1/tin/individual/profile/`, {
       headers: {
@@ -155,11 +165,15 @@ export class APIRequest {
   };
 
   updateIndividual = async (body: Partial<IIndividualProfileOnboarding>) => {
-    const { data } = await axios.patch(`/api/v1/tin/individual/profile/`, body, {
-      headers: {
-        Authorization: `JWT ${this.accessToken}`,
-      },
-    });
+    const { data } = await axios.patch(
+      `/api/v1/tin/individual/profile/`,
+      body,
+      {
+        headers: {
+          Authorization: `JWT ${this.accessToken}`,
+        },
+      }
+    );
 
     return data;
   };
@@ -175,11 +189,15 @@ export class APIRequest {
   };
 
   verifyTIN = async (tin: string) => {
-    const { data } = await axios.post(`/api/v1/tin/individual/verify-tin/`, { tin }, {
-      headers: {
-        Authorization: `JWT ${this.accessToken}`,
-      },
-    });
+    const { data } = await axios.post(
+      `/api/v1/tin/individual/verify-tin/`,
+      { tin },
+      {
+        headers: {
+          Authorization: `JWT ${this.accessToken}`,
+        },
+      }
+    );
 
     return data;
   };
@@ -193,7 +211,7 @@ export class APIRequest {
 
     return data;
   };
-  
+
   getIndividualReturnYears = async () => {
     const { data } = await axios.get(`/api/v1/returns/individual/years/`, {
       headers: {
@@ -213,32 +231,41 @@ export class APIRequest {
 
     return data;
   };
-  
 
   postIndividualIncome = async (body: IIndividualAnnualIncome) => {
-    const { statement_of_income, ...rest } = body
-    console.log(statement_of_income)
-    const { data } = await axios.post(`/api/v1/returns/individual/income/`, rest, {
-      headers: {
-        Authorization: `JWT ${this.accessToken}`,
-      },
-    });
+    const { statement_of_income, ...rest } = body;
+    console.log(statement_of_income);
+    const { data } = await axios.post(
+      `/api/v1/returns/individual/income/`,
+      rest,
+      {
+        headers: {
+          Authorization: `JWT ${this.accessToken}`,
+        },
+      }
+    );
 
     return data;
   };
-  
 
-  postIndividualAccomodation = async (incomeId: string, body: IIndividualAnnualAccomodation) => {
-    const { data } = await axios.post(`/api/v1/returns/individual/${incomeId}/accommodation/`, body, {
-      headers: {
-        Authorization: `JWT ${this.accessToken}`,
-      },
-    });
+  postIndividualAccomodation = async (
+    incomeId: string,
+    body: IIndividualAnnualAccomodation
+  ) => {
+    const { data } = await axios.post(
+      `/api/v1/returns/individual/${incomeId}/accommodation/`,
+      body,
+      {
+        headers: {
+          Authorization: `JWT ${this.accessToken}`,
+        },
+      }
+    );
 
     return data;
   };
-  
-  getIndividualBill = async (billId: string) => {
+
+  getBillInvoice = async (billId: string) => {
     const { data } = await axios.get(`/api/v1/invoices/bills/${billId}/`, {
       headers: {
         Authorization: `JWT ${this.accessToken}`,
@@ -247,7 +274,7 @@ export class APIRequest {
 
     return data;
   };
-  
+
   getIndividualBillList = async () => {
     const { data } = await axios.get(`/api/v1/invoices/bills/`, {
       headers: {
@@ -256,5 +283,56 @@ export class APIRequest {
     });
 
     return data as BillList;
+  };
+
+  getCompanyReturns = async (params?: { year: string }) => {
+    const { data } = await axios.get(`/api/v1/returns/company/`, {
+      params,
+      headers: {
+        Authorization: `JWT ${this.accessToken}`,
+      },
+    });
+
+    return data as CompanyReturnsList;
+  };
+
+  postCompanyReturns = async (variables: {
+    returns: AddCompanyStaffReturn[];
+  }) => {
+    const { data } = await axios.post(
+      `/api/v1/returns/company/staff/create/`,
+      variables,
+      {
+        headers: {
+          Authorization: `JWT ${this.accessToken}`,
+        },
+      }
+    );
+
+    return data;
+  };
+
+  getCompanyStaffTemplate = async () => {
+    const { data } = await axios.get(`/api/v1/returns/company/staff/template/`, {
+      headers: {
+        Authorization: `JWT ${this.accessToken}`,
+      },
+    });
+
+    return data
+  }
+
+  uploadCompanyReturns = async (variables: FormData) => {
+    const { data } = await axios.post(
+      `/api/v1/returns/company/staff/upload/`,
+      variables,
+      {
+        headers: {
+          Authorization: `JWT ${this.accessToken}`,
+        },
+      }
+    );
+
+    return data;
   };
 }

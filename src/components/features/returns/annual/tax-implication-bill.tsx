@@ -20,7 +20,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
 
   const { data, isPending } = useQuery({
     queryKey: [QueryKeys.BILL, billId],
-    queryFn: () => api.getIndividualBill(billId),
+    queryFn: () => api.getBillInvoice(billId),
     enabled: !!billId,
   });
 
@@ -134,7 +134,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            LIRS
+            {data?.tax_collector}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -214,7 +214,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            {user.phone}
+            {tinProfile?.phone_number_1 || user.phone}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -234,7 +234,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            {user.email}
+            {tinProfile?.email_address || user.email}
           </Typography>
         </Grid>
       </Grid>

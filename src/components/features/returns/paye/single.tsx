@@ -1,252 +1,54 @@
 import Button from "@/components/ui/button";
-import Input from "@/components/ui/input";
-import Select, { MenuItem } from "@/components/ui/select";
 import { useAPI } from "@/hooks/useApi";
 import { useLoader } from "@/hooks/useLoader";
 import { QueryKeys } from "@/lib/queryKeys";
-import { Box, FormLabel, Grid, useTheme } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
+import { Box } from "@mui/material";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { payeSchema } from "@/lib/schemas/returns/company/paye";
+import StaffForm from "./staff-form";
+import { handleFormErrors, handleFormToastErrors } from "@/lib/utils";
+import { AxiosError } from "axios";
+import { AddCompanyStaffReturn } from "@/types/returns";
+import toast from "react-hot-toast";
 
 const Single = () => {
-  const form = useForm();
-  const theme = useTheme();
+  const form = useForm(payeSchema);
   const navigate = useNavigate();
+  const { month = '' } = useParams()
   const { api } = useAPI();
   const { data: states, isLoading: isLoadingStates } = useQuery({
     queryKey: [QueryKeys.STATES],
     queryFn: api.getStates,
   });
 
-  useLoader(isLoadingStates, "Please wait...");
+  const { isPending, mutateAsync } = useMutation({
+    mutationFn: api.postCompanyReturns,
+    onSuccess(data) {
+      navigate(`/app/returns/paye/${month}/bill?billId=${data?.data?.bill}`);
+    },
+    onError: (error: AxiosError<{ [message: string]: string | string[] }>) =>
+      handleFormErrors(error, form.setError),
+  });
 
-  const onSubmit = () => {};
+  const onSubmit = (values: { returns: AddCompanyStaffReturn[] }) => {
+    toast.promise(mutateAsync(values), {
+      success: "Successful",
+      loading: "Submitting...",
+      error: (error) => handleFormToastErrors(error, "Failed"),
+    });
+  };
+
+  useLoader(isLoadingStates, "Please wait...");
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
-      <Grid
-        container
-        rowSpacing={3.2}
-        columnSpacing={2.4}
-        sx={{ mt: "2.4rem" }}
-      >
-        <Grid item xs={12} sm={6}>
-          <FormLabel
-            sx={{
-              fontSize: "2rem",
-              display: "block",
-              fontWeight: 500,
-              mb: "1.6rem",
-              color: theme.palette.grey[800],
-            }}
-          >
-            Payer ID/Tax Identification Number (TIN)
-          </FormLabel>
-          <Input name="tin" label="Enter Number" form={form} isNumber />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <FormLabel
-            sx={{
-              fontSize: "2rem",
-              display: "block",
-              fontWeight: 500,
-              mb: "1.6rem",
-              color: theme.palette.grey[800],
-            }}
-          >
-            Month in View
-          </FormLabel>
-          <Select
-            sx={{ height: "5.6rem" }}
-            placeholder="Select month"
-            value={form.watch("month_in_view")}
-            {...form.register("month_in_view")}
-            // errorMessage={form.formState.errors.marital_status?.message}
-          >
-            {["January", "February"].map((value) => (
-              <MenuItem key={value} value={value}>
-                {value}
-              </MenuItem>
-            ))}
-          </Select>
-        </Grid>
-
-        <Grid item xs={12} sm={6}>
-          <FormLabel
-            sx={{
-              fontSize: "2rem",
-              display: "block",
-              fontWeight: 500,
-              mb: "1.6rem",
-              color: theme.palette.grey[800],
-            }}
-          >
-            State of Residence
-          </FormLabel>
-          <Select
-            sx={{ height: "5.6rem" }}
-            placeholder="Select state"
-            value={form.watch("state_of_residence")}
-            {...form.register("state_of_residence")}
-            //   errorMessage={form.formState.errors.state_of_residence?.message}
-          >
-            {states?.map((state) => (
-              <MenuItem key={state.id} value={state.id}>
-                {state.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <FormLabel
-            sx={{
-              fontSize: "2rem",
-              display: "block",
-              fontWeight: 500,
-              mb: "1.6rem",
-              color: theme.palette.grey[800],
-            }}
-          >
-            Basic
-          </FormLabel>
-          <Input name="basic" label="Enter Amount" form={form} isNumber />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <FormLabel
-            sx={{
-              fontSize: "2rem",
-              display: "block",
-              fontWeight: 500,
-              mb: "1.6rem",
-              color: theme.palette.grey[800],
-            }}
-          >
-            Transport
-          </FormLabel>
-          <Input name="transport" label="Enter Amount" form={form} isNumber />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <FormLabel
-            sx={{
-              fontSize: "2rem",
-              display: "block",
-              fontWeight: 500,
-              mb: "1.6rem",
-              color: theme.palette.grey[800],
-            }}
-          >
-            Housing
-          </FormLabel>
-          <Input name="housing" label="Enter Amount" form={form} isNumber />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <FormLabel
-            sx={{
-              fontSize: "2rem",
-              display: "block",
-              fontWeight: 500,
-              mb: "1.6rem",
-              color: theme.palette.grey[800],
-            }}
-          >
-            Bonus
-          </FormLabel>
-          <Input name="bonus" label="Enter Amount" form={form} isNumber />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <FormLabel
-            sx={{
-              fontSize: "2rem",
-              display: "block",
-              fontWeight: 500,
-              mb: "1.6rem",
-              color: theme.palette.grey[800],
-            }}
-          >
-            Others
-          </FormLabel>
-          <Input name="others" label="Enter Amount" form={form} isNumber />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <FormLabel
-            sx={{
-              fontSize: "2rem",
-              display: "block",
-              fontWeight: 500,
-              mb: "1.6rem",
-              color: theme.palette.grey[800],
-            }}
-          >
-            Gross Emolument for Calculation of CRA
-          </FormLabel>
-          <Input
-            name="cra_gross_emolument"
-            label="Enter Amount"
-            form={form}
-            isNumber
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <FormLabel
-            sx={{
-              fontSize: "2rem",
-              display: "block",
-              fontWeight: 500,
-              mb: "1.6rem",
-              color: theme.palette.grey[800],
-            }}
-          >
-            Gross Emolument
-          </FormLabel>
-          <Input
-            name="gross_emolument"
-            label="Enter Amount"
-            form={form}
-            isNumber
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <FormLabel
-            sx={{
-              fontSize: "2rem",
-              display: "block",
-              fontWeight: 500,
-              mb: "1.6rem",
-              color: theme.palette.grey[800],
-            }}
-          >
-            Chargable Income
-          </FormLabel>
-          <Input
-            name="chargable_income"
-            label="Enter Amount"
-            form={form}
-            isNumber
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <FormLabel
-            sx={{
-              fontSize: "2rem",
-              display: "block",
-              fontWeight: 500,
-              mb: "1.6rem",
-              color: theme.palette.grey[800],
-            }}
-          >
-            Consolidated Relief
-          </FormLabel>
-          <Input
-            name="consolidated_relief"
-            label="Enter Amount"
-            form={form}
-            isNumber
-          />
-        </Grid>
-      </Grid>
+      {form.watch("returns").map((_, key) => (
+        <StaffForm key={key} form={form} index={key} states={states} />
+      ))}
       <Box
         sx={{
           display: "flex",
@@ -271,7 +73,7 @@ const Single = () => {
         </Button>
         <Button
           type="submit"
-          //   disabled={!file}
+          disabled={isPending}
           sx={{
             fontSize: "1.8rem",
             fontWeight: 500,

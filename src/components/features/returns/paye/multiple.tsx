@@ -3,18 +3,49 @@ import { Box, Typography } from "@mui/material";
 import UploadOutlinedIcon from "@mui/icons-material/UploadOutlined";
 import Button from "@/components/ui/button";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useState } from "react";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import { handleFormToastErrors, onDowload } from "@/lib/utils";
+import { useAPI } from "@/hooks/useApi";
+import toast from "react-hot-toast";
+import { useMutation } from "@tanstack/react-query";
 
 const Multiple = () => {
   const navigate = useNavigate();
   const [file, setFile] = useState<File | null | undefined>(null);
+  const { api } = useAPI();
+  const { month = '' } = useParams()
+
+  const { isPending, mutateAsync } = useMutation({
+    mutationFn: api.uploadCompanyReturns,
+    onSuccess(data) {
+      navigate(`/app/returns/paye/${month}/bill?billId=${data?.data?.bill}`);
+    }
+  });
+
+  const download = async () => {
+    onDowload(
+      "/assets/docs/company_staff_return.csv",
+      "company_staff_return.csv"
+    );
+  };
+
+  const onUpload = () => {
+    if (!file) return;
+    const formData = new FormData();
+    formData.append("file", file);
+    toast.promise(mutateAsync(formData), {
+      success: "Successful",
+      loading: "Submitting...",
+      error: (error) => handleFormToastErrors(error, "Failed"),
+    });
+  };
 
   return (
-    <Box sx={{ py: "4rem" }}>
+    <Box sx={{ py: "4rem", borderTop: "1px solid #D0D0D0" }}>
       <Typography
         sx={{
           color: (theme) => theme.palette.grey[800],
@@ -25,7 +56,7 @@ const Multiple = () => {
         Get the returns template below for multiple entries
       </Typography>
       <Box sx={{ display: "flex", gap: "1.6rem" }}>
-        <Button fullWidth rounded sx={{ maxWidth: "21rem" }}>
+        <Button onClick={download} fullWidth rounded sx={{ maxWidth: "21rem" }}>
           <DownloadOutlinedIcon sx={{ mr: "0.8rem" }} /> Download Tax Form
         </Button>
         {file ? (
@@ -115,8 +146,8 @@ const Multiple = () => {
           Back
         </Button>
         <Button
-          type="submit"
-          disabled={!file}
+          disabled={!file || isPending}
+          onClick={onUpload}
           sx={{
             fontSize: "1.8rem",
             fontWeight: 500,

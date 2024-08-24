@@ -11,7 +11,7 @@ import { clearLS } from "@/lib/utils";
 import { useStore } from "@/store";
 import Search from "../ui/search";
 import SidebarItem from "../features/layouts/dashboard-side-item";
-import { ITINProfile } from "@/types";
+import { ICompanyProfile, ITINProfile, UserType } from "@/types";
 
 const DashboardLayout = () => {
   const navigate = useNavigate();
@@ -19,6 +19,12 @@ const DashboardLayout = () => {
   // const { pathname } = useLocation();
 
   const tinProfile = user?.tin_profile as ITINProfile;
+  const companyProfile = user?.tin_profile as ICompanyProfile;
+
+  const userName =
+    user?.user_type === UserType.COMPANY
+      ? companyProfile?.name
+      : `${tinProfile?.first_name} ${tinProfile?.last_name}`;
 
   const logout = () => {
     clearLS();
@@ -65,6 +71,7 @@ const DashboardLayout = () => {
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
+              overflow: "auto",
             }}
           >
             <Box
@@ -162,7 +169,7 @@ const DashboardLayout = () => {
                     color: (theme) => theme.palette.grey[800],
                   }}
                 >
-                  {tinProfile?.first_name} {tinProfile?.last_name}
+                  {userName}
                 </Typography>
               </Box>
             </Box>
