@@ -17,19 +17,22 @@ import { useQuery } from "@tanstack/react-query";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import Button from "@/components/ui/button";
+import dayjs from "dayjs";
+import { MONTH_INDEX_MAPPER } from "@/lib/constants";
 
 const PayeReturns = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { api } = useAPI();
   const [year, setYear] = useState("2024");
+  const month = dayjs().month();
+  const prevMonth = month === 0 ? 11 : month - 1;
 
   const { data: returns, isLoading: isLoadingReturns } = useQuery({
     queryKey: [QueryKeys.COMPANY_RETURNS, year],
     queryFn: () => api.getCompanyReturns({ year }),
   });
-
-  console.log({ returns });
 
   useLoader(isLoadingReturns, "Fetching returns...");
 
@@ -69,6 +72,12 @@ const PayeReturns = () => {
             <option value="2021">2021</option>
           </Box>
         </Box>
+        <Button
+          rounded
+          onClick={() => navigate(`/app/returns/paye/${MONTH_INDEX_MAPPER[prevMonth]}`)}
+        >
+          File Return
+        </Button>
       </Box>
       <Box>
         <TableContainer>

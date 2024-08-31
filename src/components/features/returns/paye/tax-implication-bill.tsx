@@ -1,12 +1,15 @@
 import Button from "@/components/ui/button";
+import GoBack from "@/components/ui/go-back";
 import { useAPI } from "@/hooks/useApi";
 import { useLoader } from "@/hooks/useLoader";
 import { QueryKeys } from "@/lib/queryKeys";
+import { handleFormToastErrors } from "@/lib/utils";
 import { useStore } from "@/store";
 import { ICompanyProfile } from "@/types";
 import { Box, capitalize, Grid, Typography, useTheme } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
+import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 
 const TaxImplicationBill = ({ billId }: { billId: string }) => {
@@ -24,20 +27,38 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
     enabled: !!billId,
   });
 
-  const amountDue = Number(data?.amount ?? "0") - Number(data?.charge ?? "0")
+  const { mutateAsync: initiatePayment, isPending: paymentInitiating } =
+    useMutation({
+      mutationFn: api.initiatePayment,
+      onSuccess(data) {
+        window.open(data?.data?.authorization_url)
+      },
+    });
 
-  useLoader(isPending, "Please wait...")
+  const onInitiatePayment = () => {
+    toast.promise(initiatePayment(Number(billId)), {
+      success: "Payment initiated",
+      loading: "Please wait...",
+      error: (error) => handleFormToastErrors(error, "Failed"),
+    });
+  };
+
+  const amountDue = Number(data?.amount ?? "0") - Number(data?.charge ?? "0");
+
+  useLoader(isPending, "Please wait...");
 
   return (
     <Box sx={{ p: "4rem" }}>
-      <Typography
-        component="h3"
-        sx={{ fontSize: "2.4rem", fontWeight: 600, mb: "7.5rem" }}
-      >
-        Tax Implication Bill
-      </Typography>
+      <GoBack onClick={() => navigate("/app/returns/paye")}>
+        <Typography
+          component="span"
+          sx={{ fontSize: "2.4rem", fontWeight: 600 }}
+        >
+          Tax Implication Bill
+        </Typography>
+      </GoBack>
       <Box
-        sx={{ display: "flex", justifyContent: "space-between", mb: "4.3rem" }}
+        sx={{ display: "flex", justifyContent: "space-between", mb: "4.3rem", mt: "7rem" }}
       >
         <Typography
           sx={{
@@ -96,7 +117,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            {dayjs(data?.created).format('DD/MM/YYYY')}
+            {dayjs(data?.created).format("DD/MM/YYYY")}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -116,7 +137,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            {tinProfile?.tin ?? '--'}
+            {tinProfile?.tin ?? "--"}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -136,7 +157,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            LIRS
+            {data?.tax_collector_name ?? '--'}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -176,7 +197,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            {tinProfile?.name}
+            {tinProfile?.name ?? '--'}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -216,7 +237,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            {tinProfile?.phone_number}
+            {tinProfile?.phone_number ?? '--'}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -263,9 +284,9 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
         </Button>
         <Button
           rounded
-          disabled={isPending}
+          disabled={isPending || paymentInitiating}
           sx={{ width: "50%" }}
-          onClick={() => navigate("/app/returns/paye")}
+          onClick={onInitiatePayment}
         >
           Proceed To Payment
         </Button>

@@ -3,31 +3,22 @@ import Protected from "@/components/layouts/protected";
 import { useAPI } from "@/hooks/useApi";
 import { getLS, removeLS } from "@/lib/utils";
 import { useStore } from "@/store";
-import { UserType } from "@/types";
+import { IVerifyCAC } from "@/types/form";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
-const VerifyTIN = () => {
+const VerifyCompany = () => {
   const { user, setUser } = useStore();
   const { api } = useAPI();
   const navigate = useNavigate();
-
-  const tin = (getLS("tin") as { tin?: string })?.tin ?? "";
-
-  const verifyTINService =
-    user.user_type === UserType.COMPANY ? api.verifyCompanyTIN : api.verifyTIN;
-
-  const confirmTINService =
-    user.user_type === UserType.COMPANY
-      ? api.confirmCompanyOTP
-      : api.confirmOTP;
+  const companyInfo = getLS("company-info") as IVerifyCAC;
 
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: confirmTINService,
+    mutationFn: api.confirmCAC,
     onSuccess(data) {
-      removeLS("tin");
+      removeLS("company-info");
       setUser({ tin_profile: data?.data });
-      navigate("/auth/onboarding/success");
+      navigate("/auth/onboarding/company-profile");
     },
   });
 
@@ -35,15 +26,14 @@ const VerifyTIN = () => {
     <Protected>
       <VerifyCode
         initiateOnLoad={false}
-        shortText="Tax Identification Number (TIN)"
-        phone={user.phone}
+        shortText="company"
         email={user.email}
         verifying={isPending}
-        verify={async (code) => mutateAsync({ otp: code, tin })}
-        send={() => verifyTINService(tin)}
+        verify={async (code) => mutateAsync({ otp: code, ...companyInfo })}
+        send={() => api.verifyCAC(companyInfo)}
       />
     </Protected>
   );
 };
 
-export default VerifyTIN;
+export default VerifyCompany;

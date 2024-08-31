@@ -99,7 +99,7 @@ const CompanyProfile = () => {
               sx={{ height: "5.6rem" }}
               label="Company Reg No"
               name="names"
-              value={tinProfile?.company_verification?.rc_number}
+              value={tinProfile?.company_verification?.id_number}
               disabled
             />
             <Input

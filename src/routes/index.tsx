@@ -38,6 +38,7 @@ import FilingHistory from "@/pages/returns/filing-history";
 import PayeReturns from "@/pages/returns/paye";
 import ComputePayeReturns from "@/pages/returns/paye/compute";
 import PayeBill from "@/pages/returns/paye/bill";
+import VerifyCompany from "@/pages/auth/onboarding/verify-company";
 
 const AppRoutes = () => {
   return (
@@ -60,7 +61,10 @@ const AppRoutes = () => {
           <Route path="recaptcha" element={<Recaptcha />} />
           <Route path="onboarding" element={<Outlet />}>
             <Route path="identification" element={<Identification />} />
-            <Route path="company-info" element={<CompanyIdentification />} />
+            <Route path="company-info" element={<Outlet />}>
+              <Route index element={<CompanyIdentification />} />
+              <Route path="verify" element={<VerifyCompany />} />
+            </Route>
             <Route path="personal-info" element={<Personalinformation />} />
             <Route path="company-profile" element={<CompanyProfile />} />
             <Route path="tin" element={<Outlet />}>

@@ -6,8 +6,12 @@ import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
 import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined";
 import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
 import BusinessCenterOutlinedIcon from "@mui/icons-material/BusinessCenterOutlined";
+import { useStore } from "@/store";
+import { UserType } from "@/types";
 
 const QuickMenu = () => {
+  const { user } = useStore();
+
   return (
     <Grid
       container
@@ -21,7 +25,9 @@ const QuickMenu = () => {
     >
       <Grid item xs={4}>
         <QuickMenuCard
-          link="/app/returns"
+          link={`/app/returns${
+            user.user_type === UserType.COMPANY ? "/paye" : ""
+          }`}
           text="File Returns"
           icon={
             <FileCopyOutlinedIcon
