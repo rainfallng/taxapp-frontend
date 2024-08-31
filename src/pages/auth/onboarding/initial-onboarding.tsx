@@ -6,16 +6,20 @@ import { useNavigate } from "react-router-dom";
 import Input from "@/components/ui/input";
 import { useMutation } from "@tanstack/react-query";
 import { useAPI } from "@/hooks/useApi";
-import { handleFormToastErrors } from "@/lib/utils";
+import { handleFormToastErrors, setLS } from "@/lib/utils";
 import toast from "react-hot-toast";
-// import { useStore } from "@/store";
+import { useStore } from "@/store";
+import { UserType } from "@/types";
 
 const InitialOnboarding = () => {
   const [firstCheck, setFirstCheck] = useState<number | null>(null);
   const [tin, setTIN] = useState("");
   const navigate = useNavigate();
   const { api } = useAPI();
-  // const { user } = useStore()
+  const { user } = useStore();
+
+  const verifyTINService =
+    user.user_type === UserType.COMPANY ? api.verifyCompanyTIN : api.verifyTIN;
 
   const onCheck = (value: number, level = 0) => {
     if (level === 0) {
@@ -28,8 +32,9 @@ const InitialOnboarding = () => {
   const isValid = (firstCheck === 0 && !!tin) || firstCheck === 1;
 
   const { mutateAsync: verifyTIN, isPending } = useMutation({
-    mutationFn: () => api.verifyTIN(tin),
+    mutationFn: () => verifyTINService(tin),
     onSuccess() {
+      setLS("tin", { tin });
       navigate("/auth/onboarding/tin/verify");
     },
   });

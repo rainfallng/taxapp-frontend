@@ -60,9 +60,9 @@ const Personalinformation = () => {
   });
 
   const { data: lgas } = useQuery({
-    queryKey: [QueryKeys.LGA, watch("state_of_origin")],
-    queryFn: () => api.getLGAs(Number(watch("state_of_origin"))),
-    enabled: Boolean(watch("state_of_origin")),
+    queryKey: [QueryKeys.LGA, watch("state_of_residence")],
+    queryFn: () => api.getLGAs(Number(watch("state_of_residence"))),
+    enabled: Boolean(watch("state_of_residence")),
   });
 
   const { mutateAsync: updateIndividual, isPending } = useMutation({
@@ -443,11 +443,11 @@ const Personalinformation = () => {
             <Select
               sx={{ height: "5.6rem" }}
               placeholder="Select State"
-              value={watch("state_of_origin")}
+              value={watch("state_of_residence")}
               onChange={({ target: { value } }) =>
-                setValue("state_of_origin", value as string)
+                setValue("state_of_residence", value as string)
               }
-              errorMessage={errors?.state_of_origin?.message}
+              errorMessage={errors?.state_of_residence?.message}
             >
               {states?.map((state) => (
                 <MenuItem key={state.id} value={state.id}>

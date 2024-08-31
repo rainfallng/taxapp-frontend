@@ -9,7 +9,7 @@ import {
   Theme,
 } from "@mui/material";
 import { useState } from "react";
-import { FieldValues, UseFormReturn, Path, PathValue } from "react-hook-form";
+import { FieldValues, UseFormReturn, Path, PathValue, get } from "react-hook-form";
 
 export interface InputProps<T extends FieldValues>
   extends StandardTextFieldProps {
@@ -48,7 +48,7 @@ const Input = <T extends FieldValues>({
 
   const formValue = name ? form?.watch(name) : undefined;
   const formError = name
-    ? (form?.getFieldState?.(name)?.error?.message as string)
+    ? get(form?.formState?.errors, name)?.message
     : undefined;
 
   const value =

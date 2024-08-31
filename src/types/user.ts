@@ -62,7 +62,7 @@ export interface ICompanyProfile {
   id: number;
   icode: string;
   company_verification: {
-    rc_number: string;
+    id_number: string;
   };
   created: string;
   modified: string;

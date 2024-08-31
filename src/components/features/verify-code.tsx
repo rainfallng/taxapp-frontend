@@ -6,11 +6,22 @@ import toast from "react-hot-toast";
 import { AxiosError } from "axios";
 
 const VerifyCode: FC<{
-  phone: string;
+  phone?: string;
+  email?: string;
   send?: () => Promise<unknown>;
   verify?: (code: string) => Promise<unknown>;
   verifying?: boolean;
-}> = ({ phone, send, verify, verifying }) => {
+  initiateOnLoad?: boolean;
+  shortText?: string;
+}> = ({
+  phone,
+  email,
+  send,
+  verify,
+  verifying,
+  initiateOnLoad = true,
+  shortText = "identity",
+}) => {
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -44,7 +55,7 @@ const VerifyCode: FC<{
   };
 
   useLayoutEffect(() => {
-    onSend("Please wait...");
+    if (initiateOnLoad) onSend("Please wait...");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -79,24 +90,66 @@ const VerifyCode: FC<{
         color="#4A4A68"
         sx={{ fontSize: "1.8rem", my: "2.4rem" }}
       >
-        Enter the verification code we sent you to verify your identity
+        Enter the verification code we sent you to verify your {shortText}
       </Typography>
-      <Typography
-        textAlign="center"
-        color="#4A4A68"
-        sx={{ fontSize: "1.8rem", mb: "0.8rem" }}
-      >
-        We sent a code to your phone number:
-      </Typography>
-      <Typography
-        textAlign="center"
-        color="#4A4A68"
-        sx={{ fontSize: "1.8rem" }}
-        fontWeight={500}
-      >
-        {phone}
-      </Typography>
-      <Box sx={{ mt: "4rem", mb: "3.2rem" }}>
+      {phone && (
+        <>
+          <Typography
+            textAlign="center"
+            color="#4A4A68"
+            sx={{ fontSize: "1.8rem", mb: "0.8rem" }}
+          >
+            We sent a code to your phone number:
+          </Typography>
+          <Typography
+            textAlign="center"
+            color="#4A4A68"
+            sx={{ fontSize: "1.8rem", mb: "4rem" }}
+            fontWeight={500}
+          >
+            {phone}
+          </Typography>
+        </>
+      )}
+      {!phone && email && (
+        <>
+          <Typography
+            textAlign="center"
+            color="#4A4A68"
+            sx={{ fontSize: "1.8rem", mb: "0.8rem" }}
+          >
+            We sent a code to your email address:
+          </Typography>
+          <Typography
+            textAlign="center"
+            color="#4A4A68"
+            sx={{ fontSize: "1.8rem", mb: "4rem" }}
+            fontWeight={500}
+          >
+            {email}
+          </Typography>
+        </>
+      )}
+      {email && phone && (
+        <>
+          <Typography
+            textAlign="center"
+            color="#4A4A68"
+            sx={{ fontSize: "1.8rem", mb: "0.8rem" }}
+          >
+            also to your email address:
+          </Typography>
+          <Typography
+            textAlign="center"
+            color="#4A4A68"
+            sx={{ fontSize: "1.8rem", mb: "4rem" }}
+            fontWeight={500}
+          >
+            {email}
+          </Typography>
+        </>
+      )}
+      <Box sx={{ mb: "3.2rem" }}>
         <Typography
           sx={{
             mb: "0.8rem",

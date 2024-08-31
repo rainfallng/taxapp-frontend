@@ -64,7 +64,11 @@ export const handleFormToastErrors = (
   error: AxiosError<{ [message: string]: string | string[] }>,
   message: string = ""
 ) => {
-  const err = Object.values(error.response?.data ?? {})?.[0];
+  const errorData = error.response?.data;
+  if (errorData?.message) return errorData?.message as string;
+  if (error?.response?.status === 400 && errorData?.errors)
+    return Object.values(errorData.errors)?.[0][0];
+  const err = Object.values(errorData ?? {})?.[0];
   if (err) {
     return Array.isArray(err) ? err?.[0] : err;
   }

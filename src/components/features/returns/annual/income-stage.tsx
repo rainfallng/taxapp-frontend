@@ -1,6 +1,6 @@
 import { FileUpload } from "@/components/ui/file-upload";
 import { Box, FormLabel, Grid, Typography, useTheme } from "@mui/material";
-import { FC, useState } from "react";
+import { FC } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import UploadOutlinedIcon from "@mui/icons-material/UploadOutlined";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
@@ -23,16 +23,11 @@ const IncomeStage: FC<{ setStage: (stage: IAnnualReturnStage) => void }> = ({ se
   const { api } = useAPI();
   const { year = "" } = useParams();
   const form = useForm(individualIncomeSchema);
-  const [additionalIncome, setAdditionalIncome] = useState<
-    { name: string; amount: string }[]
-  >([]);
+  const otherIncomes = form.watch("other_incomes") ?? [];
 
   const removeAdditionalIncome = (index: number) => {
-    const filter = additionalIncome.filter((_, key) => key !== index);
-    const otherIncomes = form.watch("other_incomes") ?? [];
     const format = otherIncomes?.filter((_, key) => key !== index);
 
-    setAdditionalIncome(filter);
     form.setValue("other_incomes", format);
   };
 
@@ -274,8 +269,7 @@ const IncomeStage: FC<{ setStage: (stage: IAnnualReturnStage) => void }> = ({ se
         <Button
           type="button"
           variant="text"
-          onClick={() =>
-            setAdditionalIncome([...additionalIncome, { name: "", amount: "" }])
+          onClick={() => form.setValue("other_incomes", [...otherIncomes, { name: "", value: "" }])
           }
         >
           <AddCircleOutlineOutlinedIcon sx={{ mr: "1.5rem" }} /> Add Income
@@ -289,7 +283,7 @@ const IncomeStage: FC<{ setStage: (stage: IAnnualReturnStage) => void }> = ({ se
           gap: "1.6rem",
         }}
       >
-        {additionalIncome.map((_, key) => (
+        {form.watch("other_incomes")?.map((_, key) => (
           <Grid container key={key} spacing={1.6}>
             <Grid item xs={4}>
               <Input

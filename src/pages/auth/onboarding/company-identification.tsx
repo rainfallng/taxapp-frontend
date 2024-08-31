@@ -2,8 +2,7 @@ import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
 import { useAPI } from "@/hooks/useApi";
 import { identificationSchema } from "@/lib/schemas/onboarding/company-identification";
-import { handleFormErrors, handleFormToastErrors } from "@/lib/utils";
-import { useStore } from "@/store";
+import { handleFormErrors, handleFormToastErrors, setLS } from "@/lib/utils";
 import { IVerifyCAC } from "@/types/form";
 import { Box, FormLabel, Typography, useTheme } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
@@ -16,13 +15,12 @@ const CompanyIdentification = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { api } = useAPI();
-  const { setUser } = useStore();
   const form = useForm(identificationSchema);
   const { mutateAsync: verifyCAC, isPending } = useMutation({
     mutationFn: api.verifyCAC,
-    onSuccess(data) {
-      setUser({ tin_profile: data?.data });
-      navigate("/auth/onboarding/company-profile");
+    onSuccess() {
+      setLS("company-info", form.getValues());
+      navigate("/auth/onboarding/company-info/verify");
     },
     onError: (error: AxiosError<{ [message: string]: string | string[] }>) =>
       handleFormErrors(error, form.setError),
@@ -37,7 +35,11 @@ const CompanyIdentification = () => {
   };
 
   return (
-    <Box component="form" onSubmit={form.handleSubmit(onSubmit)} sx={{ width: { lg: "54.5rem" } }}>
+    <Box
+      component="form"
+      onSubmit={form.handleSubmit(onSubmit)}
+      sx={{ width: { lg: "54.5rem" } }}
+    >
       <Typography
         component="h4"
         sx={{

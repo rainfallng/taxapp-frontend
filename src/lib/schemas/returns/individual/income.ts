@@ -16,14 +16,13 @@ const individualIncomeSchemaObject = yup.object({
   statement_of_income: yup
     .string()
     .required("Statement of income is a required field"),
-  other_incomes: yup.array(
-    yup
-      .object({
-        name: yup.string().required("Provide income name"),
-        details: yup.string().optional(),
-        value: yup.string().required("Provide income value"),
-      })
-    ),
+  other_incomes: yup.array().of(
+    yup.object({
+      name: yup.string().required("Provide income name"),
+      details: yup.string().optional(),
+      value: yup.string().required("Provide income value"),
+    })
+  ),
 });
 
 const individualIncomeDefaultValues = {
