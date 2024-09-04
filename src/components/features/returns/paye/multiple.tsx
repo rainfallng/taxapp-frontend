@@ -17,13 +17,13 @@ const Multiple = () => {
   const navigate = useNavigate();
   const [file, setFile] = useState<File | null | undefined>(null);
   const { api } = useAPI();
-  const { month = '' } = useParams()
+  const { month = "" } = useParams();
 
   const { isPending, mutateAsync } = useMutation({
     mutationFn: api.uploadCompanyReturns,
     onSuccess(data) {
-      navigate(`/app/returns/paye/${month}/bill?billId=${data?.data?.bill}`);
-    }
+      navigate(`/app/returns/paye/bill/${month}/${data?.data?.bill?.id}`);
+    },
   });
 
   const download = async () => {

@@ -1,11 +1,13 @@
 import { getStore } from "@/lib/utils";
 import {
   ICompanyOnboarding,
+  ICompanyProfile,
   IIndividualOnboarding as IIndividualProfileOnboarding,
   ILGAs,
   ILogin,
   IRegister,
   IState,
+  ITINProfile,
 } from "@/types";
 import {
   IIndividualAnnualAccomodation,
@@ -144,14 +146,14 @@ export class APIRequest {
     return data;
   };
 
-  getCompany = async (id: string) => {
-    const { data } = await axios.get(`/api/v1/tin/profile/company/${id}/`, {
+  getCompany = async () => {
+    const { data } = await axios.get(`/api/v1/tin/company/profile/`, {
       headers: {
         Authorization: `JWT ${this.accessToken}`,
       },
     });
 
-    return data;
+    return data?.data as ICompanyProfile;
   };
 
   getIndividual = async () => {
@@ -161,7 +163,7 @@ export class APIRequest {
       },
     });
 
-    return data;
+    return data?.data as ITINProfile;
   };
 
   updateIndividual = async (body: Partial<IIndividualProfileOnboarding>) => {

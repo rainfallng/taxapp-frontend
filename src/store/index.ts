@@ -14,7 +14,12 @@ export const useStore = create<SliceType>()(
     (...a) => ({
       ...tenantSlice(...a),
       ...userSlice(...a),
-      ...onboardingSlice(...a)
+      ...onboardingSlice(...a),
+      reset: () => {
+        tenantSlice(...a).reset();
+        userSlice(...a).reset();
+        onboardingSlice(...a).reset();
+      }
     }),
     {
       name: STORAGE_NAME,

@@ -18,8 +18,8 @@ import toast from "react-hot-toast";
 const Single = () => {
   const form = useForm(payeSchema);
   const navigate = useNavigate();
-  const { month = '' } = useParams()
   const { api } = useAPI();
+  const { month = "" } = useParams();
   const { data: states, isLoading: isLoadingStates } = useQuery({
     queryKey: [QueryKeys.STATES],
     queryFn: api.getStates,
@@ -28,7 +28,7 @@ const Single = () => {
   const { isPending, mutateAsync } = useMutation({
     mutationFn: api.postCompanyReturns,
     onSuccess(data) {
-      navigate(`/app/returns/paye/${month}/bill?billId=${data?.data?.bill}`);
+      navigate(`/app/returns/paye/bill/${month}/${data?.data?.bill?.id}`);
     },
     onError: (error: AxiosError<{ [message: string]: string | string[] }>) =>
       handleFormErrors(error, form.setError),

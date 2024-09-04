@@ -10,24 +10,51 @@ import HttpsOutlinedIcon from "@mui/icons-material/HttpsOutlined";
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
 import { Link, useNavigate } from "react-router-dom";
-import { ILogin } from "@/types";
+import { ICompanyProfile, ILogin, ITINProfile, UserType } from "@/types";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { loginSchema } from "@/lib/schemas/login";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { handleFormErrors, handleFormToastErrors } from "@/lib/utils";
 import { AxiosError } from "axios";
 import { useAPI } from "@/hooks/useApi";
 import { useStore } from "@/store";
+import { useEffect, useState } from "react";
+import { QueryKeys } from "@/lib/queryKeys";
+import { useLoader } from "@/hooks/useLoader";
 
 const Login = () => {
   const theme = useTheme();
   const { api } = useAPI();
   const navigate = useNavigate();
-  const { setUser, setToken } = useStore();
+  const { setUser, setToken, user } = useStore();
   const form = useForm<ILogin>(loginSchema);
+  const [fetchProfile, setFetchProfile] = useState(false);
 
   const { handleSubmit, setError } = form;
+
+  const profileServiceMapper: Record<
+    string,
+    { api: () => Promise<ICompanyProfile | ITINProfile>; key: string[] }
+  > = {
+    [UserType.COMPANY]: { api: api.getCompany, key: [QueryKeys.COMPANY] },
+    [UserType.INDIVIDUAL]: {
+      api: api.getIndividual,
+      key: [QueryKeys.INDIVIDUAL],
+    },
+  };
+
+  const profileService = profileServiceMapper[user.user_type];
+
+  const {
+    isLoading: fetchingData,
+    data,
+    error,
+  } = useQuery({
+    queryKey: [profileService?.key],
+    queryFn: profileService?.api,
+    enabled: fetchProfile,
+  });
 
   const { mutateAsync: onLogin, isPending } = useMutation({
     mutationFn: api.login,
@@ -35,7 +62,7 @@ const Login = () => {
       const { user, ...token } = data;
       setUser(user);
       setToken(token?.access, token?.refresh);
-      navigate("/app");
+      setFetchProfile(true);
     },
     onError: (error: AxiosError<{ [message: string]: string | string[] }>) =>
       handleFormErrors(error, setError),
@@ -48,6 +75,29 @@ const Login = () => {
       error: (error) => handleFormToastErrors(error, "Login failed"),
     });
   };
+
+  useEffect(() => {
+    if (data) {
+      setUser({ tin_profile: data });
+      navigate("/app");
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(
+        handleFormToastErrors(
+          error as AxiosError<{
+            [message: string]: string | string[];
+          }>,
+          "Could not fetch user data"
+        )
+      );
+    }
+  }, [error]);
+
+  useLoader(fetchingData, "Fetching profile data...", undefined, fetchProfile);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
