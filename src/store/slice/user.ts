@@ -17,9 +17,10 @@ export interface IUserSlice extends IToken {
   setAccessToken: (value: string) => void;
   setUser: (user: Partial<IUser>) => void;
   setToken: (access: string, refresh: string) => void;
+  reset: () => void;
 }
 
-export const userSlice: StateCreator<IUserSlice> = (set) => ({
+const defaultState = {
   access: null,
   refresh: null,
   onboarded: {
@@ -42,8 +43,13 @@ export const userSlice: StateCreator<IUserSlice> = (set) => ({
     user_type: "",
     tin_profile: null,
   },
+};
+
+export const userSlice: StateCreator<IUserSlice> = (set) => ({
+  ...defaultState,
   setRefreshToken: (value) => set({ refresh: value }),
   setAccessToken: (value) => set({ access: value }),
   setToken: (access, refresh) => set({ access, refresh }),
   setUser: (value) => set((s) => ({ ...s, user: { ...s.user, ...value } })),
+  reset: () => set((s) => ({ ...s, ...defaultState })),
 });

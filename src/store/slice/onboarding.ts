@@ -12,9 +12,10 @@ export interface IOnboardingSlice {
   companyOnboarding: ICompanyOnboarding;
   setCompanyOnboarding: (value: Partial<ICompanyOnboarding>) => void;
   setOnboardingMode: (value: string) => void;
+  reset: () => void;
 }
 
-export const onboardingSlice: StateCreator<IOnboardingSlice> = (set) => ({
+const defaultState = {
   onboardingMode: SubmissionModeType.MANUAL,
   individualOnboarding: {
     vtin: "",
@@ -70,7 +71,11 @@ export const onboardingSlice: StateCreator<IOnboardingSlice> = (set) => ({
     submission_mode: "",
     first_time_filling: null,
     past_tax_filling: "",
-  },
+  }
+}
+
+export const onboardingSlice: StateCreator<IOnboardingSlice> = (set) => ({
+  ...defaultState,
   setIndividualOnboarding: (value) =>
     set((s) => ({
       ...s,
@@ -82,4 +87,5 @@ export const onboardingSlice: StateCreator<IOnboardingSlice> = (set) => ({
       companyOnboarding: { ...s.companyOnboarding, ...value },
     })),
   setOnboardingMode: (value) => set({ onboardingMode: value }),
+  reset: () => set((s) => ({ ...s, ...defaultState }))
 });

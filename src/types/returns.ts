@@ -58,7 +58,7 @@ export interface ICompanyReturn {
   created_by: string;
   modified_by: string;
   company_profile: number;
-  bill: number;
+  bill: Bill;
   amount: string;
   reference: string;
   number_of_employees: number;

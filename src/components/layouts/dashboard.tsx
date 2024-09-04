@@ -7,7 +7,6 @@ import { SIDEBAR_LINKS } from "./constants";
 import SegmentOutlinedIcon from "@mui/icons-material/SegmentOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import PersonIcon from "@mui/icons-material/Person";
-import { clearLS } from "@/lib/utils";
 import { useStore } from "@/store";
 import Search from "../ui/search";
 import SidebarItem from "../features/layouts/dashboard-side-item";
@@ -15,7 +14,7 @@ import { ICompanyProfile, ITINProfile, UserType } from "@/types";
 
 const DashboardLayout = () => {
   const navigate = useNavigate();
-  const { user } = useStore();
+  const { user, reset } = useStore();
   // const { pathname } = useLocation();
 
   const tinProfile = user?.tin_profile as ITINProfile;
@@ -27,7 +26,7 @@ const DashboardLayout = () => {
       : `${tinProfile?.first_name} ${tinProfile?.last_name}`;
 
   const logout = () => {
-    clearLS();
+    reset();
     navigate("/auth/login");
   };
 

@@ -118,18 +118,13 @@ const AppRoutes = () => {
         <Route path="returns" element={<Outlet />}>
           <Route index element={<FileReturns />} />
           <Route path="history" element={<FilingHistory />} />
-          <Route path="annual" element={<Outlet />}>
-            <Route path=":year" element={<AnnualReturn />} />
-          </Route>
+          <Route path="annual/:year" element={<AnnualReturn />} />
           <Route path="paye" element={<Outlet />}>
             <Route index element={<PayeReturns />} />
             {/* <Route path="history" element={<CompanyFilingHistory />} /> */}
-            <Route path=":month" element={<Outlet />}>
-              <Route index element={<ComputePayeReturns />} />
-              <Route path="bill" element={<PayeBill />} />
-            </Route>
+            <Route path="bill/:month/:billId" element={<PayeBill />} />
+            <Route path="create/:month" element={<ComputePayeReturns />} />
           </Route>
-          {/* <Route path="annual" element={<AnnualReturn />} /> */}
         </Route>
         <Route index element={<Navigate replace to="/app/quick-menu" />} />
         <Route path="*" element={<Error404 />} />

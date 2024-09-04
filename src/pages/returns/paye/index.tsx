@@ -74,7 +74,11 @@ const PayeReturns = () => {
         </Box>
         <Button
           rounded
-          onClick={() => navigate(`/app/returns/paye/${MONTH_INDEX_MAPPER[prevMonth]}`)}
+          onClick={() =>
+            navigate(
+              `/app/returns/paye/create/${MONTH_INDEX_MAPPER[prevMonth]}`
+            )
+          }
         >
           File Return
         </Button>
@@ -170,7 +174,7 @@ const PayeReturns = () => {
                       width: "12%",
                     }}
                   >
-                    {item.month}
+                    {item.month_name}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -190,7 +194,7 @@ const PayeReturns = () => {
                       width: "18%",
                     }}
                   >
-                    {item.icode}
+                    {item.reference}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -210,7 +214,9 @@ const PayeReturns = () => {
                       width: "16%",
                     }}
                   >
-                    {item.is_active ? "Filed" : "Not Filed"}
+                    {item.bill.status.toLowerCase() !== "created"
+                      ? "Filed"
+                      : "Not Filed"}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -222,16 +228,18 @@ const PayeReturns = () => {
                   >
                     <SelectDropdown
                       options={[
-                        item.is_active
+                        item.bill.status.toLowerCase() === "created"
                           ? {
+                              name: "Proceed to payment",
+                              onClick: () =>
+                                navigate(
+                                  `/app/returns/paye/bill/${item.month_name}/${item.bill.id}`
+                                ),
+                            }
+                          : {
                               name: "Statement of Income",
                               onClick: () =>
                                 navigate(`/app/returns/paye/${year}`),
-                            }
-                          : {
-                              name: "File Return",
-                              onClick: () =>
-                                navigate(`/app/returns/paye/${item.month}`),
                             },
                       ]}
                     >

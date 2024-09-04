@@ -6,18 +6,23 @@ import { QueryKeys } from "@/lib/queryKeys";
 import { handleFormToastErrors } from "@/lib/utils";
 import { useStore } from "@/store";
 import { ICompanyProfile } from "@/types";
-import { Box, capitalize, Grid, Typography, useTheme } from "@mui/material";
+import { Box, Grid, Typography, useTheme } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import toast from "react-hot-toast";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const TaxImplicationBill = ({ billId }: { billId: string }) => {
+const TaxImplicationBill = ({
+  billId,
+  month,
+}: {
+  billId: string;
+  month: string;
+}) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { api } = useAPI();
   const { user } = useStore();
-  const { month = "" } = useParams();
 
   const tinProfile = user?.tin_profile as ICompanyProfile;
 
@@ -31,7 +36,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
     useMutation({
       mutationFn: api.initiatePayment,
       onSuccess(data) {
-        window.open(data?.data?.authorization_url)
+        window.open(data?.data?.authorization_url);
       },
     });
 
@@ -58,7 +63,12 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
         </Typography>
       </GoBack>
       <Box
-        sx={{ display: "flex", justifyContent: "space-between", mb: "4.3rem", mt: "7rem" }}
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          mb: "4.3rem",
+          mt: "7rem",
+        }}
       >
         <Typography
           sx={{
@@ -67,7 +77,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
             fontWeight: 500,
           }}
         >
-          Bill: Annual Returns Filing
+          Bill: {data?.name}
         </Typography>
         <Typography
           sx={{
@@ -157,7 +167,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            {data?.tax_collector_name ?? '--'}
+            {data?.tax_collector_name ?? "--"}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -177,7 +187,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            {capitalize(month)}
+            {month}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -197,7 +207,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            {tinProfile?.name ?? '--'}
+            {tinProfile?.name ?? "--"}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -237,7 +247,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            {tinProfile?.phone_number ?? '--'}
+            {tinProfile?.phone_number || user.phone || "--"}
           </Typography>
         </Grid>
         <Grid item md={4}>
