@@ -89,7 +89,7 @@ const DashboardHome = () => {
         sx={{
           py: "2.2rem",
           px: "2.4rem",
-          display: showReturnsBanner ? "flex" : "hidden",
+          display: showReturnsBanner ? "flex" : "none",
           alignItems: "center",
           justifyContent: "space-between",
           width: "fit-content",
