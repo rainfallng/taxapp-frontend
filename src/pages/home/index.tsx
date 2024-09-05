@@ -1,12 +1,87 @@
 import { MONTH_INDEX_MAPPER } from "@/lib/constants";
-import { Box, Grid, Typography, useTheme } from "@mui/material";
+import { Box, FormLabel, Grid, Typography, useTheme } from "@mui/material";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
+import { BarChart } from "@mui/x-charts/BarChart";
+import { axisClasses } from "@mui/x-charts/ChartsAxis";
+import { useStore } from "@/store";
+import { ICompanyProfile, ITINProfile, UserType } from "@/types";
+import { QueryKeys } from "@/lib/queryKeys";
+import { useQueries } from "@tanstack/react-query";
+import { useAPI } from "@/hooks/useApi";
+import { useLoader } from "@/hooks/useLoader";
+import { ReturnGraph, YearParam } from "@/types/returns";
+import { useState } from "react";
+import Select, { MenuItem } from "@/components/ui/select";
 
 const DashboardHome = () => {
+  const { user } = useStore();
+  const { api } = useAPI();
   const theme = useTheme();
+  const [params, setParams] = useState<YearParam>({ year: dayjs().year() });
+  const [showReturnsBanner, setShowReturnsBanner] = useState(true);
   const month = dayjs().month();
   const prevMonth = month === 0 ? 11 : month - 1;
+
+  const valueFormatter = (value: number | null) =>
+    Number(value ?? "0").toLocaleString();
+
+  const chartSetting = {
+    yAxis: [
+      {
+        label: "Amount",
+      },
+    ],
+    series: [{ dataKey: "amount", label: "Returns", valueFormatter }],
+    height: 400,
+    sx: {
+      [`& .${axisClasses.directionY} .${axisClasses.label}`]: {
+        transform: "translateX(-10px)",
+      },
+    },
+  };
+
+  const isCompany = UserType.COMPANY === user.user_type;
+  const individualTIN = user.tin_profile as ITINProfile;
+  const companyTIN = user.tin_profile as ICompanyProfile;
+
+  const [
+    { data: companyGraph, isLoading: isLoadingCompanyReturnsGraph },
+    { data: companyStat, isLoading: isLoadingCompanyReturnsStat },
+  ] = useQueries({
+    queries: [
+      {
+        queryKey: [QueryKeys.COMPANY_RETURNS_GRAPH, params],
+        queryFn: () => api.getCompanyReturnsGraph(params),
+        enabled: isCompany,
+        select(data) {
+          return Object.values(MONTH_INDEX_MAPPER).map((m) => {
+            const findMonthData = (data as ReturnGraph[]).find(
+              (v) => v.month_name === m
+            );
+            if (findMonthData)
+              return {
+                month: findMonthData.month_name,
+                amount: findMonthData.amount,
+              };
+            return { month: m, amount: 0 };
+          });
+        },
+      },
+      {
+        queryKey: [QueryKeys.COMPANY_RETURNS_STAT, params],
+        queryFn: () => api.getCompanyReturnsStat(params),
+        enabled: isCompany,
+      },
+    ],
+  });
+
+  useLoader(
+    isLoadingCompanyReturnsGraph || isLoadingCompanyReturnsStat,
+    "Fetching data...",
+    undefined,
+    isCompany
+  );
 
   return (
     <Box sx={{ py: "3.2rem", px: "4.5rem" }}>
@@ -14,11 +89,12 @@ const DashboardHome = () => {
         sx={{
           py: "2.2rem",
           px: "2.4rem",
-          display: "flex",
+          display: showReturnsBanner ? "flex" : "hidden",
           alignItems: "center",
           justifyContent: "space-between",
-          width: "100%",
-          maxWidth: "101rem",
+          width: "fit-content",
+          minWidth: "101rem",
+          maxWidth: "100%",
           border: "1px solid #d0d0d0",
           borderRadius: "1.5rem",
           gap: "1.5rem",
@@ -27,7 +103,8 @@ const DashboardHome = () => {
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
           <Typography sx={{ fontSize: "2rem", fontWeight: 500 }}>
-            June 10: deadline for your tax returns for 2023 is close
+            {MONTH_INDEX_MAPPER[month]} 10: deadline for your tax returns
+            for {dayjs().year()} is close
           </Typography>
           <Box
             component="img"
@@ -49,6 +126,7 @@ const DashboardHome = () => {
         </Box>
         <Box
           component="button"
+          onClick={() => setShowReturnsBanner(false)}
           sx={{
             background: "transparent",
             outline: "none",
@@ -73,7 +151,9 @@ const DashboardHome = () => {
             >
               Hello,
             </Typography>{" "}
-            Aloy Group Company Ltd.
+            {isCompany
+              ? companyTIN.name
+              : `${individualTIN.first_name} ${individualTIN.last_name}`}
           </Typography>
           <Box
             component="img"
@@ -113,6 +193,33 @@ const DashboardHome = () => {
           >
             Overview
           </Typography>
+          <Box sx={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
+            <FormLabel
+              sx={{
+                fontSize: "1.4rem",
+                fontWeight: 500,
+                color: "#797889",
+              }}
+            >
+              Year&nbsp;in&nbsp;view:
+            </FormLabel>
+            <Select
+              sx={{ height: "3.6rem" }}
+              placeholder="Select Year"
+              value={params?.year}
+              onChange={({ target: { value } }) =>
+                setParams({ year: Number(value) })
+              }
+            >
+              {Array(5)
+                .fill(dayjs().year())
+                .map((val, index) => (
+                  <MenuItem key={index} value={val - index}>
+                    {val - index}
+                  </MenuItem>
+                ))}
+            </Select>
+          </Box>
         </Box>
         <Grid container columnSpacing={1.6} sx={{ mt: "3.6rem" }}>
           <Grid item xs={3}>
@@ -196,12 +303,12 @@ const DashboardHome = () => {
               <Typography
                 sx={{ fontSize: "3.2rem", fontWeight: 600, mb: "1.2rem" }}
               >
-                ₦20,000
+                ₦{companyStat?.amount ?? 0}
               </Typography>
               <Typography
                 sx={{ fontSize: "1.6rem", color: theme.palette.grey[600] }}
               >
-                50 Per Month
+                {companyStat?.count ?? 0} Per Month
               </Typography>
             </Box>
           </Grid>
@@ -227,6 +334,45 @@ const DashboardHome = () => {
           >
             Tax Returns
           </Typography>
+          <Box sx={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
+            <FormLabel
+              sx={{
+                fontSize: "1.4rem",
+                fontWeight: 500,
+                color: "#797889",
+              }}
+            >
+              Year&nbsp;in&nbsp;view:
+            </FormLabel>
+            <Select
+              sx={{ height: "3.6rem" }}
+              placeholder="Select Year"
+              value={params?.year}
+              onChange={({ target: { value } }) =>
+                setParams({ year: Number(value) })
+              }
+            >
+              {Array(5)
+                .fill(dayjs().year())
+                .map((val, index) => (
+                  <MenuItem key={index} value={val - index}>
+                    {val - index}
+                  </MenuItem>
+                ))}
+            </Select>
+          </Box>
+        </Box>
+        <Box>
+          <BarChart
+            dataset={companyGraph || []}
+            xAxis={[
+              {
+                scaleType: "band",
+                dataKey: "month",
+              },
+            ]}
+            {...chartSetting}
+          />
         </Box>
       </Box>
     </Box>
