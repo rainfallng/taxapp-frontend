@@ -20,6 +20,9 @@ import {
   AddCompanyStaffReturn,
   BillList,
   CompanyReturnsList,
+  ReturnGraph,
+  ReturnStat,
+  YearOrMonthParam,
 } from "@/types/returns";
 import axios, { AxiosInstance } from "axios";
 
@@ -257,21 +260,28 @@ export class APIRequest {
   };
 
   confirmCAC = async (body: IVerifyCAC & { otp: string }) => {
-    const { data } = await axios.post(`/api/v1/tin/company/confirm-otp/`, body, {
-      headers: {
-        Authorization: `JWT ${this.accessToken}`,
-      },
-    });
+    const { data } = await axios.post(
+      `/api/v1/tin/company/confirm-otp/`,
+      body,
+      {
+        headers: {
+          Authorization: `JWT ${this.accessToken}`,
+        },
+      }
+    );
 
     return data;
   };
 
   getIndividualReturnYears = async () => {
-    const { data } = await axios.get(`/api/v1/returns/individual/individual/years/`, {
-      headers: {
-        Authorization: `JWT ${this.accessToken}`,
-      },
-    });
+    const { data } = await axios.get(
+      `/api/v1/returns/individual/individual/years/`,
+      {
+        headers: {
+          Authorization: `JWT ${this.accessToken}`,
+        },
+      }
+    );
 
     return data as { data: number[] };
   };
@@ -405,5 +415,33 @@ export class APIRequest {
     );
 
     return data;
+  };
+
+  getCompanyReturnsGraph = async (params?: YearOrMonthParam) => {
+    const { data } = await axios.get(
+      "/api/v1/dashboard/company/returns/graph/",
+      {
+        params,
+        headers: {
+          Authorization: `JWT ${this.accessToken}`,
+        },
+      }
+    );
+
+    return data as ReturnGraph[];
+  };
+
+  getCompanyReturnsStat = async (params?: YearOrMonthParam) => {
+    const { data } = await axios.get(
+      "/api/v1/dashboard/company/returns/stat/",
+      {
+        params,
+        headers: {
+          Authorization: `JWT ${this.accessToken}`,
+        },
+      }
+    );
+
+    return data as ReturnStat;
   };
 }

@@ -83,3 +83,21 @@ export type AddCompanyStaffReturn = {
   bonus: number | null;
   state_of_residence: number | null;
 };
+
+export type ReturnGraph = {
+  month_name: string;
+  amount: number;
+};
+
+export type YearParam = { year: number }
+
+export type MonthParam = { month: string }
+
+export type YearOrMonthParam = YearParam | MonthParam
+
+export type ReturnStat = {
+  count: number;
+  amount: number;
+};
+
+
