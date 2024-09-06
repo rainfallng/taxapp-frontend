@@ -13,6 +13,7 @@ import {
   Rect,
   ClipPath,
 } from "@react-pdf/renderer";
+import { Style } from "@react-pdf/types";
 import dayjs from "dayjs";
 import { ReactNode } from "react";
 
@@ -134,6 +135,17 @@ const Logo = () => {
   );
 };
 
+const Naira = ({ style }: { style?: Style }) => {
+  return (
+    <Svg viewBox="0 0 72 122.88" style={{ width: 14, height: 10, ...style }}>
+      <Path
+        fill="#000000"
+        d="M13.42,0H32.1a1.25,1.25,0,0,1,1,.6L58,42.26H83.17v-41A1.23,1.23,0,0,1,84.39,0h17.28a1.23,1.23,0,0,1,1.23,1.23v41h11a1.23,1.23,0,0,1,1.23,1.23V54.55a1.23,1.23,0,0,1-1.23,1.23h-11v9.41h11a1.23,1.23,0,0,1,1.23,1.22V77.48a1.23,1.23,0,0,1-1.23,1.22h-11v43a1.23,1.23,0,0,1-1.23,1.23H84.39a1.25,1.25,0,0,1-1-.6L58,78.7H33.26v43A1.23,1.23,0,0,1,32,122.88H13.42a1.23,1.23,0,0,1-1.23-1.23V78.7h-11A1.23,1.23,0,0,1,0,77.48V66.41a1.23,1.23,0,0,1,1.23-1.22h11V55.78h-11A1.23,1.23,0,0,1,0,54.55V43.49a1.23,1.23,0,0,1,1.23-1.23h11v-41A1.23,1.23,0,0,1,13.42,0ZM33.26,55.78v9.41h17l-4.4-9.41ZM70,65.19H83.17V55.78H65.68L70,65.19ZM83.17,78.7H77.88l5.29,11v-11ZM33.26,32.76v9.5h4.57l-4.57-9.5Z"
+      />
+    </Svg>
+  );
+};
+
 const BillSummaryPDF = ({
   data,
   tinProfile,
@@ -156,10 +168,16 @@ const BillSummaryPDF = ({
         </View>
         <View style={styles.billTitleWrapper}>
           <Text style={styles.billTitle}>Bill: {data?.name}</Text>
-          <Text style={styles.billTitle}>
-            Tax Implication Total: ₦
-            {Number(data?.amount ?? "0").toLocaleString()}
-          </Text>
+          <View
+            style={[
+              styles.billTitle,
+              { flexDirection: "row", alignItems: "center" },
+            ]}
+          >
+            <Text>Tax Implication Total:</Text>
+            <Naira style={{ width: 16 }} />
+            <Text>{Number(data?.amount ?? "0").toLocaleString()}</Text>
+          </View>
         </View>
         <Grid>
           <Grid item>
@@ -293,14 +311,17 @@ const BillSummaryPDF = ({
             >
               Surcharge:
             </Text>
-            <Text
-              style={{
-                fontSize: 12.5,
-                color: "#2A2A2A",
-              }}
-            >
-              ₦{Number(data?.charge ?? "0").toLocaleString()}
-            </Text>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Naira />
+              <Text
+                style={{
+                  fontSize: 12.5,
+                  color: "#2A2A2A",
+                }}
+              >
+                {Number(data?.charge ?? "0").toLocaleString()}
+              </Text>
+            </View>
           </Grid>
           <Grid item>
             <Text
@@ -343,16 +364,20 @@ const BillSummaryPDF = ({
             </Text>
           </Grid>
         </Grid>
-        <Text
+        <View
           style={{
             fontSize: 16.25,
             color: "#2A2A2A",
             fontWeight: 500,
             marginTop: 31.25,
+            flexDirection: "row",
+            alignItems: "center",
           }}
         >
-          Amount Due: ₦{amountDue.toLocaleString()}
-        </Text>
+          <Text>Amount Due:</Text>
+          <Naira style={{ width: 16 }} />
+          <Text>{amountDue.toLocaleString()}</Text>
+        </View>
       </Page>
     </Document>
   );
