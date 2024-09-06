@@ -3,7 +3,7 @@ import GoBack from "@/components/ui/go-back";
 import { useAPI } from "@/hooks/useApi";
 import { useLoader } from "@/hooks/useLoader";
 import { QueryKeys } from "@/lib/queryKeys";
-import { handleFormToastErrors } from "@/lib/utils";
+import { handleFormToastErrors, onDownloadBlob } from "@/lib/utils";
 import { useStore } from "@/store";
 import { ICompanyProfile } from "@/types";
 import { Box, Grid, Typography, useTheme } from "@mui/material";
@@ -11,6 +11,9 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import BillSummaryPDF from "./bill-summary-pdf";
+import { usePDF } from "@react-pdf/renderer";
+import { useEffect } from "react";
 
 const TaxImplicationBill = ({
   billId,
@@ -49,6 +52,23 @@ const TaxImplicationBill = ({
   };
 
   const amountDue = Number(data?.amount ?? "0") - Number(data?.charge ?? "0");
+
+  const PDF = () => (
+    <BillSummaryPDF
+      data={data}
+      tinProfile={tinProfile}
+      user={user}
+      amountDue={amountDue}
+      month={month}
+    />
+  );
+
+  const [pdfInstance, updateInstance] = usePDF({ document: <PDF /> });
+
+  useEffect(() => {
+    if (data) updateInstance(<PDF />);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
 
   useLoader(isPending, "Please wait...");
 
@@ -289,7 +309,15 @@ const TaxImplicationBill = ({
           mt: "8rem",
         }}
       >
-        <Button variant="outlined" rounded sx={{ width: "50%" }}>
+        <Button
+          variant="outlined"
+          rounded
+          sx={{ width: "50%" }}
+          onClick={() => {
+            if (pdfInstance.blob)
+              onDownloadBlob(pdfInstance.blob, "paye-bill-summary.pdf");
+          }}
+        >
           Download Bill
         </Button>
         <Button
