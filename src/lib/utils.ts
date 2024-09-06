@@ -85,9 +85,7 @@ export const toBase64 = (file: File) =>
     reader.onerror = reject;
   });
 
-export const onDowload = async (url: string, filename: string) => {
-  const response = await fetch(url);
-  const blob = await response.blob();
+export const onDownloadBlob = (blob: Blob, filename: string) => {
   const blobURL =
     window.URL && window.URL.createObjectURL
       ? window.URL.createObjectURL(blob)
@@ -108,4 +106,10 @@ export const onDowload = async (url: string, filename: string) => {
     document.body.removeChild(tempLink);
     window.URL.revokeObjectURL(blobURL);
   }, 200);
+};
+
+export const onDowload = async (url: string, filename: string) => {
+  const response = await fetch(url);
+  const blob = await response.blob();
+  onDownloadBlob(blob, filename);
 };

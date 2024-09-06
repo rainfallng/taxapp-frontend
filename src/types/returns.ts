@@ -37,6 +37,7 @@ export type Bill = {
   revenue: number;
   reference: string;
   charge: string;
+  tax_collector_name: string;
 };
 
 export type BillList = {
