@@ -39,6 +39,7 @@ import PayeReturns from "@/pages/returns/paye";
 import ComputePayeReturns from "@/pages/returns/paye/compute";
 import PayeBill from "@/pages/returns/paye/bill";
 import VerifyCompany from "@/pages/auth/onboarding/verify-company";
+import CreatePassword from "@/pages/auth/create-password";
 
 const AppRoutes = () => {
   return (
@@ -56,6 +57,7 @@ const AppRoutes = () => {
           <Route path="terms" element={<TermsOfUse />} />
           <Route path="register" element={<Register />} />
           <Route path="forgot-password" element={<ForgotPassword />} />
+          <Route path="create-password" element={<CreatePassword />} />
           <Route path="tax-retrieval" element={<TaxRetrieval />} />
           <Route path="verify-phone" element={<VerifyPhone />} />
           <Route path="recaptcha" element={<Recaptcha />} />
