@@ -66,11 +66,7 @@ const Login = () => {
       const isTaxConsultant = user.user_type === UserType.TAX_CONSULTANT;
       setUser({
         ...user,
-        user_type: isInstitutionAdmin
-          ? UserType.ADMIN
-          : isTaxConsultant
-          ? user.user_type
-          : user.user.user_type,
+        user_type: isInstitutionAdmin ? UserType.ADMIN : user.user_type,
       });
       setToken(token?.access, token?.refresh);
       if (!isInstitutionAdmin && !isTaxConsultant) {
