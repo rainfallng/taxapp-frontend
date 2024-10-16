@@ -5,7 +5,7 @@ import Select from "@/components/ui/select";
 import { useAPI } from "@/hooks/useApi";
 import { individualAccomodationSchema } from "@/lib/schemas/returns/individual/accomodation";
 import { handleFormToastErrors } from "@/lib/utils";
-import { IIndividualAnnualAccomodation } from "@/types/form";
+import { IIndividualAnnualAccomodationInput } from "@/types/form";
 import {
   Box,
   FormLabel,
@@ -33,14 +33,14 @@ const AccomodationStage: FC<{
   const form = useForm(individualAccomodationSchema);
 
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: (variables: IIndividualAnnualAccomodation) =>
+    mutationFn: (variables: IIndividualAnnualAccomodationInput) =>
       api.postIndividualAccomodation(incomeId, variables),
     onSuccess() {
       navigate(`/app/returns/annual/${year}?id=${incomeId}&billId=${billId}&showBill=true`)
     },
   });
 
-  const onSubmit = (values: IIndividualAnnualAccomodation) => {
+  const onSubmit = (values: IIndividualAnnualAccomodationInput) => {
     toast.promise(mutateAsync(values), {
       success: "Successful",
       loading: "Please wait...",

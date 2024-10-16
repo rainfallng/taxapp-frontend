@@ -1,30 +1,30 @@
+import axios, { AxiosInstance } from "axios";
 import { getStore } from "@/lib/utils";
-import {
-  ICompanyOnboarding,
-  ICompanyProfile,
-  IIndividualOnboarding as IIndividualProfileOnboarding,
-  ILGAs,
-  ILogin,
-  IRegister,
-  IState,
-  ITINProfile,
-} from "@/types";
-import {
-  IIndividualAnnualAccomodation,
-  IIndividualAnnualIncome,
-  IIndividualOnboarding,
-  IIndividualReturn,
-  IVerifyCAC,
-} from "@/types/form";
 import {
   AddCompanyStaffReturn,
   BillList,
   CompanyReturnsList,
+  ICompanyOnboarding,
+  ICompanyProfile,
+  IConsultant,
+  IConsultantRequestForm,
+  IIndividualAnnualAccomodationInput,
+  IIndividualAnnualIncome,
+  IIndividualOnboardingInput,
+  IIndividualOnboarding as IIndividualProfileOnboarding,
+  IIndividualReturn,
+  ILGAs,
+  ILogin,
+  IPaginatedResponse,
+  IRegister,
+  IResetPassword,
+  IState,
+  ITINProfile,
+  IVerifyCAC,
   ReturnGraph,
   ReturnStat,
   YearOrMonthParam,
-} from "@/types/returns";
-import axios, { AxiosInstance } from "axios";
+} from "@/types";
 
 export class APIRequest {
   private endpoint?: string;
@@ -63,6 +63,15 @@ export class APIRequest {
 
   login = async (body: ILogin) => {
     const { data } = await axios.post(`/login/`, body);
+
+    return data;
+  };
+
+  resetPassword = async (body: IResetPassword) => {
+    const { data } = await axios.post(
+      `/api/v1/ums/profile/reset-password/`,
+      body
+    );
 
     return data;
   };
@@ -139,12 +148,89 @@ export class APIRequest {
     return data;
   };
 
-  individualIdentification = async (body: IIndividualOnboarding) => {
+  individualIdentification = async (body: IIndividualOnboardingInput) => {
     const { data } = await axios.post(`/api/v1/tin/individual/verify/`, body, {
       headers: {
         Authorization: `JWT ${this.accessToken}`,
       },
     });
+
+    return data;
+  };
+
+  profileIdentification = async (
+    body: Omit<IIndividualOnboardingInput, "date_of_birth">
+  ) => {
+    const { data } = await axios.post(
+      `/api/v1/ums/profile/verify-identity/`,
+      body,
+      {
+        headers: {
+          Authorization: `JWT ${this.accessToken}`,
+        },
+      }
+    );
+
+    return data;
+  };
+
+  verifyProfileIdentification = async (
+    body: Omit<IIndividualOnboardingInput, "date_of_birth"> & { otp: string }
+  ) => {
+    const { data } = await axios.post(
+      `/api/v1/ums/profile/verify-identity/otp/`,
+      body,
+      {
+        headers: {
+          Authorization: `JWT ${this.accessToken}`,
+        },
+      }
+    );
+
+    return data;
+  };
+
+  consultantIdentification = async (
+    body: Omit<IIndividualOnboardingInput, "date_of_birth">
+  ) => {
+    const { data } = await axios.post(
+      `/api/v1/ums/tax-consultant/request/verify-identity/`,
+      body
+    );
+
+    return data;
+  };
+
+  verifyConsultantIdentification = async (
+    body: Omit<IIndividualOnboardingInput, "date_of_birth"> & { otp: string }
+  ) => {
+    const { data } = await axios.post(
+      `/api/v1/ums/tax-consultant/request/verify-identity/otp/`,
+      body
+    );
+
+    return data;
+  };
+
+  consultantRequest = async (body: IConsultantRequestForm) => {
+    const { data } = await axios.post(
+      `/api/v1/ums/tax-consultant/request/`,
+      body
+    );
+
+    return data;
+  };
+
+  consultantSignup = async (body: IConsultantRequestForm) => {
+    const { data } = await axios.post(
+      `/api/v1/ums/tax-consultant/complete-signup/`,
+      body,
+      {
+        headers: {
+          Authorization: `JWT ${this.accessToken}`,
+        },
+      }
+    );
 
     return data;
   };
@@ -314,7 +400,7 @@ export class APIRequest {
 
   postIndividualAccomodation = async (
     incomeId: string,
-    body: IIndividualAnnualAccomodation
+    body: IIndividualAnnualAccomodationInput
   ) => {
     const { data } = await axios.post(
       `/api/v1/returns/individual/${incomeId}/accommodation/`,
@@ -443,5 +529,29 @@ export class APIRequest {
     );
 
     return data as ReturnStat;
+  };
+
+  inviteConsultant = async (body: { email: string; phone: string }) => {
+    const { data } = await axios.post(
+      `/api/v1/ums/tax-consultant/invite/`,
+      body,
+      {
+        headers: {
+          Authorization: `JWT ${this.accessToken}`,
+        },
+      }
+    );
+
+    return data;
+  };
+
+  getConsultants = async () => {
+    const { data } = await axios.get(`/api/v1/ums/tax-consultant/`, {
+      headers: {
+        Authorization: `JWT ${this.accessToken}`,
+      },
+    });
+
+    return data as IPaginatedResponse<IConsultant>;
   };
 }

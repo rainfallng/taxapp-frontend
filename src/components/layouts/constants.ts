@@ -6,6 +6,7 @@ import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNone
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
+import BusinessCenterOutlinedIcon from '@mui/icons-material/BusinessCenterOutlined';
 
 export const SIDEBAR_LINKS: Record<string, ISidebar[]> = {
   [UserType.COMPANY]: [
@@ -106,4 +107,11 @@ export const SIDEBAR_LINKS: Record<string, ISidebar[]> = {
       icon: SupportAgentIcon,
     },
   ],
+  [UserType.ADMIN]: [
+    {
+      title: "Tax Consultant",
+      link: "/app/consultant",
+      icon: BusinessCenterOutlinedIcon,
+    }
+  ]
 };

@@ -90,18 +90,20 @@ const QuickMenu = () => {
         />
       </Grid>
 
-      <Grid item xs={4}>
-        <QuickMenuCard
-          link="/app/consultant"
-          text="Tax Consultant"
-          icon={
-            <BusinessCenterOutlinedIcon
-              color="success"
-              sx={{ width: "7.2rem", height: "7.2rem" }}
-            />
-          }
-        />
-      </Grid>
+      {user.user_type === UserType.ADMIN && (
+        <Grid item xs={4}>
+          <QuickMenuCard
+            link="/app/consultant"
+            text="Tax Consultant"
+            icon={
+              <BusinessCenterOutlinedIcon
+                color="success"
+                sx={{ width: "7.2rem", height: "7.2rem" }}
+              />
+            }
+          />
+        </Grid>
+      )}
     </Grid>
   );
 };

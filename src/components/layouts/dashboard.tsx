@@ -15,28 +15,34 @@ import { ICompanyProfile, ITINProfile, UserType } from "@/types";
 const DashboardLayout = () => {
   const navigate = useNavigate();
   const { user, reset } = useStore();
-  // const { pathname } = useLocation();
 
   const tinProfile = user?.tin_profile as ITINProfile;
   const companyProfile = user?.tin_profile as ICompanyProfile;
 
-  const userName =
-    user?.user_type === UserType.COMPANY
-      ? companyProfile?.name
-      : `${tinProfile?.first_name} ${tinProfile?.last_name}`;
+  const getUserName = () => {
+    if (user?.user_type === UserType.COMPANY) return companyProfile?.name;
+    if (user?.user_type === UserType.INDIVIDUAL)
+      return `${tinProfile?.first_name} ${tinProfile?.last_name}`;
+    return `${user?.first_name} ${user?.last_name}`;
+  };
+
+  const userName = getUserName();
 
   const logout = () => {
     reset();
     navigate("/auth/login");
   };
 
-  if (!user.phone) return <Navigate to="/auth/verify-phone" />;
+  if (
+    !user.phone &&
+    !([UserType.ADMIN, UserType.TAX_CONSULTANT] as Array<string>).includes(
+      user?.user_type
+    )
+  )
+    return <Navigate to="/auth/verify-phone" />;
 
-  // if (!user.tin_profile && !pathname.startsWith("/app/onboarding"))
-  //   return <Navigate to="/app/onboarding" />;
-
-  // if (user.tin_profile && pathname.startsWith("/app/onboarding"))
-  //   return <Navigate to="/app/home" />;
+  if (!user?.phone_verified && UserType.TAX_CONSULTANT === user?.user_type)
+    return <Navigate to="/auth/onboarding/consultant" />;
 
   return (
     <Protected>

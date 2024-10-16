@@ -64,6 +64,7 @@ export const handleFormToastErrors = (
   error: AxiosError<{ [message: string]: string | string[] }>,
   message: string = ""
 ) => {
+  console.log({ error })
   const errorData = error.response?.data;
   if (errorData?.message) return errorData?.message as string;
   if (error?.response?.status === 400 && errorData?.errors)

@@ -1,8 +1,9 @@
 import VerifyIdentity from "@/components/features/onboarding/verify-identity";
 import { useAPI } from "@/hooks/useApi";
-import { identificationSchema } from "@/lib/schemas/onboarding/identification";
+import { identificationSchema } from "@/lib/schemas/onboarding/consultant-identification";
 import { handleFormErrors, handleFormToastErrors } from "@/lib/utils";
 import { useStore } from "@/store";
+import { UserType } from "@/types";
 import { IIndividualOnboardingInput } from "@/types/form";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
@@ -10,33 +11,45 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
-const Identification = () => {
+const ConsultantIdentification = () => {
   const navigate = useNavigate();
   const { api } = useAPI();
-  const { setUser } = useStore();
+  const { setConsultantOnboarding, user } = useStore();
+  const isTaxConsultant = user.user_type === UserType.TAX_CONSULTANT;
   const form = useForm({
     defaultValues: identificationSchema.defaultValues,
     resolver: identificationSchema.resolver,
   });
-  const { mutateAsync: individualIdentification, isPending } = useMutation({
-    mutationFn: api.individualIdentification,
-    onSuccess(data) {
-      setUser({ tin_profile: data?.data });
-      navigate("/auth/onboarding/personal-info");
+  const { mutateAsync: consultantIdentification, isPending } = useMutation({
+    mutationFn: isTaxConsultant
+      ? api.profileIdentification
+      : api.consultantIdentification,
+    onSuccess() {
+      setConsultantOnboarding(form.getValues());
+      navigate("/auth/onboarding/consultant/verify");
     },
     onError: (error: AxiosError<{ [message: string]: string | string[] }>) =>
       handleFormErrors(error, form.setError),
   });
 
-  const onSubmit = (values: IIndividualOnboardingInput) => {
-    toast.promise(individualIdentification(values), {
+  const onSubmit = (
+    values: Omit<IIndividualOnboardingInput, "date_of_birth">
+  ) => {
+    toast.promise(consultantIdentification(values), {
       success: "Identification successful",
       loading: "Please wait...",
       error: (error) => handleFormToastErrors(error, "Identification failed"),
     });
   };
 
-  return <VerifyIdentity form={form} isPending={isPending} onSubmit={onSubmit} />;
+  return (
+    <VerifyIdentity
+      form={form}
+      isPending={isPending}
+      showDOB={false}
+      onSubmit={onSubmit}
+    />
+  );
 };
 
-export default Identification;
+export default ConsultantIdentification;

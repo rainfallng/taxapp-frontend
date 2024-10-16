@@ -40,6 +40,12 @@ import ComputePayeReturns from "@/pages/returns/paye/compute";
 import PayeBill from "@/pages/returns/paye/bill";
 import VerifyCompany from "@/pages/auth/onboarding/verify-company";
 import CreatePassword from "@/pages/auth/create-password";
+import ConsultantRequestForm from "@/pages/auth/onboarding/consultant-request-form";
+import TaxConsultant from "@/pages/consultant";
+import ConsultantIdentification from "@/pages/auth/onboarding/consultant-identification";
+import VerifyConsultantIdentity from "@/pages/auth/onboarding/verify-consultant-identity";
+import ConsultantRequestSuccess from "@/pages/auth/onboarding/consultant-request-success";
+import ConsultantSuccess from "@/pages/auth/onboarding/consultant-success";
 
 const AppRoutes = () => {
   return (
@@ -54,6 +60,7 @@ const AppRoutes = () => {
           }
         >
           <Route path="login" element={<Login />} />
+          <Route path="admin" element={<Login />} />
           <Route path="terms" element={<TermsOfUse />} />
           <Route path="register" element={<Register />} />
           <Route path="forgot-password" element={<ForgotPassword />} />
@@ -66,6 +73,13 @@ const AppRoutes = () => {
             <Route path="company-info" element={<Outlet />}>
               <Route index element={<CompanyIdentification />} />
               <Route path="verify" element={<VerifyCompany />} />
+            </Route>
+            <Route path="consultant" element={<Outlet />}>
+              <Route index element={<ConsultantIdentification />} />
+              <Route path="verify" element={<VerifyConsultantIdentity />} />
+              <Route path="request" element={<ConsultantRequestForm />} />
+              <Route path="success" element={<ConsultantSuccess />} />
+              <Route path="request-success" element={<ConsultantRequestSuccess />} />
             </Route>
             <Route path="personal-info" element={<Personalinformation />} />
             <Route path="company-profile" element={<CompanyProfile />} />
@@ -96,6 +110,7 @@ const AppRoutes = () => {
       >
         <Route path="home" element={<DashboardHome />} />
         <Route path="quick-menu" element={<QuickMenu />} />
+        <Route path="consultant" element={<TaxConsultant />} />
         <Route
           path="profile/generate-tax-certificate"
           element={<GenerateTaxCertificate />}
