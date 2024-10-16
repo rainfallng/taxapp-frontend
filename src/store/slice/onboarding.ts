@@ -1,5 +1,6 @@
 import {
   ICompanyOnboarding,
+  IConsultantOnboarding,
   IIndividualOnboarding,
   SubmissionModeType,
 } from "@/types";
@@ -8,9 +9,11 @@ import { StateCreator } from "zustand";
 export interface IOnboardingSlice {
   onboardingMode: string;
   individualOnboarding: IIndividualOnboarding;
+  consultantOnboarding: IConsultantOnboarding;
   setIndividualOnboarding: (value: Partial<IIndividualOnboarding>) => void;
   companyOnboarding: ICompanyOnboarding;
   setCompanyOnboarding: (value: Partial<ICompanyOnboarding>) => void;
+  setConsultantOnboarding: (value: Partial<IConsultantOnboarding>) => void;
   setOnboardingMode: (value: string) => void;
   reset: () => void;
 }
@@ -71,8 +74,13 @@ const defaultState = {
     submission_mode: "",
     first_time_filling: null,
     past_tax_filling: "",
-  }
-}
+  },
+  consultantOnboarding: {
+    id_type: "",
+    id_number: "",
+    otp: "",
+  },
+};
 
 export const onboardingSlice: StateCreator<IOnboardingSlice> = (set) => ({
   ...defaultState,
@@ -86,6 +94,11 @@ export const onboardingSlice: StateCreator<IOnboardingSlice> = (set) => ({
       ...s,
       companyOnboarding: { ...s.companyOnboarding, ...value },
     })),
+  setConsultantOnboarding: (value) =>
+    set((s) => ({
+      ...s,
+      consultantOnboarding: { ...s.consultantOnboarding, ...value },
+    })),
   setOnboardingMode: (value) => set({ onboardingMode: value }),
-  reset: () => set((s) => ({ ...s, ...defaultState }))
+  reset: () => set((s) => ({ ...s, ...defaultState })),
 });

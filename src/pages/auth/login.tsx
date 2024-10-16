@@ -9,7 +9,7 @@ import {
 import HttpsOutlinedIcon from "@mui/icons-material/HttpsOutlined";
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ICompanyProfile, ILogin, ITINProfile, UserType } from "@/types";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { loginSchema } from "@/lib/schemas/login";
@@ -30,6 +30,9 @@ const Login = () => {
   const { setUser, setToken, user } = useStore();
   const form = useForm<ILogin>(loginSchema);
   const [fetchProfile, setFetchProfile] = useState(false);
+  const location = useLocation();
+
+  const isInstitutionAdmin = location.pathname === "/auth/admin";
 
   const { handleSubmit, setError } = form;
 
@@ -60,9 +63,21 @@ const Login = () => {
     mutationFn: api.login,
     onSuccess(data) {
       const { user, ...token } = data;
-      setUser(user);
+      const isTaxConsultant = user.user_type === UserType.TAX_CONSULTANT;
+      setUser({
+        ...user,
+        user_type: isInstitutionAdmin
+          ? UserType.ADMIN
+          : isTaxConsultant
+          ? user.user_type
+          : user.user.user_type,
+      });
       setToken(token?.access, token?.refresh);
-      setFetchProfile(true);
+      if (!isInstitutionAdmin && !isTaxConsultant) {
+        setFetchProfile(true);
+      } else {
+        navigate("/app");
+      }
     },
     onError: (error: AxiosError<{ [message: string]: string | string[] }>) =>
       handleFormErrors(error, setError),
@@ -81,7 +96,7 @@ const Login = () => {
       setUser({ tin_profile: data });
       navigate("/app");
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   useEffect(() => {
@@ -168,7 +183,7 @@ const Login = () => {
           />
         </FormGroup>
         <Button
-          disabled={form.formState.isDirty || isPending}
+          disabled={isPending}
           type="submit"
           sx={{
             py: "1.75rem",
@@ -182,46 +197,37 @@ const Login = () => {
           />
           Sign In
         </Button>
-        <Box
-          textAlign="center"
-          display="flex"
-          flexDirection="column"
-          gap="1.6rem"
-        >
+        {!isInstitutionAdmin && (
           <Box
-            component={Link}
-            to="/forgot-password"
-            sx={{
-              fontSize: "1.6rem",
-              color: "#7879C5",
-              textDecoration: "none",
-            }}
+            textAlign="center"
+            display="flex"
+            flexDirection="column"
+            gap="1.6rem"
           >
-            Forgot your pasword?
+            <Box
+              component={Link}
+              to="/forgot-password"
+              sx={{
+                fontSize: "1.6rem",
+                color: "#7879C5",
+                textDecoration: "none",
+              }}
+            >
+              Forgot your pasword?
+            </Box>
+            <Box
+              component={Link}
+              to="/auth/tax-retrieval"
+              sx={{
+                fontSize: "1.6rem",
+                color: "#7879C5",
+                textDecoration: "none",
+              }}
+            >
+              Forgot Tax ID?
+            </Box>
           </Box>
-          <Box
-            component={Link}
-            to="/auth/tax-retrieval"
-            sx={{
-              fontSize: "1.6rem",
-              color: "#7879C5",
-              textDecoration: "none",
-            }}
-          >
-            Forgot Tax ID?
-          </Box>
-          {/* <Box
-            component={Link}
-            to="/"
-            sx={{
-              fontSize: "1.6rem",
-              color: "#7879C5",
-              textDecoration: "none",
-            }}
-          >
-            Create New Tax ID?
-          </Box> */}
-        </Box>
+        )}
       </Box>
     </form>
   );

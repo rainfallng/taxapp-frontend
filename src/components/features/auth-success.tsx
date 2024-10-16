@@ -3,7 +3,17 @@ import { Box, Typography } from "@mui/material";
 import Button from "../ui/button";
 import { useNavigate } from "react-router-dom";
 
-const AuthSuccess = ({ title, detail }: { title: string; detail: string }) => {
+const AuthSuccess = ({
+  title,
+  detail,
+  linkTo = "/auth/login",
+  linkText = "Proceed to Login",
+}: {
+  title: string;
+  detail: string;
+  linkTo?: string;
+  linkText?: string;
+}) => {
   const navigate = useNavigate();
 
   return (
@@ -61,9 +71,9 @@ const AuthSuccess = ({ title, detail }: { title: string; detail: string }) => {
           fontSize: "1.8rem",
           textTransform: "capitalize",
         }}
-        onClick={() => navigate("/auth/login")}
+        onClick={() => navigate(linkTo)}
       >
-        Proceed to Login
+        {linkText}
       </Button>
     </Box>
   );

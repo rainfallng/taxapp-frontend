@@ -1,6 +1,8 @@
 export const UserType = {
   INDIVIDUAL: "Individual",
   COMPANY: "Company",
+  ADMIN: "Admin",
+  TAX_CONSULTANT: "Tax Consultant"
 } as const;
 
 export const MaritalStatusType = {
@@ -51,6 +53,12 @@ export interface IRegister {
 export interface ILogin {
   email: string;
   password: string;
+}
+
+export interface IResetPassword {
+  token: string;
+  password1: string;
+  password2: string;
 }
 
 export interface IToken {
@@ -162,6 +170,7 @@ export interface IUser {
   email: string;
   phone: string;
   user_type: string;
+  phone_verified?: boolean;
   tin_profile: ITINProfile | ICompanyProfile | null;
 }
 
@@ -220,6 +229,12 @@ export interface ICompanyOnboarding {
   submission_mode: string;
   first_time_filling: boolean | null;
   past_tax_filling: string;
+}
+
+export interface IConsultantOnboarding {
+  id_type: string;
+  id_number: string;
+  otp: string;
 }
 
 export interface IState {

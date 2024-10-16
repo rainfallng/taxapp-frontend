@@ -1,15 +1,44 @@
-import Button from "@/components/ui/button"
-import Input from "@/components/ui/input"
-import { Box, Typography, useTheme } from "@mui/material"
-import { useForm } from "react-hook-form"
+import Button from "@/components/ui/button";
+import Input from "@/components/ui/input";
+import { useAPI } from "@/hooks/useApi";
+import { resetPasswordSchema } from "@/lib/schemas/reset-password";
+import { handleFormErrors, handleFormToastErrors } from "@/lib/utils";
+import { IResetPassword } from "@/types";
+import { Box, Typography, useTheme } from "@mui/material";
+import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 
 const CreatePassword = () => {
-    const form = useForm()
-    const theme = useTheme()
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token");
+  const form = useForm(resetPasswordSchema);
+  const theme = useTheme();
+  const navigate = useNavigate();
+  const { api } = useAPI();
 
-    const { handleSubmit } = form
+  const { handleSubmit } = form;
 
-    const onSubmit = (data: unknown) => console.log({ data })
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: api.resetPassword,
+    onSuccess() {
+      navigate("/auth/login");
+    },
+    onError: (error: AxiosError<{ [message: string]: string | string[] }>) =>
+      handleFormErrors(error, form.setError),
+  });
+
+  const onSubmit = (data: Omit<IResetPassword, "token">) => {
+    toast.promise(mutateAsync({ ...data, token: token as string }), {
+      success: "Change password successful",
+      loading: "Please wait...",
+      error: (error) => handleFormToastErrors(error, "Request failed"),
+    });
+  };
+
+  if (!token) return <Navigate to="/auth/login" replace />;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -40,20 +69,20 @@ const CreatePassword = () => {
       >
         <Input
           type="password"
-          name="email"
+          name="password1"
           form={form}
           sx={{ height: "5.6rem" }}
           label="Enter New Password"
         />
         <Input
           type="password"
-          name="email"
+          name="password2"
           form={form}
           sx={{ height: "5.6rem" }}
           label="Confirm New Password"
         />
         <Button
-          disabled={form.formState.isDirty}
+          disabled={isPending}
           type="submit"
           sx={{
             py: "1.75rem",
@@ -66,7 +95,7 @@ const CreatePassword = () => {
         </Button>
       </Box>
     </form>
-  )
-}
+  );
+};
 
-export default CreatePassword
+export default CreatePassword;

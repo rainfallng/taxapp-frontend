@@ -1,4 +1,4 @@
-export interface IIndividualOnboarding {
+export interface IIndividualOnboardingInput {
   id_type: string;
   id_number: string;
   date_of_birth: string;
@@ -77,7 +77,7 @@ export interface IIndividualReturn {
   tin: string;
 }
 
-export interface IIndividualAnnualAccomodation {
+export interface IIndividualAnnualAccomodationInput {
   accommodation_type: string;
   ownership_type: string;
   owner_name: string;
@@ -87,4 +87,16 @@ export interface IIndividualAnnualAccomodation {
   rent_paid_by_employer: string;
   start_date: string;
   end_date: string;
+}
+
+export interface IConsultantSignUp {
+  tax_id: string;
+  credential: string;
+}
+
+export interface IConsultantRequestForm extends IConsultantSignUp {
+  id_type: string;
+  id_number: string;
+  otp: string;
+  email: string;
 }
