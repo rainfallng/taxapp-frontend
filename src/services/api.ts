@@ -107,7 +107,7 @@ export class APIRequest {
   };
 
   getStates = async () => {
-    const { data } = await axios.get(`/api/v1/tin/state`, {
+    const { data } = await axios.get(`/api/v1/location/state`, {
       headers: {
         Authorization: `JWT ${this.accessToken}`,
       },
@@ -117,7 +117,7 @@ export class APIRequest {
   };
 
   getLGAs = async (stateId: number) => {
-    const { data } = await axios.get(`/api/v1/tin/state/${stateId}/lgas/`, {
+    const { data } = await axios.get(`/api/v1/location/state/${stateId}/lgas/`, {
       headers: {
         Authorization: `JWT ${this.accessToken}`,
       },
