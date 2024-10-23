@@ -79,6 +79,10 @@ const defaultState = {
     id_type: "",
     id_number: "",
     otp: "",
+    tax_office: null,
+    first_name: "",
+    last_name: "",
+    phone_number_1: "",
   },
 };
 

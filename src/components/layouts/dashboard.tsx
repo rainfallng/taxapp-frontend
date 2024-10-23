@@ -14,10 +14,11 @@ import { ICompanyProfile, ITINProfile, UserType } from "@/types";
 
 const DashboardLayout = () => {
   const navigate = useNavigate();
-  const { user, reset } = useStore();
+  const { user, onboarded, reset } = useStore();
 
   const tinProfile = user?.tin_profile as ITINProfile;
   const companyProfile = user?.tin_profile as ICompanyProfile;
+  const isTaxConsultant = UserType.TAX_CONSULTANT === user?.user_type;
 
   const getUserName = () => {
     if (user?.user_type === UserType.COMPANY) return companyProfile?.name;
@@ -41,8 +42,14 @@ const DashboardLayout = () => {
   )
     return <Navigate to="/auth/verify-phone" />;
 
-  if (!user?.phone_verified && UserType.TAX_CONSULTANT === user?.user_type)
+  if (
+    (!user?.phone || !onboarded[UserType.TAX_CONSULTANT].id_verified) &&
+    isTaxConsultant
+  )
     return <Navigate to="/auth/onboarding/consultant" />;
+
+  if (!onboarded[UserType.TAX_CONSULTANT].cac_verified && isTaxConsultant)
+    return <Navigate to="/auth/onboarding/consultant/request" />;
 
   return (
     <Protected>

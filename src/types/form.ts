@@ -91,7 +91,7 @@ export interface IIndividualAnnualAccomodationInput {
 
 export interface IConsultantSignUp {
   tax_id: string;
-  credential: string;
+  credential: FormData;
 }
 
 export interface IConsultantRequestForm extends IConsultantSignUp {
@@ -99,4 +99,13 @@ export interface IConsultantRequestForm extends IConsultantSignUp {
   id_number: string;
   otp: string;
   email: string;
+}
+
+export interface IConsultantVerifyIdentity {
+  id_type: string;
+  id_number: string;
+  tax_office: null;
+  first_name: string;
+  last_name: string;
+  phone_number_1: string;
 }

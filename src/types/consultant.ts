@@ -14,4 +14,7 @@ export interface IConsultant {
   created_by: string;
   modified_by: string | null;
   user: string;
+  tax_office: null;
+  id_number: string;
+  id_type: string;
 }

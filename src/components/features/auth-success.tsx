@@ -23,7 +23,6 @@ const AuthSuccess = ({
       flexDirection="column"
       alignItems="center"
       textAlign="center"
-      sx={{ pt: "13rem" }}
     >
       <Box
         sx={{

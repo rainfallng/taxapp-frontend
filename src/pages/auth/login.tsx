@@ -27,7 +27,7 @@ const Login = () => {
   const theme = useTheme();
   const { api } = useAPI();
   const navigate = useNavigate();
-  const { setUser, setToken, user } = useStore();
+  const { setUser, setToken, setOnboarded, user } = useStore();
   const form = useForm<ILogin>(loginSchema);
   const [fetchProfile, setFetchProfile] = useState(false);
   const location = useLocation();
@@ -62,13 +62,15 @@ const Login = () => {
   const { mutateAsync: onLogin, isPending } = useMutation({
     mutationFn: api.login,
     onSuccess(data) {
-      const { user, ...token } = data;
+      const { user, cac_verified, id_verified, ...token } = data;
       const isTaxConsultant = user.user_type === UserType.TAX_CONSULTANT;
       setUser({
         ...user,
         user_type: isInstitutionAdmin ? UserType.ADMIN : user.user_type,
       });
       setToken(token?.access, token?.refresh);
+      if (!isInstitutionAdmin)
+        setOnboarded({ [user.user_type]: { cac_verified, id_verified } });
       if (!isInstitutionAdmin && !isTaxConsultant) {
         setFetchProfile(true);
       } else {

@@ -14,6 +14,8 @@ import { useAPI } from "@/hooks/useApi";
 import { useNavigate } from "react-router-dom";
 import { useStore } from "@/store";
 import { UserType } from "@/types";
+import { useEffect, useMemo, useState } from "react";
+import { CancelOutlined } from "@mui/icons-material";
 
 type Values = {
   id_type?: string;
@@ -30,7 +32,11 @@ const ConsultantRequestForm = () => {
   const { api } = useAPI();
   const navigate = useNavigate();
   const { user } = useStore();
-  const isTaxConsultant = user.user_type === UserType.TAX_CONSULTANT;
+  const [file, setFile] = useState<File | null>(null);
+  const isTaxConsultant = useMemo(
+    () => user.user_type === UserType.TAX_CONSULTANT,
+    [user.user_type]
+  );
   const form = useForm(consultantRequestFormSchema);
 
   const { mutateAsync: consultantRequest, isPending } = useMutation({
@@ -47,6 +53,8 @@ const ConsultantRequestForm = () => {
   });
 
   const onSubmit = (inputs: Values) => {
+    const formData = new FormData();
+    if (!file) return;
     const {
       id_number = "",
       id_type = "",
@@ -54,22 +62,40 @@ const ConsultantRequestForm = () => {
       email = "",
       tax_id = "",
     } = inputs;
+    formData.append("credential", file);
+    formData.append("tax_id", tax_id);
+    if (!isTaxConsultant) {
+      formData.append("id_number", id_number);
+      formData.append("id_type", id_type);
+      formData.append("otp", otp);
+      formData.append("email", email);
+    }
     toast.promise(
-      consultantRequest({
-        id_number,
-        id_type,
-        otp,
-        email,
-        tax_id,
-        credential: "",
-      }),
+      consultantRequest(formData),
       {
-        success: "Identification successful",
+        success: "Request successful",
         loading: "Please wait...",
-        error: (error) => handleFormToastErrors(error, "Identification failed"),
+        error: (error) => handleFormToastErrors(error, "Request failed"),
       }
     );
   };
+
+  useEffect(() => {
+    form.reset({
+      ...form.getValues(),
+      first_name: user.first_name,
+      last_name: user.last_name,
+      phone_number: user.phone,
+      ...(isTaxConsultant ? { email: user.email } : {}),
+    });
+  }, [
+    form,
+    isTaxConsultant,
+    user.email,
+    user.first_name,
+    user.last_name,
+    user.phone,
+  ]);
 
   return (
     <Box
@@ -106,16 +132,18 @@ const ConsultantRequestForm = () => {
           />
         </Grid>
         <Grid item xs={6}>
-          <Input label="Email Address" name="email" form={form} />
+          <Input
+            label="Email Address"
+            name="email"
+            form={form}
+            disabled={isTaxConsultant}
+          />
         </Grid>
         <Grid item xs={6}>
           <Input label="Unique Tax ID" name="tax_id" form={form} />
         </Grid>
         <Grid item xs={6} sx={{ display: "flex", alignItems: "center" }}>
-          <FileUpload
-            multiple={false}
-            onChange={({ target }) => console.log(target.files?.item?.(0))}
-          >
+          {file ? (
             <Box
               sx={{
                 width: "100%",
@@ -126,12 +154,41 @@ const ConsultantRequestForm = () => {
                 alignItems: "center",
               }}
             >
-              <UploadOutlinedIcon
-                sx={{ mr: "1.6rem", width: "1.6rem", height: "1.6rem" }}
-              />{" "}
-              Upload Credentials
+              {file.name}
+              <CancelOutlined
+                onClick={() => setFile(null)}
+                sx={{
+                  ml: "1.6rem",
+                  width: "1.6rem",
+                  height: "1.6rem",
+                  cursor: "pointer",
+                }}
+              />
             </Box>
-          </FileUpload>
+          ) : (
+            <FileUpload
+              multiple={false}
+              onChange={({ target }) => {
+                if (target.files?.item?.(0)) setFile(target.files?.item?.(0));
+              }}
+            >
+              <Box
+                sx={{
+                  width: "100%",
+                  color: "#278F76",
+                  fontSize: "1.8rem",
+                  fontWeight: 500,
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <UploadOutlinedIcon
+                  sx={{ mr: "1.6rem", width: "1.6rem", height: "1.6rem" }}
+                />{" "}
+                Upload Credentials
+              </Box>
+            </FileUpload>
+          )}
         </Grid>
       </Grid>
       <Box
