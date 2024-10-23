@@ -6,7 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 const VerifyConsultantIdentity = () => {
-  const { consultantOnboarding, setConsultantOnboarding, user } = useStore();
+  const { consultantOnboarding, setConsultantOnboarding, setUser, user } = useStore();
   const { api } = useAPI();
   const navigate = useNavigate();
   const isTaxConsultant = user.user_type === UserType.TAX_CONSULTANT;
@@ -15,8 +15,15 @@ const VerifyConsultantIdentity = () => {
     mutationFn: isTaxConsultant
       ? api.verifyProfileIdentification
       : api.verifyConsultantIdentification,
-    onSuccess(_, variable) {
-      setConsultantOnboarding({ otp: variable.otp });
+    onSuccess(data, variable) {
+      setConsultantOnboarding({
+        otp: variable.otp,
+      });
+      setUser({
+        first_name: data?.data?.first_name,
+        last_name: data?.data?.last_name,
+        phone: data?.data?.phone_number_1,
+      })
       navigate("/auth/onboarding/consultant/request");
     },
   });

@@ -7,7 +7,7 @@ import {
   ICompanyOnboarding,
   ICompanyProfile,
   IConsultant,
-  IConsultantRequestForm,
+  IConsultantVerifyIdentity,
   IIndividualAnnualAccomodationInput,
   IIndividualAnnualIncome,
   IIndividualOnboardingInput,
@@ -187,7 +187,7 @@ export class APIRequest {
       }
     );
 
-    return data;
+    return data as { data: IConsultantVerifyIdentity };
   };
 
   consultantIdentification = async (
@@ -209,10 +209,10 @@ export class APIRequest {
       body
     );
 
-    return data;
+    return data as { data: IConsultantVerifyIdentity };
   };
 
-  consultantRequest = async (body: IConsultantRequestForm) => {
+  consultantRequest = async (body: FormData) => {
     const { data } = await axios.post(
       `/api/v1/ums/tax-consultant/request/`,
       body
@@ -221,8 +221,8 @@ export class APIRequest {
     return data;
   };
 
-  consultantSignup = async (body: IConsultantRequestForm) => {
-    const { data } = await axios.post(
+  consultantSignup = async (body: FormData) => {
+    const { data } = await axios.patch(
       `/api/v1/ums/tax-consultant/complete-signup/`,
       body,
       {

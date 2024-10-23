@@ -1,8 +1,10 @@
+import { IConsultant } from "./consultant";
+
 export const UserType = {
   INDIVIDUAL: "Individual",
   COMPANY: "Company",
   ADMIN: "Admin",
-  TAX_CONSULTANT: "Tax Consultant"
+  TAX_CONSULTANT: "Tax Consultant",
 } as const;
 
 export const MaritalStatusType = {
@@ -172,6 +174,7 @@ export interface IUser {
   user_type: string;
   phone_verified?: boolean;
   tin_profile: ITINProfile | ICompanyProfile | null;
+  consultant: IConsultant | null;
 }
 
 export interface IIndividualOnboarding {
@@ -235,6 +238,10 @@ export interface IConsultantOnboarding {
   id_type: string;
   id_number: string;
   otp: string;
+  tax_office: null;
+  first_name: string;
+  last_name: string;
+  phone_number_1: string;
 }
 
 export interface IState {
