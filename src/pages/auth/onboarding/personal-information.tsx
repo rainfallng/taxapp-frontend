@@ -36,7 +36,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
-const Personalinformation = () => {
+const PersonalInformation = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { user, setUser } = useStore();
@@ -705,4 +705,4 @@ const Personalinformation = () => {
   );
 };
 
-export default Personalinformation;
+export default PersonalInformation;

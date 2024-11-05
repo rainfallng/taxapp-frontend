@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import BillSummaryPDF from "./bill-summary-pdf";
 import { usePDF } from "@react-pdf/renderer";
 import { useEffect } from "react";
-import { Company } from "@/types";
+import { CompanyProfile } from "@/types";
 
 const TaxImplicationBill = ({
   billId,
@@ -56,7 +56,7 @@ const TaxImplicationBill = ({
   const PDF = () => (
     <BillSummaryPDF
       data={data}
-      tinProfile={tinProfile as Company}
+      tinProfile={tinProfile as CompanyProfile}
       user={user}
       amountDue={amountDue}
       month={month}

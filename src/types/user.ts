@@ -66,116 +66,7 @@ export interface IToken {
   refresh: string | null;
 }
 
-export interface ICompanyProfile {
-  id: number;
-  icode: string;
-  company_verification: {
-    id_number: string;
-  };
-  created: string;
-  modified: string;
-  is_active: boolean;
-  tin: string | null;
-  tax_payer_number: string | null;
-  vtin: string | null;
-  submission_mode: typeof SubmissionModeType;
-  completion_status: string;
-  tax_station: string | null;
-  first_time_filling: string | null;
-  past_tax_filling: string | null;
-  name: string;
-  email: string | null;
-  business_type: string | null;
-  phone_number: string | null;
-  number_of_employees: string | null;
-  number_of_directors: string | null;
-  place_of_business: string;
-  street_number: string | null;
-  street_name: string | null;
-  city: string;
-  lcda: string | null;
-  created_by: string | null;
-  modified_by: string | null;
-  state: string | null;
-  lga: string | null;
-}
-
-export interface ITINProfile {
-  id: number;
-  age: number;
-  nationality: string;
-  lcda: string;
-  employment_status: typeof EmploymentStatusType;
-  icode: string;
-  created: string;
-  modified: string;
-  is_active: boolean;
-  tin: string;
-  vtin: string;
-  tin_type: typeof UserType;
-  submission_mode: typeof SubmissionModeType;
-  completion_status: string;
-  last_name: string;
-  middle_name: string;
-  first_name: string;
-  title: string;
-  marital_status: string;
-  date_of_birth: string;
-  place_of_birth: string;
-  gender: string;
-  house_number: string;
-  street: string;
-  phone_number_1: string;
-  phone_number_2: string;
-  email_address: string;
-  occupation: string;
-  basic_salary: string;
-  gross_income: string;
-  annual_tax_paid: string;
-  annual_total_income: string;
-  pension: string;
-  nhis: string;
-  nsitf: string;
-  nhf: string;
-  utitlity_allowance: string;
-  arrears: string;
-  life_assurance: string;
-  thirteenth_month_salary: string;
-  gratuity: string;
-  medical_allowance: string;
-  housing_allowance: string;
-  transport_allowance: string;
-  leave_allowance: string;
-  one_off_allowance: string;
-  consolidated_relief_allowance: string;
-  first_time_filling: string;
-  past_tax_filling: string;
-  created_by: string;
-  modified_by: string;
-  state_of_origin: string;
-  state_of_residence: string;
-  lga_of_residence: string;
-  verification: {
-    id_type: typeof IndentificationType;
-    id_number: string;
-    tax_office: string | null;
-  };
-}
-
-// export interface IUser {
-//   pk: string;
-//   id: string;
-//   first_name: string;
-//   last_name: string;
-//   email: string;
-//   phone: string;
-//   user_type: string;
-//   phone_verified?: boolean;
-//   tin_profile: ITINProfile | ICompanyProfile | null;
-//   consultant: IConsultant | null;
-// }
-
-export type Individual = {
+export type IndividualProfile = {
   id: number;
   icode: string;
   created: string;
@@ -208,7 +99,7 @@ export type Individual = {
   lga_of_residence: string;
 };
 
-export type Company = {
+export type CompanyProfile = {
   id: number;
   icode: string;
   created: string;
@@ -243,8 +134,8 @@ export type Company = {
 export interface IUser {
   id: string;
   icode: string;
-  profile: Individual | null;
-  company_profile: Company | null;
+  profile: IndividualProfile | null;
+  company_profile: CompanyProfile | null;
   created: string;
   modified: string;
   last_login: string;

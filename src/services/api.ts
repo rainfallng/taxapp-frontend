@@ -5,7 +5,6 @@ import {
   BillList,
   CompanyReturnsList,
   ICompanyOnboarding,
-  ICompanyProfile,
   IConsultant,
   IConsultantVerifyIdentity,
   IIndividualAnnualAccomodationInput,
@@ -19,7 +18,6 @@ import {
   IRegister,
   IResetPassword,
   IState,
-  ITINProfile,
   IUser,
   IVerifyCAC,
   ReturnGraph,
@@ -247,26 +245,6 @@ export class APIRequest {
     });
 
     return data as IUser;
-  };
-
-  getCompany = async () => {
-    const { data } = await axios.get(`/api/v1/tin/company/profile/`, {
-      headers: {
-        Authorization: `JWT ${this.accessToken}`,
-      },
-    });
-
-    return data?.data as ICompanyProfile;
-  };
-
-  getIndividual = async () => {
-    const { data } = await axios.get(`/api/v1/tin/individual/profile/`, {
-      headers: {
-        Authorization: `JWT ${this.accessToken}`,
-      },
-    });
-
-    return data?.data as ITINProfile;
   };
 
   updateIndividual = async (body: Partial<IIndividualProfileOnboarding>) => {

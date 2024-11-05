@@ -12,7 +12,7 @@ import CompanyIdentification from "@/pages/auth/onboarding/company-identificatio
 import CompanyProfile from "@/pages/auth/onboarding/company-profile";
 import InitialOnboarding from "@/pages/auth/onboarding/initial-onboarding";
 import Identification from "@/pages/auth/onboarding/identification";
-import Personalinformation from "@/pages/auth/onboarding/personal-information";
+import PersonalInformation from "@/pages/auth/onboarding/personal-information";
 import Recaptcha from "@/pages/auth/recaptcha";
 import Register from "@/pages/auth/register";
 import TaxRetrieval from "@/pages/auth/tax-retrieval";
@@ -88,7 +88,7 @@ const AppRoutes = () => {
                 element={<ConsultantRequestSuccess />}
               />
             </Route>
-            <Route path="personal-info" element={<Personalinformation />} />
+            <Route path="personal-info" element={<PersonalInformation />} />
             <Route path="company-profile" element={<CompanyProfile />} />
             <Route path="tin" element={<Outlet />}>
               <Route index element={<InitialOnboarding />} />

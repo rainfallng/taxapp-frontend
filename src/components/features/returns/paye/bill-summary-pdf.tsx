@@ -1,4 +1,4 @@
-import { Bill, Company, IUser } from "@/types";
+import { Bill, CompanyProfile, IUser } from "@/types";
 import {
   Document,
   Page,
@@ -154,7 +154,7 @@ const BillSummaryPDF = ({
   month,
 }: {
   data: Bill;
-  tinProfile: Company;
+  tinProfile: CompanyProfile;
   user: IUser;
   amountDue: number;
   month: string;
