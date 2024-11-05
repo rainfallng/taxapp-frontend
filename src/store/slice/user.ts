@@ -1,8 +1,9 @@
-import { IToken, IUser, UserType } from "@/types";
+import { IConsultant, IToken, IUser, UserType } from "@/types";
 import { StateCreator } from "zustand";
 
 export interface IUserSlice extends IToken {
   user: IUser;
+  consultant: IConsultant;
   onboarded: Record<
     string,
     {
@@ -13,6 +14,7 @@ export interface IUserSlice extends IToken {
   setRefreshToken: (value: string) => void;
   setAccessToken: (value: string) => void;
   setUser: (user: Partial<IUser>) => void;
+  setConsultant: (user: Partial<IConsultant>) => void;
   setOnboarded: (value: {
     [id: string]: Partial<{
       cac_verified: boolean;
@@ -40,17 +42,8 @@ const defaultState = {
       id_verified: false,
     },
   },
-  user: {
-    id: "",
-    pk: "",
-    first_name: "",
-    last_name: "",
-    email: "",
-    phone: "",
-    user_type: "",
-    tin_profile: null,
-    consultant: null,
-  },
+  user: {} as IUser,
+  consultant: {} as IConsultant
 };
 
 export const userSlice: StateCreator<IUserSlice> = (set) => ({
@@ -58,7 +51,8 @@ export const userSlice: StateCreator<IUserSlice> = (set) => ({
   setRefreshToken: (value) => set({ refresh: value }),
   setAccessToken: (value) => set({ access: value }),
   setToken: (access, refresh) => set({ access, refresh }),
-  setUser: (value) => set((s) => ({ ...s, user: { ...s.user, ...value } })),
+  setUser: (value) => set((s) => ({ ...s, user: { ...s.user, ...value as IUser } })),
+  setConsultant: (value) => set((s) => ({ ...s, consultant: { ...s.consultant, ...value as IConsultant } })),
   setOnboarded: (value) =>
     set((s) => ({
       ...s,

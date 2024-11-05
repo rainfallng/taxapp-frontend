@@ -31,6 +31,8 @@ const Register = () => {
     setError,
   } = form;
 
+  const { INDIVIDUAL, COMPANY } = UserType;
+
   const { mutateAsync: onRegister, isPending } = useMutation({
     mutationFn: api.register,
     onSuccess(data) {
@@ -143,7 +145,7 @@ const Register = () => {
             {...register("user_type")}
             errorMessage={errors.user_type?.message}
           >
-            {Object.entries(UserType).map(([key, val]) => (
+            {Object.entries({ INDIVIDUAL, COMPANY }).map(([key, val]) => (
               <MenuItem key={key} value={val}>
                 {val}
               </MenuItem>

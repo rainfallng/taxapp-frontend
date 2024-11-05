@@ -1,5 +1,3 @@
-import { IConsultant } from "./consultant";
-
 export const UserType = {
   INDIVIDUAL: "Individual",
   COMPANY: "Company",
@@ -164,17 +162,110 @@ export interface ITINProfile {
   };
 }
 
+// export interface IUser {
+//   pk: string;
+//   id: string;
+//   first_name: string;
+//   last_name: string;
+//   email: string;
+//   phone: string;
+//   user_type: string;
+//   phone_verified?: boolean;
+//   tin_profile: ITINProfile | ICompanyProfile | null;
+//   consultant: IConsultant | null;
+// }
+
+export type Individual = {
+  id: number;
+  icode: string;
+  created: string;
+  modified: string;
+  is_active: boolean;
+  tin: string;
+  lasrra: string;
+  title: string;
+  marital_status: string;
+  place_of_birth: string;
+  date_of_birth: string;
+  gender: string;
+  house_number: number;
+  street: string;
+  city: string;
+  lcda: string;
+  phone_number_1: string;
+  phone_number_2: string;
+  email_address: string;
+  residential_address: string;
+  is_public_servant: boolean;
+  business_type: string;
+  employment_status: string;
+  occupation: string;
+  created_by: string;
+  modified_by: string;
+  user: string;
+  state_of_origin: string;
+  state_of_residence: string;
+  lga_of_residence: string;
+};
+
+export type Company = {
+  id: number;
+  icode: string;
+  created: string;
+  modified: string;
+  is_active: boolean;
+  tin: string;
+  lasrra: string;
+  title: string;
+  marital_status: string;
+  place_of_birth: string;
+  gender: string;
+  house_number: number;
+  street: string;
+  city: string;
+  lcda: string;
+  phone_number_1: string;
+  phone_number_2: string;
+  email_address: string;
+  residential_address: string;
+  is_public_servant: boolean;
+  business_type: string;
+  employment_status: string;
+  occupation: string;
+  created_by: string;
+  modified_by: string;
+  user: string;
+  state_of_origin: string;
+  state_of_residence: string;
+  lga_of_residence: string;
+};
+
 export interface IUser {
-  pk: string;
   id: string;
+  icode: string;
+  profile: Individual | null;
+  company_profile: Company | null;
+  created: string;
+  modified: string;
+  last_login: string;
+  is_superuser: boolean;
   first_name: string;
   last_name: string;
+  is_staff: boolean;
+  is_active: boolean;
+  date_joined: string;
   email: string;
   phone: string;
+  other_name: string;
+  phone_verified: boolean;
+  identity_verified: boolean;
+  tin_verified: boolean;
+  cac_verified: boolean;
   user_type: string;
-  phone_verified?: boolean;
-  tin_profile: ITINProfile | ICompanyProfile | null;
-  consultant: IConsultant | null;
+  created_by: string;
+  modified_by: string;
+  groups: [];
+  user_permissions: [];
 }
 
 export interface IIndividualOnboarding {

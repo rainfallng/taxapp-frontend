@@ -1,7 +1,7 @@
 export interface IIndividualOnboardingInput {
   id_type: string;
   id_number: string;
-  date_of_birth: string;
+  date_of_birth?: string;
 }
 
 export interface IPersonalInfo {

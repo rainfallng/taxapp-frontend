@@ -7,19 +7,19 @@ import { IIndividualOnboardingInput } from "@/types/form";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
-const VerifyCompany = () => {
+const VerifyIndividual = () => {
   const { user, setUser } = useStore();
   const { api } = useAPI();
   const navigate = useNavigate();
-  const companyInfo = getLS("company-info") as Omit<IIndividualOnboardingInput, "date_of_birth">;
+  const companyInfo = getLS("individual-info") as Omit<IIndividualOnboardingInput, "date_of_birth">;
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: api.verifyProfileIdentification,
     onSuccess(data) {
       console.log({ data })
-      removeLS("company-info");
+      removeLS("individual-info");
       setUser(data?.data);
-      navigate("/auth/onboarding/company-profile");
+      navigate("/auth/onboarding/personal-info");
     },
   });
 
@@ -37,4 +37,4 @@ const VerifyCompany = () => {
   );
 };
 
-export default VerifyCompany;
+export default VerifyIndividual;

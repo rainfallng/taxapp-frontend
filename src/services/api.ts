@@ -20,6 +20,7 @@ import {
   IResetPassword,
   IState,
   ITINProfile,
+  IUser,
   IVerifyCAC,
   ReturnGraph,
   ReturnStat,
@@ -64,7 +65,7 @@ export class APIRequest {
   login = async (body: ILogin) => {
     const { data } = await axios.post(`/login/`, body);
 
-    return data;
+    return data as { refresh: string; access: string; user: IUser };
   };
 
   resetPassword = async (body: IResetPassword) => {
@@ -117,11 +118,14 @@ export class APIRequest {
   };
 
   getLGAs = async (stateId: number) => {
-    const { data } = await axios.get(`/api/v1/location/state/${stateId}/lgas/`, {
-      headers: {
-        Authorization: `JWT ${this.accessToken}`,
-      },
-    });
+    const { data } = await axios.get(
+      `/api/v1/location/state/${stateId}/lgas/`,
+      {
+        headers: {
+          Authorization: `JWT ${this.accessToken}`,
+        },
+      }
+    );
 
     return data as ILGAs[];
   };
@@ -178,7 +182,7 @@ export class APIRequest {
     body: Omit<IIndividualOnboardingInput, "date_of_birth"> & { otp: string }
   ) => {
     const { data } = await axios.post(
-      `/api/v1/ums/profile/verify-identity/otp/`,
+      `/api/v1/ums/profile/verify-identity/confirm-otp/`,
       body,
       {
         headers: {
@@ -187,7 +191,7 @@ export class APIRequest {
       }
     );
 
-    return data as { data: IConsultantVerifyIdentity };
+    return data as { data: IConsultantVerifyIdentity | IUser };
   };
 
   consultantIdentification = async (
@@ -233,6 +237,16 @@ export class APIRequest {
     );
 
     return data;
+  };
+
+  getProfile = async () => {
+    const { data } = await axios.get(`/api/v1/ums/profile/me/`, {
+      headers: {
+        Authorization: `JWT ${this.accessToken}`,
+      },
+    });
+
+    return data as IUser;
   };
 
   getCompany = async () => {

@@ -12,7 +12,6 @@ import { useStore } from "@/store";
 import { getValue } from "@/lib/utils";
 import { UseFormReturn } from "react-hook-form";
 import { IIndividualProfile } from "@/types/form";
-import { ITINProfile } from "@/types";
 
 const AddressInfo: FC<{
   editMode: boolean;
@@ -22,7 +21,7 @@ const AddressInfo: FC<{
   const user = useStore((s) => s.user);
   const { api } = useAPI();
 
-  const tinProfile = user?.tin_profile as ITINProfile;
+  const tinProfile = user?.profile;
 
   const { data: states, isLoading: isLoadingStates } = useQuery({
     queryKey: [QueryKeys.STATES],

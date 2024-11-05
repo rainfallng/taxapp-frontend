@@ -5,7 +5,6 @@ import { useLoader } from "@/hooks/useLoader";
 import { QueryKeys } from "@/lib/queryKeys";
 import { handleFormToastErrors, onDownloadBlob } from "@/lib/utils";
 import { useStore } from "@/store";
-import { ICompanyProfile } from "@/types";
 import { Box, Grid, Typography, useTheme } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
@@ -14,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import BillSummaryPDF from "./bill-summary-pdf";
 import { usePDF } from "@react-pdf/renderer";
 import { useEffect } from "react";
+import { Company } from "@/types";
 
 const TaxImplicationBill = ({
   billId,
@@ -27,7 +27,7 @@ const TaxImplicationBill = ({
   const { api } = useAPI();
   const { user } = useStore();
 
-  const tinProfile = user?.tin_profile as ICompanyProfile;
+  const tinProfile = user?.company_profile;
 
   const { data, isPending } = useQuery({
     queryKey: [QueryKeys.BILL, billId],
@@ -56,7 +56,7 @@ const TaxImplicationBill = ({
   const PDF = () => (
     <BillSummaryPDF
       data={data}
-      tinProfile={tinProfile}
+      tinProfile={tinProfile as Company}
       user={user}
       amountDue={amountDue}
       month={month}
@@ -227,7 +227,7 @@ const TaxImplicationBill = ({
               color: theme.palette.grey[800],
             }}
           >
-            {tinProfile?.name ?? "--"}
+            {tinProfile?.title ?? "--"}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -267,7 +267,7 @@ const TaxImplicationBill = ({
               color: theme.palette.grey[800],
             }}
           >
-            {tinProfile?.phone_number || user.phone || "--"}
+            {tinProfile?.phone_number_1 || user.phone || "--"}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -287,7 +287,7 @@ const TaxImplicationBill = ({
               color: theme.palette.grey[800],
             }}
           >
-            {tinProfile?.email || user.email}
+            {tinProfile?.email_address || user.email}
           </Typography>
         </Grid>
       </Grid>

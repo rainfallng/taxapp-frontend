@@ -8,7 +8,7 @@ import { QueryKeys } from "@/lib/queryKeys";
 import { companyInfoSchema } from "@/lib/schemas/onboarding/company-info";
 import { handleFormErrors, handleFormToastErrors } from "@/lib/utils";
 import { useStore } from "@/store";
-import { ICompanyOnboarding, ICompanyProfile } from "@/types";
+import { ICompanyOnboarding } from "@/types";
 import { ICompanyInfo } from "@/types/form";
 import { Box, FormLabel, Grid, Typography, useTheme } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -29,7 +29,7 @@ const CompanyProfile = () => {
     formState: { errors },
   } = form;
 
-  const tinProfile = user?.tin_profile as ICompanyProfile;
+  const tinProfile = user?.company_profile;
 
   const { data: states, isLoading: isLoadingStates } = useQuery({
     queryKey: [QueryKeys.STATES],
@@ -46,7 +46,7 @@ const CompanyProfile = () => {
     mutationFn: (variables: ICompanyInfo) =>
       api.updateCompany(variables as Partial<ICompanyOnboarding>),
     onSuccess(data) {
-      setUser({ tin_profile: data?.data });
+      setUser(data?.data);
       navigate("/auth/onboarding/tin");
     },
     onError: (error: AxiosError<{ [message: string]: string | string[] }>) =>
@@ -99,14 +99,15 @@ const CompanyProfile = () => {
               sx={{ height: "5.6rem" }}
               label="Company Reg No"
               name="names"
-              value={tinProfile?.company_verification?.id_number}
+              // value={tinProfile?.company_verification?.id_number}
+              value={tinProfile?.icode}
               disabled
             />
             <Input
               sx={{ height: "5.6rem" }}
               label="Company Name"
               name="names"
-              value={tinProfile?.name}
+              value={tinProfile?.title}
               disabled
             />
           </Box>

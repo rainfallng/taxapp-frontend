@@ -1,9 +1,9 @@
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
 import { useAPI } from "@/hooks/useApi";
-import { identificationSchema } from "@/lib/schemas/onboarding/company-identification";
+import { identificationSchema } from "@/lib/schemas/onboarding/identification";
 import { handleFormErrors, handleFormToastErrors, setLS } from "@/lib/utils";
-import { IVerifyCAC } from "@/types/form";
+import { IIndividualOnboardingInput } from "@/types/form";
 import { Box, FormLabel, Typography, useTheme } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
@@ -15,9 +15,12 @@ const CompanyIdentification = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { api } = useAPI();
-  const form = useForm(identificationSchema);
-  const { mutateAsync: verifyCAC, isPending } = useMutation({
-    mutationFn: api.verifyCAC,
+  const form = useForm({
+    defaultValues: { ...identificationSchema.defaultValues, id_type: "CAC" },
+    resolver: identificationSchema.resolver,
+  });
+  const { mutateAsync: profileIdentification, isPending } = useMutation({
+    mutationFn: api.profileIdentification,
     onSuccess() {
       setLS("company-info", form.getValues());
       navigate("/auth/onboarding/company-info/verify");
@@ -26,8 +29,10 @@ const CompanyIdentification = () => {
       handleFormErrors(error, form.setError),
   });
 
-  const onSubmit = (values: IVerifyCAC) => {
-    toast.promise(verifyCAC(values), {
+  const onSubmit = (
+    values: Omit<IIndividualOnboardingInput, "date_of_birth">
+  ) => {
+    toast.promise(profileIdentification(values), {
       success: "Identification successful",
       loading: "Please wait...",
       error: (error) => handleFormToastErrors(error, "Identification failed"),
@@ -73,8 +78,8 @@ const CompanyIdentification = () => {
           <Input
             sx={{ height: "5.6rem" }}
             label="Enter Company Name"
-            name="company_name"
-            form={form}
+            // name="company_name"
+            // form={form}
           />
         </Box>
         <Box>
@@ -92,7 +97,7 @@ const CompanyIdentification = () => {
           <Input
             sx={{ height: "5.6rem" }}
             label="Enter CAC ID Number"
-            name="rc_number"
+            name="id_number"
             form={form}
           />
         </Box>

@@ -5,7 +5,6 @@ import { useLoader } from "@/hooks/useLoader";
 import { QueryKeys } from "@/lib/queryKeys";
 import { handleFormToastErrors } from "@/lib/utils";
 import { useStore } from "@/store";
-import { ITINProfile } from "@/types";
 import { Box, Grid, Typography, useTheme } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
@@ -19,7 +18,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
   const { user } = useStore();
   const { year = "" } = useParams();
 
-  const tinProfile = user?.tin_profile as ITINProfile;
+  const tinProfile = user?.profile;
 
   const { data, isPending } = useQuery({
     queryKey: [QueryKeys.BILL, billId],
@@ -142,7 +141,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            {user.tin_profile?.tin ?? "--"}
+            {user.profile?.tin ?? "--"}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -202,11 +201,11 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            {!tinProfile?.first_name && !tinProfile?.last_name ? (
+            {!user?.first_name && !user?.last_name ? (
               "--"
             ) : (
               <>
-                {tinProfile?.first_name} {tinProfile?.last_name}
+                {user?.first_name} {user?.last_name}
               </>
             )}
           </Typography>

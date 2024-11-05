@@ -26,7 +26,7 @@ const MyProfile = () => {
   const { mutateAsync: updateIndividualProfile } = useMutation({
     mutationFn: api.updateIndividual,
     onSuccess(data) {
-      setUser({ tin_profile: data?.data });
+      setUser(data?.data);
       setEditMode(null);
     },
   });
@@ -40,7 +40,7 @@ const MyProfile = () => {
   };
 
   const getFieldValue = useMemo(() => {
-    const profile = user?.tin_profile as unknown as { [key: string]: string };
+    const profile = user?.profile as unknown as { [key: string]: string };
     return Object.keys(individualProfileSchema.defaultValues).reduce(
       (res, key) => ({
         ...res,
@@ -50,7 +50,7 @@ const MyProfile = () => {
       }),
       {} as Partial<IIndividualOnboarding>
     );
-  }, [user?.tin_profile]);
+  }, [user?.profile]);
 
   useEffect(() => {
     form.reset(getFieldValue);

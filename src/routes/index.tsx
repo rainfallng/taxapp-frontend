@@ -46,6 +46,7 @@ import ConsultantIdentification from "@/pages/auth/onboarding/consultant-identif
 import VerifyConsultantIdentity from "@/pages/auth/onboarding/verify-consultant-identity";
 import ConsultantRequestSuccess from "@/pages/auth/onboarding/consultant-request-success";
 import ConsultantSuccess from "@/pages/auth/onboarding/consultant-success";
+import VerifyIndividual from "@/pages/auth/onboarding/verify-individual";
 
 const AppRoutes = () => {
   return (
@@ -69,7 +70,10 @@ const AppRoutes = () => {
           <Route path="verify-phone" element={<VerifyPhone />} />
           <Route path="recaptcha" element={<Recaptcha />} />
           <Route path="onboarding" element={<Outlet />}>
-            <Route path="identification" element={<Identification />} />
+            <Route path="identification" element={<Outlet />}>
+              <Route index element={<Identification />} />
+              <Route path="verify" element={<VerifyIndividual />} />
+            </Route>
             <Route path="company-info" element={<Outlet />}>
               <Route index element={<CompanyIdentification />} />
               <Route path="verify" element={<VerifyCompany />} />
@@ -79,7 +83,10 @@ const AppRoutes = () => {
               <Route path="verify" element={<VerifyConsultantIdentity />} />
               <Route path="request" element={<ConsultantRequestForm />} />
               <Route path="success" element={<ConsultantSuccess />} />
-              <Route path="request-success" element={<ConsultantRequestSuccess />} />
+              <Route
+                path="request-success"
+                element={<ConsultantRequestSuccess />}
+              />
             </Route>
             <Route path="personal-info" element={<Personalinformation />} />
             <Route path="company-profile" element={<CompanyProfile />} />
