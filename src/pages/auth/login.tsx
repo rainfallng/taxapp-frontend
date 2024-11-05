@@ -10,7 +10,7 @@ import HttpsOutlinedIcon from "@mui/icons-material/HttpsOutlined";
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { ICompanyProfile, ILogin, ITINProfile, UserType } from "@/types";
+import { ILogin, UserType } from "@/types";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { loginSchema } from "@/lib/schemas/login";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -36,13 +36,9 @@ const Login = () => {
 
   const { handleSubmit, setError } = form;
 
-  const profileServiceMapper: Record<
-    string,
-    { api: () => Promise<ICompanyProfile | ITINProfile>; key: string[] }
-  > = {
-    [UserType.COMPANY]: { api: api.getCompany, key: [QueryKeys.COMPANY] },
+  const profileServiceMapper: Record<string, { key: string[] }> = {
+    [UserType.COMPANY]: { key: [QueryKeys.COMPANY] },
     [UserType.INDIVIDUAL]: {
-      api: api.getIndividual,
       key: [QueryKeys.INDIVIDUAL],
     },
   };
@@ -55,14 +51,14 @@ const Login = () => {
     error,
   } = useQuery({
     queryKey: [profileService?.key],
-    queryFn: profileService?.api,
+    queryFn: api.getProfile,
     enabled: fetchProfile,
   });
 
   const { mutateAsync: onLogin, isPending } = useMutation({
     mutationFn: api.login,
     onSuccess(data) {
-      const { user, cac_verified, id_verified, ...token } = data;
+      const { user, ...token } = data;
       const isTaxConsultant = user.user_type === UserType.TAX_CONSULTANT;
       setUser({
         ...user,
@@ -70,7 +66,12 @@ const Login = () => {
       });
       setToken(token?.access, token?.refresh);
       if (!isInstitutionAdmin)
-        setOnboarded({ [user.user_type]: { cac_verified, id_verified } });
+        setOnboarded({
+          [user.user_type]: {
+            cac_verified: user.cac_verified,
+            id_verified: user.identity_verified,
+          },
+        });
       if (!isInstitutionAdmin && !isTaxConsultant) {
         setFetchProfile(true);
       } else {
@@ -91,7 +92,8 @@ const Login = () => {
 
   useEffect(() => {
     if (data) {
-      setUser({ tin_profile: data });
+      setFetchProfile(false)
+      setUser(data);
       navigate("/app");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

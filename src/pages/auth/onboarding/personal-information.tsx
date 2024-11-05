@@ -13,7 +13,6 @@ import {
   EmploymentStatusType,
   GenderType,
   IIndividualOnboarding,
-  ITINProfile,
   MaritalStatusType,
   TitleType,
 } from "@/types";
@@ -37,7 +36,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
-const Personalinformation = () => {
+const PersonalInformation = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { user, setUser } = useStore();
@@ -51,8 +50,6 @@ const Personalinformation = () => {
     formState: { errors },
     reset,
   } = form;
-
-  const tinProfile = user?.tin_profile as ITINProfile;
 
   const { data: states, isLoading: isLoadingStates } = useQuery({
     queryKey: [QueryKeys.STATES],
@@ -69,7 +66,8 @@ const Personalinformation = () => {
     mutationFn: (variables: IPersonalInfo) =>
       api.updateIndividual(variables as Partial<IIndividualOnboarding>),
     onSuccess(data) {
-      setUser({ tin_profile: data?.data });
+      console.log({ personal: data?.data });
+      setUser(data?.data);
       navigate("/auth/onboarding/tin");
     },
     onError: (error: AxiosError<{ [message: string]: string | string[] }>) =>
@@ -140,19 +138,19 @@ const Personalinformation = () => {
             <Input
               label="First Name"
               name="names"
-              value={tinProfile?.first_name}
+              value={user?.first_name}
               disabled
             />
             <Input
               label="Surname"
               name="names"
-              value={tinProfile?.last_name}
+              value={user?.last_name}
               disabled
             />
             <Input
               label="Other Names"
               name="names"
-              value={tinProfile?.middle_name}
+              value={user?.other_name}
               disabled
             />
           </Box>
@@ -180,7 +178,7 @@ const Personalinformation = () => {
             <DatePicker
               name="date_of_birth"
               format="YYYY-MM-DD"
-              value={dayjs(tinProfile?.date_of_birth)}
+              value={dayjs(user?.date_joined)}
               disabled
             />
           </Box>
@@ -707,4 +705,4 @@ const Personalinformation = () => {
   );
 };
 
-export default Personalinformation;
+export default PersonalInformation;

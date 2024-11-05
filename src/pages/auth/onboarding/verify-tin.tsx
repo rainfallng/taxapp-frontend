@@ -26,7 +26,7 @@ const VerifyTIN = () => {
     mutationFn: confirmTINService,
     onSuccess(data) {
       removeLS("tin");
-      setUser({ tin_profile: data?.data });
+      setUser(data?.data);
       navigate("/auth/onboarding/success");
     },
   });

@@ -21,6 +21,8 @@ const TaxRetrieval = () => {
   const { setUser, setToken } = useStore();
   const form = useForm<ILogin>(loginSchema);
 
+  const { INDIVIDUAL, COMPANY } = UserType;
+
   const { handleSubmit, setError } = form;
 
   const { mutateAsync: onLogin, isPending } = useMutation({
@@ -82,7 +84,7 @@ const TaxRetrieval = () => {
         sx={{ gap: "2.4rem" }}
       >
         <Select sx={{ height: "5.6rem" }} placeholder="Select Tax Payer Type">
-          {Object.entries(UserType).map(([key, val]) => (
+          {Object.entries({ INDIVIDUAL, COMPANY }).map(([key, val]) => (
             <MenuItem key={key} value={val}>
               {val}
             </MenuItem>
@@ -92,7 +94,7 @@ const TaxRetrieval = () => {
           sx={{ height: "5.6rem" }}
           placeholder="Select Identification Type"
         >
-          {Object.entries(UserType).map(([key, val]) => (
+          {Object.entries({ INDIVIDUAL, COMPANY }).map(([key, val]) => (
             <MenuItem key={key} value={val}>
               {val}
             </MenuItem>

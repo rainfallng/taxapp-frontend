@@ -10,20 +10,17 @@ import PersonIcon from "@mui/icons-material/Person";
 import { useStore } from "@/store";
 import Search from "../ui/search";
 import SidebarItem from "../features/layouts/dashboard-side-item";
-import { ICompanyProfile, ITINProfile, UserType } from "@/types";
+import { UserType } from "@/types";
 
 const DashboardLayout = () => {
   const navigate = useNavigate();
   const { user, onboarded, reset } = useStore();
 
-  const tinProfile = user?.tin_profile as ITINProfile;
-  const companyProfile = user?.tin_profile as ICompanyProfile;
+  const companyProfile = user?.company_profile;
   const isTaxConsultant = UserType.TAX_CONSULTANT === user?.user_type;
 
   const getUserName = () => {
-    if (user?.user_type === UserType.COMPANY) return companyProfile?.name;
-    if (user?.user_type === UserType.INDIVIDUAL)
-      return `${tinProfile?.first_name} ${tinProfile?.last_name}`;
+    if (user?.user_type === UserType.COMPANY) return companyProfile?.title;
     return `${user?.first_name} ${user?.last_name}`;
   };
 

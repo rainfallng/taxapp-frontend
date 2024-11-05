@@ -1,4 +1,4 @@
-import { Bill, ICompanyProfile, IUser } from "@/types";
+import { Bill, CompanyProfile, IUser } from "@/types";
 import {
   Document,
   Page,
@@ -154,7 +154,7 @@ const BillSummaryPDF = ({
   month,
 }: {
   data: Bill;
-  tinProfile: ICompanyProfile;
+  tinProfile: CompanyProfile;
   user: IUser;
   amountDue: number;
   month: string;
@@ -297,7 +297,7 @@ const BillSummaryPDF = ({
                 color: "#2A2A2A",
               }}
             >
-              {tinProfile?.name ?? "--"}
+              {tinProfile?.title ?? "--"}
             </Text>
           </Grid>
           <Grid item>
@@ -340,7 +340,7 @@ const BillSummaryPDF = ({
                 color: "#2A2A2A",
               }}
             >
-              {tinProfile?.phone_number || user.phone || "--"}
+              {tinProfile?.phone_number_1 || user.phone || "--"}
             </Text>
           </Grid>
           <Grid item>
@@ -360,7 +360,7 @@ const BillSummaryPDF = ({
                 color: "#2A2A2A",
               }}
             >
-              {tinProfile?.email || user.email}
+              {tinProfile?.email_address || user.email}
             </Text>
           </Grid>
         </Grid>

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { axisClasses } from "@mui/x-charts/ChartsAxis";
 import { useStore } from "@/store";
-import { ICompanyProfile, ITINProfile, UserType } from "@/types";
+import { UserType } from "@/types";
 import { QueryKeys } from "@/lib/queryKeys";
 import { useQueries } from "@tanstack/react-query";
 import { useAPI } from "@/hooks/useApi";
@@ -42,8 +42,7 @@ const DashboardHome = () => {
   };
 
   const isCompany = UserType.COMPANY === user.user_type;
-  const individualTIN = user.tin_profile as ITINProfile;
-  const companyTIN = user.tin_profile as ICompanyProfile;
+  const companyTIN = user.company_profile;
 
   const [
     { data: companyGraph, isLoading: isLoadingCompanyReturnsGraph },
@@ -152,8 +151,8 @@ const DashboardHome = () => {
               Hello,
             </Typography>{" "}
             {isCompany
-              ? companyTIN.name
-              : `${individualTIN.first_name} ${individualTIN.last_name}`}
+              ? companyTIN?.title
+              : `${user.first_name} ${user.last_name}`}
           </Typography>
           <Box
             component="img"
