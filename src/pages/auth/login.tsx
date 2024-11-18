@@ -175,7 +175,7 @@ const Login = () => {
         <FormGroup>
           <FormControlLabel
             control={<Checkbox />}
-            label="Remember me next time"
+            label="Remember me"
             sx={{
               "& .MuiFormControlLabel-label": { fontSize: "1.6rem" },
               "& .MuiSvgIcon-root": { fontSize: "2.4rem" },
