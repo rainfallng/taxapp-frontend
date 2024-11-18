@@ -48,6 +48,12 @@ const DashboardLayout = () => {
   if (!onboarded[UserType.TAX_CONSULTANT].cac_verified && isTaxConsultant)
     return <Navigate to="/auth/onboarding/consultant/request" />;
 
+  if (user?.phone && user.user_type === UserType.INDIVIDUAL && !user.profile)
+    return <Navigate to="/auth/onboarding/identification" />;
+
+  if (user?.phone && user.user_type === UserType.COMPANY && !user.company_profile)
+    return <Navigate to="/auth/onboarding/company-info" />;
+
   return (
     <Protected>
       <Box
