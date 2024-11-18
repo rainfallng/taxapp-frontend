@@ -4,8 +4,17 @@ import { IRegister, UserType } from "@/types";
 
 const schema = yup.object({
   email: yup.string().email().required("Email is a required field"),
-  password1: yup.string().required("Password is a required field"),
-  password2: yup.string().required("Password is a required field"),
+  password1: yup
+    .string()
+    .required("Password is a required field")
+    .matches(
+      /^(?=.*[A-Za-z])(?=.*d)(?=.*[@$!%*#?&])[A-Za-zd@$!%*#?&]{8,}$/,
+      "Password must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
+    ),
+  password2: yup
+    .string()
+    .required("Password is a required field")
+    .oneOf([yup.ref("password")], "Passwords do not match"),
   phone: yup
     .string()
     .max(15, "Phone number cannot be more than 15 characters")

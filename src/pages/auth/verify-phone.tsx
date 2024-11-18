@@ -25,8 +25,9 @@ const VerifyPhone = () => {
   return (
     <Protected>
       <VerifyCode
-        shortText="phone number"
+        shortText="phone number and email"
         phone={user.phone}
+        email={user.email}
         verifying={isPending}
         verify={async (code) => mutateAsync({ token: code })}
         send={api.sendAuthOtp}

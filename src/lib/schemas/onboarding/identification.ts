@@ -3,7 +3,11 @@ import * as yup from "yup";
 
 const identificationSchemaObject = yup.object({
   id_type: yup.string().required("Select identification type"),
-  id_number: yup.string().required("Provide identification number"),
+  id_number: yup
+    .string()
+    .required("Provide identification number")
+    .min(11, "Identification number should be 11 characters long")
+    .max(11, "Identification number should be 11 characters long"),
   date_of_birth: yup.string(),
 });
 
