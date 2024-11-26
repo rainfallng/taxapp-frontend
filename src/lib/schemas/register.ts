@@ -8,8 +8,8 @@ const schema = yup.object({
     .string()
     .required("Password is a required field")
     .matches(
-      /^(?=.*[A-Za-z])(?=.*d)(?=.*[@$!%*#?&])[A-Za-zd@$!%*#?&]{8,}$/,
-      "Password must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
+      /^(?=.*[A-Za-z])(?=.*d)(?=.*[@$!%*#?_&])[A-Za-zd@$!%*#?_&]{8,}$/,
+      "Password must contain 8 characters, one Uppercase, one Lowercase, one number and one special case character"
     ),
   password2: yup
     .string()

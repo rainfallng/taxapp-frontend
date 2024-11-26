@@ -1,6 +1,5 @@
 import * as yup from "yup";
 import { resolveSchema } from "../../utils";
-import { useStore } from "@/store";
 
 const companyInfoSchemaObject = yup.object({
   state: yup.string().required("Select a state"),
@@ -20,8 +19,6 @@ const companyInfoSchemaObject = yup.object({
     .required("Place of business is a required field"),
 });
 
-const { user } = useStore.getState()
-
 const companyInfoDefaultValues = {
   state: "",
   lga: "",
@@ -31,8 +28,8 @@ const companyInfoDefaultValues = {
   tax_station: "",
   business_type: "",
   place_of_business: "",
-  email_address: user.email,
-  phone_number: user.phone
+  email_address: "",
+  phone_number: ""
 };
 
 export const companyInfoSchema = resolveSchema({

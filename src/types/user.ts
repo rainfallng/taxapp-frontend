@@ -107,7 +107,7 @@ export type CompanyProfile = {
   is_active: boolean;
   tin: string;
   lasrra: string;
-  title: string;
+  name: string;
   marital_status: string;
   place_of_birth: string;
   gender: string;

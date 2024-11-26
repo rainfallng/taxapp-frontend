@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { getStore } from "@/lib/utils";
+import { getStore, onDownloadBlob } from "@/lib/utils";
 import {
   AddCompanyStaffReturn,
   BillList,
@@ -249,7 +249,7 @@ export class APIRequest {
 
   updateIndividual = async (body: Partial<IIndividualProfileOnboarding>) => {
     const { data } = await axios.patch(
-      `/api/v1/tin/individual/profile/`,
+      `/api/v1/ums/profile/me/update/`,
       body,
       {
         headers: {
@@ -262,7 +262,7 @@ export class APIRequest {
   };
 
   updateCompany = async (body: Partial<ICompanyOnboarding>) => {
-    const { data } = await axios.patch(`/api/v1/tin/company/profile/`, body, {
+    const { data } = await axios.patch(`/api/v1/ums/profile/me/update-company/`, body, {
       headers: {
         Authorization: `JWT ${this.accessToken}`,
       },
@@ -545,5 +545,21 @@ export class APIRequest {
     });
 
     return data as IPaginatedResponse<IConsultant>;
+  };
+
+  downloadStaffReturnTemplate = async (filename: string) => {
+    const response = await axios.get(
+      `/api/v1/returns/company/staff/template/`,
+      {
+        responseType: "blob",
+        headers: {
+          Authorization: `JWT ${this.accessToken}`,
+        },
+      }
+    );
+
+    onDownloadBlob(response.data, filename);
+
+    return response.data;
   };
 }

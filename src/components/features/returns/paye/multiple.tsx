@@ -8,7 +8,7 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useState } from "react";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { handleFormToastErrors, onDowload } from "@/lib/utils";
+import { handleFormToastErrors } from "@/lib/utils";
 import { useAPI } from "@/hooks/useApi";
 import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
@@ -27,10 +27,7 @@ const Multiple = () => {
   });
 
   const download = async () => {
-    onDowload(
-      "/assets/docs/company_staff_return.csv",
-      "company_staff_return.csv"
-    );
+    api.downloadStaffReturnTemplate("company_staff_return.csv");
   };
 
   const onUpload = () => {

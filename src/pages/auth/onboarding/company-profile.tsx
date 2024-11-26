@@ -107,7 +107,7 @@ const CompanyProfile = () => {
               sx={{ height: "5.6rem" }}
               label="Company Name"
               name="names"
-              value={tinProfile?.title}
+              value={tinProfile?.name}
               disabled
             />
           </Box>
