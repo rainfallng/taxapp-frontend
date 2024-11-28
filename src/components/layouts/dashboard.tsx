@@ -8,7 +8,7 @@ import SegmentOutlinedIcon from "@mui/icons-material/SegmentOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import PersonIcon from "@mui/icons-material/Person";
 import { useStore } from "@/store";
-import Search from "../ui/search";
+// import Search from "../ui/search";
 import SidebarItem from "../features/layouts/dashboard-side-item";
 import { UserType } from "@/types";
 
@@ -20,7 +20,7 @@ const DashboardLayout = () => {
   const isTaxConsultant = UserType.TAX_CONSULTANT === user?.user_type;
 
   const getUserName = () => {
-    if (user?.user_type === UserType.COMPANY) return companyProfile?.title;
+    if (user?.user_type === UserType.COMPANY) return companyProfile?.name;
     return `${user?.first_name} ${user?.last_name}`;
   };
 
@@ -47,6 +47,16 @@ const DashboardLayout = () => {
 
   if (!onboarded[UserType.TAX_CONSULTANT].cac_verified && isTaxConsultant)
     return <Navigate to="/auth/onboarding/consultant/request" />;
+
+  if (user?.phone && user.user_type === UserType.INDIVIDUAL && !user.profile)
+    return <Navigate to="/auth/onboarding/identification" />;
+
+  if (
+    user?.phone &&
+    user.user_type === UserType.COMPANY &&
+    !user.company_profile
+  )
+    return <Navigate to="/auth/onboarding/company-info" />;
 
   return (
     <Protected>
@@ -133,13 +143,13 @@ const DashboardLayout = () => {
             sx={{
               mb: "0.9rem",
               display: "flex",
-              justifyContent: "space-between",
+              justifyContent: "flex-end",
               alignItems: "center",
             }}
           >
-            <Box sx={{ width: "100%", maxWidth: "33.7rem" }}>
+            {/* <Box sx={{ width: "100%", maxWidth: "33.7rem" }}>
               <Search />
-            </Box>
+            </Box> */}
             <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
               <Button
                 variant="text"
@@ -150,7 +160,13 @@ const DashboardLayout = () => {
                 />
               </Button>
               <Box
-                sx={{ display: "flex", alignItems: "center", gap: "0.8rem" }}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.8rem",
+                  cursor: "pointer",
+                }}
+                onClick={() => navigate("/app/profile")}
               >
                 <Box
                   sx={{

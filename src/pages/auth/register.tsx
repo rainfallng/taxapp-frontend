@@ -58,7 +58,11 @@ const Register = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <Box
+      component="form"
+      sx={{ maxWidth: "42.5rem" }}
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <Box
         sx={{
           mx: "auto",
@@ -168,7 +172,7 @@ const Register = () => {
           Create Account
         </Button>
       </Box>
-    </form>
+    </Box>
   );
 };
 

@@ -9,7 +9,11 @@ import { FC } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { IIndividualProfile } from "@/types/form";
 
-const PersonalInfo: FC<{ editMode: boolean; setEditMode: () => void; form: UseFormReturn<Partial<IIndividualProfile>> }> = ({ editMode, setEditMode, form }) => {
+const PersonalInfo: FC<{
+  editMode: boolean;
+  setEditMode: () => void;
+  form: UseFormReturn<Partial<IIndividualProfile>>;
+}> = ({ editMode, setEditMode, form }) => {
   const theme = useTheme();
 
   return (

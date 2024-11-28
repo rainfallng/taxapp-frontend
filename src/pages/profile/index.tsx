@@ -50,11 +50,11 @@ const MyProfile = () => {
       }),
       {} as Partial<IIndividualOnboarding>
     );
-  }, [user?.profile]);
+  }, [form, user?.profile]);
 
   useEffect(() => {
     form.reset(getFieldValue);
-  }, [getFieldValue]);
+  }, [form, getFieldValue]);
 
   return (
     <form
@@ -89,13 +89,14 @@ const MyProfile = () => {
           </Button>
         )}
       </Box>
-      {user.user_type === UserType.INDIVIDUAL ? (
+      {user.user_type === UserType.INDIVIDUAL && (
         <PersonalInfo
           form={form}
           editMode={editMode === "personal"}
           setEditMode={() => setEditMode("personal")}
         />
-      ) : (
+      )}
+      {user.user_type === UserType.COMPANY && (
         <CompanyInfo
           editMode={editMode === "personal"}
           setEditMode={() => setEditMode("personal")}

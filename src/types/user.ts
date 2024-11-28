@@ -79,8 +79,8 @@ export type IndividualProfile = {
   place_of_birth: string;
   date_of_birth: string;
   gender: string;
-  house_number: number;
-  street: string;
+  street_number: number | string;
+  street_name: string;
   city: string;
   lcda: string;
   phone_number_1: string;
@@ -95,8 +95,8 @@ export type IndividualProfile = {
   modified_by: string;
   user: string;
   state_of_origin: string;
-  state_of_residence: string;
-  lga_of_residence: string;
+  state: number;
+  lga: number;
 };
 
 export type CompanyProfile = {
@@ -107,17 +107,17 @@ export type CompanyProfile = {
   is_active: boolean;
   tin: string;
   lasrra: string;
-  title: string;
+  name: string;
   marital_status: string;
   place_of_birth: string;
+  place_of_business: string;
   gender: string;
-  house_number: number;
-  street: string;
+  street_number: number | string;
+  street_name: string;
   city: string;
   lcda: string;
-  phone_number_1: string;
-  phone_number_2: string;
-  email_address: string;
+  phone_number: string;
+  email: string;
   residential_address: string;
   is_public_servant: boolean;
   business_type: string;
@@ -126,9 +126,11 @@ export type CompanyProfile = {
   created_by: string;
   modified_by: string;
   user: string;
-  state_of_origin: string;
-  state_of_residence: string;
-  lga_of_residence: string;
+  state: number;
+  lga: number;
+  number_of_directors: number;
+  number_of_employees: number;
+  past_tax_filling: null;
 };
 
 export interface IUser {

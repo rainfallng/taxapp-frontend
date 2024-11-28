@@ -227,7 +227,7 @@ const TaxImplicationBill = ({
               color: theme.palette.grey[800],
             }}
           >
-            {tinProfile?.title ?? "--"}
+            {tinProfile?.name ?? "--"}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -267,7 +267,7 @@ const TaxImplicationBill = ({
               color: theme.palette.grey[800],
             }}
           >
-            {tinProfile?.phone_number_1 || user.phone || "--"}
+            {tinProfile?.phone_number || user.phone || "--"}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -287,7 +287,7 @@ const TaxImplicationBill = ({
               color: theme.palette.grey[800],
             }}
           >
-            {tinProfile?.email_address || user.email}
+            {tinProfile?.email || user.email}
           </Typography>
         </Grid>
       </Grid>

@@ -40,15 +40,15 @@ export interface IIndividualProfile {
   date_of_birth: string;
   gender: string;
   state_of_origin: string | number;
-  lga_of_residence: string | number;
+  lga: null | number;
   business_type: string;
   lcda: string;
   occupation: string;
   phone_number_1: string;
   email_address: string;
-  house_number: number | null;
-  street: string;
-  state_of_residence: string | number;
+  street_number: number | null;
+  street_name: string;
+  state: null | number;
 }
 
 export interface IIndividualAnnualIncome {
