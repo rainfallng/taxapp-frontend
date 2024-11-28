@@ -151,7 +151,7 @@ const DashboardHome = () => {
               Hello,
             </Typography>{" "}
             {isCompany
-              ? companyTIN?.title
+              ? companyTIN?.name
               : `${user.first_name} ${user.last_name}`}
           </Typography>
           <Box

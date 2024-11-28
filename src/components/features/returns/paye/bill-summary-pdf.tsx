@@ -297,7 +297,7 @@ const BillSummaryPDF = ({
                 color: "#2A2A2A",
               }}
             >
-              {tinProfile?.title ?? "--"}
+              {tinProfile?.name ?? "--"}
             </Text>
           </Grid>
           <Grid item>
@@ -340,7 +340,7 @@ const BillSummaryPDF = ({
                 color: "#2A2A2A",
               }}
             >
-              {tinProfile?.phone_number_1 || user.phone || "--"}
+              {tinProfile?.phone_number || user.phone || "--"}
             </Text>
           </Grid>
           <Grid item>
@@ -360,7 +360,7 @@ const BillSummaryPDF = ({
                 color: "#2A2A2A",
               }}
             >
-              {tinProfile?.email_address || user.email}
+              {tinProfile?.email || user.email}
             </Text>
           </Grid>
         </Grid>
