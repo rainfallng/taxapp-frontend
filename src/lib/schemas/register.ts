@@ -8,20 +8,27 @@ const schema = yup.object({
     .string()
     .required("Password is a required field")
     .matches(
-      /^(?=.*[A-Za-z])(?=.*d)(?=.*[@$!%*#?_&])[A-Za-zd@$!%*#?_&]{8,}$/,
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%_*?&])[A-Za-z\d@$!%_*?&]{8,}$/,
       "Password must contain 8 characters, one Uppercase, one Lowercase, one number and one special case character"
     ),
   password2: yup
     .string()
     .required("Password is a required field")
-    .oneOf([yup.ref("password")], "Passwords do not match"),
+    .when("password1", ([password1], schema) => {
+      return password1
+        ? schema.oneOf([yup.ref("password")], "Passwords do not match")
+        : schema;
+    }),
   phone: yup
     .string()
     .max(15, "Phone number cannot be more than 15 characters")
     .required("Phone number is a required field"),
   user_type: yup
     .string()
-    .oneOf(Object.values(UserType))
+    .oneOf(
+      [UserType.INDIVIDUAL, UserType.COMPANY],
+      "Taxpayer must be one of the following values: Individual, Company"
+    )
     .required("This field is required"),
 });
 

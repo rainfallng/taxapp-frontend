@@ -12,6 +12,7 @@ import { useStore } from "@/store";
 import { getValue } from "@/lib/utils";
 import { UseFormReturn } from "react-hook-form";
 import { IIndividualProfile } from "@/types/form";
+import { UserType } from "@/types";
 
 const AddressInfo: FC<{
   editMode: boolean;
@@ -21,17 +22,22 @@ const AddressInfo: FC<{
   const user = useStore((s) => s.user);
   const { api } = useAPI();
 
-  const tinProfile = user?.profile;
+  const tinProfile =
+    user.user_type === UserType.INDIVIDUAL
+      ? user?.profile
+      : user?.company_profile;
 
   const { data: states, isLoading: isLoadingStates } = useQuery({
     queryKey: [QueryKeys.STATES],
     queryFn: api.getStates,
   });
 
+  const state = editMode ? form.watch("state") : tinProfile?.state
+
   const { data: lgas, isLoading: isLoadingLgas } = useQuery({
-    queryKey: [QueryKeys.LGA, form.watch("state_of_residence")],
-    queryFn: () => api.getLGAs(Number(form.watch("state_of_residence"))),
-    enabled: Boolean(form.watch("state_of_residence")),
+    queryKey: [QueryKeys.LGA, state],
+    queryFn: () => api.getLGAs(Number(state)),
+    enabled: !!state,
   });
   const theme = useTheme();
 
@@ -79,7 +85,12 @@ const AddressInfo: FC<{
       <Grid container spacing={2}>
         <Grid item xs={3}>
           {editMode ? (
-            <Input isNumber label="Street No." name="house_number" form={form} />
+            <Input
+              isNumber
+              label="Street No."
+              name="street_number"
+              form={form}
+            />
           ) : (
             <>
               <Typography
@@ -98,14 +109,14 @@ const AddressInfo: FC<{
                   fontWeight: 500,
                 }}
               >
-                {getValue(tinProfile?.house_number)}
+                {getValue(tinProfile?.street_number)}
               </Typography>
             </>
           )}
         </Grid>
         <Grid item xs={3}>
           {editMode ? (
-            <Input label="Street Name" name="street" form={form} />
+            <Input label="Street Name" name="street_name" form={form} />
           ) : (
             <>
               <Typography
@@ -124,7 +135,7 @@ const AddressInfo: FC<{
                   fontWeight: 500,
                 }}
               >
-                {getValue(tinProfile?.street)}
+                {getValue(tinProfile?.street_name)}
               </Typography>
             </>
           )}
@@ -135,9 +146,9 @@ const AddressInfo: FC<{
             <Select
               sx={{ height: "5.6rem" }}
               placeholder="State"
-              value={form.watch("state_of_residence")}
-              {...form.register("state_of_residence")}
-              errorMessage={form.formState.errors.state_of_residence?.message}
+              value={form.watch("state")}
+              {...form.register("state")}
+              errorMessage={form.formState.errors.state?.message}
             >
               {states?.map((state) => (
                 <MenuItem key={state.id} value={state.id}>
@@ -164,10 +175,9 @@ const AddressInfo: FC<{
                 }}
               >
                 {getValue(
-                  tinProfile?.state_of_residence
+                  tinProfile?.state
                     ? states?.find(
-                        (s) =>
-                          s.id === Number(tinProfile?.state_of_residence)
+                        (s) => s.id === Number(tinProfile?.state)
                       )?.name
                     : ""
                 )}
@@ -181,9 +191,9 @@ const AddressInfo: FC<{
             <Select
               sx={{ height: "5.6rem" }}
               placeholder="LGA"
-              value={form.watch("lga_of_residence")}
-              {...form.register("lga_of_residence")}
-              errorMessage={form.formState.errors.lga_of_residence?.message}
+              value={form.watch("lga")}
+              {...form.register("lga")}
+              errorMessage={form.formState.errors.lga?.message}
             >
               {lgas?.map((lga) => (
                 <MenuItem key={lga.id} value={lga.id}>
@@ -210,10 +220,9 @@ const AddressInfo: FC<{
                 }}
               >
                 {getValue(
-                  tinProfile?.lga_of_residence
+                  tinProfile?.lga
                     ? lgas?.find(
-                        (l) =>
-                          l.id === Number(tinProfile?.lga_of_residence)
+                        (l) => l.id === Number(tinProfile?.lga)
                       )?.name
                     : ""
                 )}

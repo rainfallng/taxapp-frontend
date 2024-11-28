@@ -20,7 +20,7 @@ const SidebarItem = ({ item }: { item: ISidebar }) => {
       : KeyboardArrowDownOutlinedIcon;
   
     const activeStyle = {
-      bgcolor: theme.palette.success.main,
+      bgcolor: '#2EAB8D',
       color: theme.palette.primary.contrastText,
     };
   

@@ -143,13 +143,13 @@ const DashboardLayout = () => {
             sx={{
               mb: "0.9rem",
               display: "flex",
-              justifyContent: "space-between",
+              justifyContent: "flex-end",
               alignItems: "center",
             }}
           >
-            <Box sx={{ width: "100%", maxWidth: "33.7rem" }}>
-              {/* <Search /> */}
-            </Box>
+            {/* <Box sx={{ width: "100%", maxWidth: "33.7rem" }}>
+              <Search />
+            </Box> */}
             <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
               <Button
                 variant="text"
@@ -160,7 +160,13 @@ const DashboardLayout = () => {
                 />
               </Button>
               <Box
-                sx={{ display: "flex", alignItems: "center", gap: "0.8rem" }}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.8rem",
+                  cursor: "pointer",
+                }}
+                onClick={() => navigate("/app/profile")}
               >
                 <Box
                   sx={{
@@ -174,7 +180,6 @@ const DashboardLayout = () => {
                     border: "1px solid",
                     borderColor: (theme) => theme.palette.grey[500],
                   }}
-                  onClick={() => navigate("/app/profile")}
                 >
                   <PersonIcon
                     sx={{

@@ -3,7 +3,6 @@ import Protected from "@/components/layouts/protected";
 import { useAPI } from "@/hooks/useApi";
 import { getLS, removeLS } from "@/lib/utils";
 import { useStore } from "@/store";
-import { UserType } from "@/types";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
@@ -14,16 +13,8 @@ const VerifyTIN = () => {
 
   const tin = (getLS("tin") as { tin?: string })?.tin ?? "";
 
-  const verifyTINService =
-    user.user_type === UserType.COMPANY ? api.verifyCompanyTIN : api.verifyTIN;
-
-  const confirmTINService =
-    user.user_type === UserType.COMPANY
-      ? api.confirmCompanyOTP
-      : api.confirmOTP;
-
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: confirmTINService,
+    mutationFn: api.verifyProfileIdentification,
     onSuccess(data) {
       removeLS("tin");
       setUser(data?.data);
@@ -39,8 +30,19 @@ const VerifyTIN = () => {
         phone={user.phone}
         email={user.email}
         verifying={isPending}
-        verify={async (code) => mutateAsync({ otp: code, tin })}
-        send={() => verifyTINService(tin)}
+        verify={async (code) =>
+          mutateAsync({
+            otp: code,
+            id_type: "TIN",
+            id_number: tin,
+          })
+        }
+        send={() =>
+          api.profileIdentification({
+            id_type: "TIN",
+            id_number: tin,
+          })
+        }
       />
     </Protected>
   );

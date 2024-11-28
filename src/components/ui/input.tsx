@@ -1,5 +1,6 @@
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
+  Box,
   IconButton,
   InputAdornment,
   StandardTextFieldProps,
@@ -9,7 +10,14 @@ import {
   Theme,
 } from "@mui/material";
 import { useState } from "react";
-import { FieldValues, UseFormReturn, Path, PathValue, get } from "react-hook-form";
+import {
+  FieldValues,
+  UseFormReturn,
+  Path,
+  PathValue,
+  get,
+} from "react-hook-form";
+import HelperText from "./helper-text";
 
 export interface InputProps<T extends FieldValues>
   extends StandardTextFieldProps {
@@ -54,54 +62,58 @@ const Input = <T extends FieldValues>({
   const value =
     (propValue as string | undefined) ?? (formValue as string | undefined);
 
+  const hasError = Boolean(errorMessage) || Boolean(formError) || props.error;
+
   return (
-    <TextField
-      type={type}
-      sx={styles}
-      InputLabelProps={{
-        ...props?.InputLabelProps,
-        sx: {
-          ...props?.InputLabelProps?.sx,
-          fontSize: "1.6rem",
-        },
-      }}
-      error={Boolean(errorMessage) || Boolean(formError) || props.error}
-      helperText={errorMessage || formError || props.helperText}
-      FormHelperTextProps={{
-        ...props?.FormHelperTextProps,
-        sx: {
-          ...props?.FormHelperTextProps?.sx,
-          fontSize: "1rem",
-        },
-      }}
-      InputProps={{
-        ...(defaultType === "password" && {
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={() => setShowPassword(!showPassword)}
-                edge="end"
-              >
-                {showPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-          ),
-        }),
-      }}
-      name={name}
-      value={isNumber && value ? Number(value).toLocaleString() : value}
-      onChange={(e) => {
-        const formattedValue = isNumber
-          ? e.target.value.replace(/,/g, "")
-          : e.target.value;
-        if (isNumber && Number.isNaN(Number(formattedValue))) return;
-        if (onChange) return onChange(e);
-        if (name)
-          form?.setValue?.(name, formattedValue as PathValue<T, Path<T>>);
-      }}
-      {...props}
-    />
+    <Box width="100%">
+      <TextField
+        type={type}
+        sx={styles}
+        InputLabelProps={{
+          ...props?.InputLabelProps,
+          sx: {
+            ...props?.InputLabelProps?.sx,
+            fontSize: "1.6rem",
+          },
+        }}
+        error={hasError}
+        FormHelperTextProps={{
+          ...props?.FormHelperTextProps,
+          sx: {
+            ...props?.FormHelperTextProps?.sx,
+            fontSize: "1rem",
+          },
+        }}
+        InputProps={{
+          ...(defaultType === "password" && {
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={() => setShowPassword(!showPassword)}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }),
+        }}
+        name={name}
+        value={isNumber && value ? Number(value).toLocaleString() : value}
+        onChange={(e) => {
+          const formattedValue = isNumber
+            ? e.target.value.replace(/,/g, "")
+            : e.target.value;
+          if (isNumber && Number.isNaN(Number(formattedValue))) return;
+          if (onChange) return onChange(e);
+          if (name)
+            form?.setValue?.(name, formattedValue as PathValue<T, Path<T>>);
+        }}
+        {...props}
+      />
+      <HelperText error={hasError} message={errorMessage || formError || props.helperText} />
+    </Box>
   );
 };
 
