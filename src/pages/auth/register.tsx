@@ -95,7 +95,7 @@ const Register = () => {
         width="100%"
         display="flex"
         flexDirection="column"
-        sx={{ gap: "2.4rem", maxHeight: "56.5rem", overflow: "auto" }}
+        sx={{ gap: "2.4rem" }}
       >
         <Input
           type="email"
