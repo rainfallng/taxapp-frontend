@@ -16,7 +16,7 @@ const schema = yup.object({
     .required("Password is a required field")
     .when("password1", ([password1], schema) => {
       return password1
-        ? schema.oneOf([yup.ref("password")], "Passwords do not match")
+        ? schema.oneOf([yup.ref("password1")], "Passwords do not match")
         : schema;
     }),
   phone: yup
