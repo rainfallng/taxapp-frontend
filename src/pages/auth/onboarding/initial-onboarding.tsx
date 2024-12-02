@@ -8,12 +8,19 @@ import { useMutation } from "@tanstack/react-query";
 import { useAPI } from "@/hooks/useApi";
 import { handleFormToastErrors, setLS } from "@/lib/utils";
 import toast from "react-hot-toast";
+import { useStore } from "@/store";
+import { UserType } from "@/types";
 
 const InitialOnboarding = () => {
   const [firstCheck, setFirstCheck] = useState<number | null>(null);
   const [tin, setTIN] = useState("");
   const navigate = useNavigate();
   const { api } = useAPI();
+  const { user } = useStore()
+
+  const isCompany = user.user_type === UserType.COMPANY;
+
+  const id_type = isCompany ? "CTIN" : "TIN";
 
   const onCheck = (value: number, level = 0) => {
     if (level === 0) {
@@ -37,7 +44,7 @@ const InitialOnboarding = () => {
     if (firstCheck === 1) return navigate("/auth/onboarding/success");
     toast.promise(
       verifyTIN({
-        id_type: "TIN",
+        id_type,
         id_number: tin,
       }),
       {
