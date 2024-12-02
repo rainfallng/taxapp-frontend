@@ -16,7 +16,6 @@ const VerifyCompany = () => {
   const { mutateAsync, isPending } = useMutation({
     mutationFn: api.verifyProfileIdentification,
     onSuccess(data) {
-      console.log({ data })
       removeLS("company-info");
       setUser(data?.data);
       navigate("/auth/onboarding/company-profile");

@@ -3,6 +3,7 @@ import Protected from "@/components/layouts/protected";
 import { useAPI } from "@/hooks/useApi";
 import { getLS, removeLS } from "@/lib/utils";
 import { useStore } from "@/store";
+import { UserType } from "@/types";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
@@ -10,6 +11,10 @@ const VerifyTIN = () => {
   const { user, setUser } = useStore();
   const { api } = useAPI();
   const navigate = useNavigate();
+
+  const isCompany = user.user_type === UserType.COMPANY;
+
+  const id_type = isCompany ? "CTIN" : "TIN";
 
   const tin = (getLS("tin") as { tin?: string })?.tin ?? "";
 
@@ -33,13 +38,13 @@ const VerifyTIN = () => {
         verify={async (code) =>
           mutateAsync({
             otp: code,
-            id_type: "TIN",
+            id_type,
             id_number: tin,
           })
         }
         send={() =>
           api.profileIdentification({
-            id_type: "TIN",
+            id_type,
             id_number: tin,
           })
         }
