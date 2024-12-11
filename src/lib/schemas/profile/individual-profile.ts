@@ -22,7 +22,7 @@ export const personalInfoSchemaObject = yup.object({
     .string()
     .max(15, "Phone number cannot be more than 15 characters"),
   email_address: yup.string().email(),
-  street_number: yup.number(),
+  street_number: yup.string(),
   street_name: yup.string(),
 });
 
@@ -43,7 +43,7 @@ const personalInfoDefaultValues: Partial<IIndividualProfile> = {
   occupation: "",
   phone_number_1: "",
   email_address: "",
-  street_number: 0,
+  street_number: "",
   street_name: "",
   state: null,
 };

@@ -12,7 +12,7 @@ import { CompanyProfileUpdateType, IIndividualProfile } from "@/types/form";
 import { Box, Typography, useTheme } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
-import { WatchObserver, useForm } from "react-hook-form";
+import { UseFormReturn, WatchObserver, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
 type EditMode = "personal" | "address" | null;
@@ -22,23 +22,27 @@ const MyProfile = () => {
   const { api } = useAPI();
   const [editMode, setEditMode] = useState<EditMode>(null);
   const { user, setUser } = useStore();
-  const form = useForm(individualProfileSchema);
+  const individualForm = useForm(individualProfileSchema);
   const companyForm = useForm(companyProfileSchema);
 
-  const isIndividual = user.user_type === UserType.INDIVIDUAL
+  const isIndividual = user.user_type === UserType.INDIVIDUAL;
 
-  const isCompany = user.user_type === UserType.COMPANY
+  const isCompany = user.user_type === UserType.COMPANY;
 
-  const { mutateAsync: updateIndividualProfile } = useMutation({
-    mutationFn: api.updateIndividual,
+  const form = isCompany ? companyForm : individualForm;
+
+  const { mutateAsync: updateProfile } = useMutation({
+    mutationFn: isCompany ? api.updateCompany : api.updateIndividual,
     onSuccess(data) {
       setUser(data?.data);
       setEditMode(null);
     },
   });
 
-  const onSave = (values: Partial<IIndividualOnboarding>) => {
-    toast.promise(updateIndividualProfile(values), {
+  const onSave = (
+    values: Partial<IIndividualOnboarding> | CompanyProfileUpdateType
+  ) => {
+    toast.promise(updateProfile(values), {
       success: "Identification successful",
       loading: "Please wait...",
       error: (error) => handleFormToastErrors(error, "Identification failed"),
@@ -52,30 +56,34 @@ const MyProfile = () => {
         ...res,
         [key]:
           profile?.[key] ??
-          form.watch(key as unknown as WatchObserver<IIndividualProfile>),
+          individualForm.watch(
+            key as unknown as WatchObserver<IIndividualProfile>
+          ),
       }),
       {} as Partial<IIndividualOnboarding>
     );
-  }, [form, user?.profile]);
+  }, [individualForm, user?.profile]);
 
   const getCompanyFieldValue = useMemo(() => {
-    const profile = user?.company_profile as unknown as { [key: string]: string };
+    const profile = user?.company_profile as unknown as {
+      [key: string]: string;
+    };
     return Object.keys(companyProfileSchema.defaultValues).reduce(
       (res, key) => ({
         ...res,
         [key]:
           profile?.[key] ??
-          companyForm.watch(key as unknown as WatchObserver<CompanyProfileUpdateType>),
+          companyForm.watch(
+            key as unknown as WatchObserver<CompanyProfileUpdateType>
+          ),
       }),
       {} as CompanyProfileUpdateType
     );
   }, [companyForm, user?.company_profile]);
 
-  console.log(getCompanyFieldValue)
-
   useEffect(() => {
-    form.reset(getFieldValue);
-  }, [form, getFieldValue]);
+    individualForm.reset(getFieldValue);
+  }, [individualForm, getFieldValue]);
 
   useEffect(() => {
     companyForm.reset(getCompanyFieldValue);
@@ -104,9 +112,7 @@ const MyProfile = () => {
             color: theme.palette.grey[900],
           }}
         >
-          {isIndividual
-            ? "My Profile"
-            : "Business Profile"}
+          {isIndividual ? "My Profile" : "Business Profile"}
         </Typography>
         {Boolean(editMode) && (
           <Button rounded type="submit">
@@ -116,7 +122,7 @@ const MyProfile = () => {
       </Box>
       {isIndividual && (
         <PersonalInfo
-          form={form}
+          form={individualForm}
           editMode={editMode === "personal"}
           setEditMode={() => setEditMode("personal")}
         />
@@ -129,7 +135,14 @@ const MyProfile = () => {
         />
       )}
       <AddressInfo
-        form={form}
+        form={
+          form as UseFormReturn<
+            Pick<
+              CompanyProfileUpdateType,
+              "lcda" | "state" | "lga" | "street_name" | "street_number"
+            >
+          >
+        }
         editMode={editMode === "address"}
         setEditMode={() => setEditMode("address")}
       />

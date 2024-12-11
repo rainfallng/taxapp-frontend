@@ -50,7 +50,7 @@ export interface IIndividualProfile {
   occupation: string;
   phone_number_1: string;
   email_address: string;
-  street_number: number | null;
+  street_number: string;
   street_name: string;
   state: null | number;
 }

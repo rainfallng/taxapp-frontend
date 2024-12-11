@@ -12,7 +12,7 @@ const defaultValues = {
   street_name: "",
   lcda: "",
   state: 0,
-  lga: 0,
+  lga: null,
   business_type: ""
 };
 
@@ -22,15 +22,15 @@ export const schema = yup.object({
   phone_number: yup
     .string()
     .max(15, "Phone number cannot be more than 15 characters").optional(),
-  number_of_employees: yup.number().optional().default(0),
-  number_of_directors: yup.number().optional().default(0),
-  place_of_business: yup.string().optional(),
-  street_number: yup.string().optional(),
-  street_name: yup.string().optional(),
-  lga: yup.number().optional(),
-  state: yup.number().optional(),
-  lcda: yup.string().optional(),
-  business_type: yup.string().optional(),
+  number_of_employees: yup.number().default(0),
+  number_of_directors: yup.number().default(0),
+  place_of_business: yup.string(),
+  street_number: yup.string(),
+  street_name: yup.string(),
+  lga: yup.number().nullable(),
+  state: yup.number().nullable(),
+  lcda: yup.string(),
+  business_type: yup.string(),
 });
 
 export const companyProfileSchema = resolveSchema({
