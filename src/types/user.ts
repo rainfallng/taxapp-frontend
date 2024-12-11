@@ -79,7 +79,7 @@ export type IndividualProfile = {
   place_of_birth: string;
   date_of_birth: string;
   gender: string;
-  street_number: number | string;
+  street_number: string;
   street_name: string;
   city: string;
   lcda: string;
@@ -112,7 +112,7 @@ export type CompanyProfile = {
   place_of_birth: string;
   place_of_business: string;
   gender: string;
-  street_number: number | string;
+  street_number: string;
   street_name: string;
   city: string;
   lcda: string;

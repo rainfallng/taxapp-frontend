@@ -2,7 +2,7 @@ import { resolveSchema } from "@/lib/utils";
 import { IIndividualProfile } from "@/types/form";
 import * as yup from "yup";
 
-const personalInfoSchemaObject = yup.object({
+export const personalInfoSchemaObject = yup.object({
   first_name: yup.string(),
   last_name: yup.string(),
   middle_name: yup.string(),
@@ -23,32 +23,32 @@ const personalInfoSchemaObject = yup.object({
     .max(15, "Phone number cannot be more than 15 characters"),
   email_address: yup.string().email(),
   street_number: yup.number(),
-  street_name: yup.string()
-  });
-  
-  const personalInfoDefaultValues: Partial<IIndividualProfile> = {
-    first_name: "",
-    last_name: "",
-    middle_name: "",
-    title: "",
-    marital_status: "",
-    employment_status: "",
-    nationality: "",
-    date_of_birth: "",
-    gender: "",
-    state_of_origin: "",
-    lga: null,
-    business_type: "",
-    lcda: "",
-    occupation: "",
-    phone_number_1: "",
-    email_address: "",
-    street_number: 0,
-    street_name: "",
-    state: null
-  };
-  
-  export const individualProfileSchema = resolveSchema({
-    defaultValues: personalInfoDefaultValues,
-    schema: personalInfoSchemaObject,
-  });
+  street_name: yup.string(),
+});
+
+const personalInfoDefaultValues: Partial<IIndividualProfile> = {
+  first_name: "",
+  last_name: "",
+  middle_name: "",
+  title: "",
+  marital_status: "",
+  employment_status: "",
+  nationality: "",
+  date_of_birth: "",
+  gender: "",
+  state_of_origin: "",
+  lga: null,
+  business_type: "",
+  lcda: "",
+  occupation: "",
+  phone_number_1: "",
+  email_address: "",
+  street_number: 0,
+  street_name: "",
+  state: null,
+};
+
+export const individualProfileSchema = resolveSchema({
+  defaultValues: personalInfoDefaultValues,
+  schema: personalInfoSchemaObject,
+});

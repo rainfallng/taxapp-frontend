@@ -1,6 +1,5 @@
 import Button from "@/components/ui/button";
 import { Box, Grid, Typography, useTheme } from "@mui/material";
-import { FC } from "react";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import Input from "@/components/ui/input";
 import { useAPI } from "@/hooks/useApi";
@@ -10,15 +9,20 @@ import { useLoader } from "@/hooks/useLoader";
 import Select, { MenuItem } from "@/components/ui/select";
 import { useStore } from "@/store";
 import { getValue } from "@/lib/utils";
-import { UseFormReturn } from "react-hook-form";
-import { IIndividualProfile } from "@/types/form";
+import { FieldValues, Path, UseFormReturn } from "react-hook-form";
 import { UserType } from "@/types";
 
-const AddressInfo: FC<{
+interface AddressInfoProps<T extends FieldValues> {
   editMode: boolean;
   setEditMode: () => void;
-  form: UseFormReturn<Partial<IIndividualProfile>>;
-}> = ({ editMode, setEditMode, form }) => {
+  form: UseFormReturn<T>;
+}
+
+const AddressInfo = <T extends FieldValues>({
+  editMode,
+  setEditMode,
+  form,
+}: AddressInfoProps<T>) => {
   const user = useStore((s) => s.user);
   const { api } = useAPI();
 
@@ -32,7 +36,7 @@ const AddressInfo: FC<{
     queryFn: api.getStates,
   });
 
-  const state = editMode ? form.watch("state") : tinProfile?.state
+  const state = editMode ? form.watch("state" as Path<T>) : tinProfile?.state;
 
   const { data: lgas, isLoading: isLoadingLgas } = useQuery({
     queryKey: [QueryKeys.LGA, state],
@@ -88,7 +92,7 @@ const AddressInfo: FC<{
             <Input
               isNumber
               label="Street No."
-              name="street_number"
+              name={"street_number" as Path<T>}
               form={form}
             />
           ) : (
@@ -116,7 +120,11 @@ const AddressInfo: FC<{
         </Grid>
         <Grid item xs={3}>
           {editMode ? (
-            <Input label="Street Name" name="street_name" form={form} />
+            <Input
+              label="Street Name"
+              name={"street_name" as Path<T>}
+              form={form}
+            />
           ) : (
             <>
               <Typography
@@ -146,9 +154,9 @@ const AddressInfo: FC<{
             <Select
               sx={{ height: "5.6rem" }}
               placeholder="State"
-              value={form.watch("state")}
-              {...form.register("state")}
-              errorMessage={form.formState.errors.state?.message}
+              value={form.watch("state" as Path<T>)}
+              {...form.register("state" as Path<T>)}
+              errorMessage={form.formState.errors.state?.message as string}
             >
               {states?.map((state) => (
                 <MenuItem key={state.id} value={state.id}>
@@ -176,9 +184,8 @@ const AddressInfo: FC<{
               >
                 {getValue(
                   tinProfile?.state
-                    ? states?.find(
-                        (s) => s.id === Number(tinProfile?.state)
-                      )?.name
+                    ? states?.find((s) => s.id === Number(tinProfile?.state))
+                        ?.name
                     : ""
                 )}
               </Typography>
@@ -191,9 +198,9 @@ const AddressInfo: FC<{
             <Select
               sx={{ height: "5.6rem" }}
               placeholder="LGA"
-              value={form.watch("lga")}
-              {...form.register("lga")}
-              errorMessage={form.formState.errors.lga?.message}
+              value={form.watch("lga" as Path<T>)}
+              {...form.register("lga" as Path<T>)}
+              errorMessage={form.formState.errors.lga?.message as string}
             >
               {lgas?.map((lga) => (
                 <MenuItem key={lga.id} value={lga.id}>
@@ -221,9 +228,7 @@ const AddressInfo: FC<{
               >
                 {getValue(
                   tinProfile?.lga
-                    ? lgas?.find(
-                        (l) => l.id === Number(tinProfile?.lga)
-                      )?.name
+                    ? lgas?.find((l) => l.id === Number(tinProfile?.lga))?.name
                     : ""
                 )}
               </Typography>
@@ -233,7 +238,7 @@ const AddressInfo: FC<{
 
         <Grid item md={2}>
           {editMode ? (
-            <Input label="LCDA" name="lcda" form={form} />
+            <Input label="LCDA" name={"lcda" as Path<T>} form={form} />
           ) : (
             <>
               <Typography

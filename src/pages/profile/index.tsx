@@ -3,11 +3,12 @@ import CompanyInfo from "@/components/features/profile/company-info";
 import PersonalInfo from "@/components/features/profile/personal-info";
 import Button from "@/components/ui/button";
 import { useAPI } from "@/hooks/useApi";
+import { companyProfileSchema } from "@/lib/schemas/profile/company-profile";
 import { individualProfileSchema } from "@/lib/schemas/profile/individual-profile";
 import { handleFormToastErrors } from "@/lib/utils";
 import { useStore } from "@/store";
 import { IIndividualOnboarding, UserType } from "@/types";
-import { IIndividualProfile } from "@/types/form";
+import { CompanyProfileUpdateType, IIndividualProfile } from "@/types/form";
 import { Box, Typography, useTheme } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
@@ -22,6 +23,11 @@ const MyProfile = () => {
   const [editMode, setEditMode] = useState<EditMode>(null);
   const { user, setUser } = useStore();
   const form = useForm(individualProfileSchema);
+  const companyForm = useForm(companyProfileSchema);
+
+  const isIndividual = user.user_type === UserType.INDIVIDUAL
+
+  const isCompany = user.user_type === UserType.COMPANY
 
   const { mutateAsync: updateIndividualProfile } = useMutation({
     mutationFn: api.updateIndividual,
@@ -52,9 +58,28 @@ const MyProfile = () => {
     );
   }, [form, user?.profile]);
 
+  const getCompanyFieldValue = useMemo(() => {
+    const profile = user?.company_profile as unknown as { [key: string]: string };
+    return Object.keys(companyProfileSchema.defaultValues).reduce(
+      (res, key) => ({
+        ...res,
+        [key]:
+          profile?.[key] ??
+          companyForm.watch(key as unknown as WatchObserver<CompanyProfileUpdateType>),
+      }),
+      {} as CompanyProfileUpdateType
+    );
+  }, [companyForm, user?.company_profile]);
+
+  console.log(getCompanyFieldValue)
+
   useEffect(() => {
     form.reset(getFieldValue);
   }, [form, getFieldValue]);
+
+  useEffect(() => {
+    companyForm.reset(getCompanyFieldValue);
+  }, [companyForm, getCompanyFieldValue]);
 
   return (
     <form
@@ -79,7 +104,7 @@ const MyProfile = () => {
             color: theme.palette.grey[900],
           }}
         >
-          {user.user_type === UserType.INDIVIDUAL
+          {isIndividual
             ? "My Profile"
             : "Business Profile"}
         </Typography>
@@ -89,15 +114,16 @@ const MyProfile = () => {
           </Button>
         )}
       </Box>
-      {user.user_type === UserType.INDIVIDUAL && (
+      {isIndividual && (
         <PersonalInfo
           form={form}
           editMode={editMode === "personal"}
           setEditMode={() => setEditMode("personal")}
         />
       )}
-      {user.user_type === UserType.COMPANY && (
+      {isCompany && (
         <CompanyInfo
+          form={companyForm}
           editMode={editMode === "personal"}
           setEditMode={() => setEditMode("personal")}
         />

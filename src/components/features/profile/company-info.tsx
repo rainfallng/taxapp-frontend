@@ -7,11 +7,13 @@ import DetailsMode from "./details-company-info";
 import EditMode from "./edit-company-info";
 import { FC } from "react";
 import { FileUpload } from "@/components/ui/file-upload";
+import { CompanyProfileUpdate } from "@/types";
 
-const CompanyInfo: FC<{ editMode: boolean; setEditMode: () => void }> = ({
-  editMode,
-  setEditMode,
-}) => {
+const CompanyInfo: FC<{
+  editMode: boolean;
+  setEditMode: () => void;
+  form: CompanyProfileUpdate;
+}> = ({ editMode, setEditMode, form }) => {
   const theme = useTheme();
 
   return (
@@ -99,7 +101,7 @@ const CompanyInfo: FC<{ editMode: boolean; setEditMode: () => void }> = ({
           </Box>
         </Box>
         <Box sx={{ width: "calc(100% - 9.6rem - 6.4rem)" }}>
-          {editMode ? <EditMode /> : <DetailsMode />}
+          {editMode ? <EditMode form={form} /> : <DetailsMode />}
         </Box>
       </Box>
     </Box>

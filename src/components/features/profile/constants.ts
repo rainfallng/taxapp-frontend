@@ -29,14 +29,14 @@ export const ProfileLinks: Record<string, IProfileMenuBar[]> = {
           title: "Edit Payer ID/TIN",
           link: "/app/profile/tin",
         },
-        {
-          title: "Face/Fingerprint Access",
-          link: "/app/profile/access",
-        },
-        {
-          title: "Delete Account",
-          link: "/app/profile/delete",
-        },
+        // {
+        //   title: "Face/Fingerprint Access",
+        //   link: "/app/profile/access",
+        // },
+        // {
+        //   title: "Delete Account",
+        //   link: "/app/profile/delete",
+        // },
       ],
     },
   ],
@@ -57,10 +57,10 @@ export const ProfileLinks: Record<string, IProfileMenuBar[]> = {
       title: "Payroll",
       link: "/app/profile/payroll",
     },
-    {
-      title: "Payments",
-      link: "/app/profile/payments",
-    },
+    // {
+    //   title: "Payments",
+    //   link: "/app/profile/payments",
+    // },
     {
       title: "Security",
       subs: [
@@ -68,18 +68,18 @@ export const ProfileLinks: Record<string, IProfileMenuBar[]> = {
           title: "Change Password",
           link: "/app/profile/password",
         },
-        {
-          title: "Edit Payer ID/TIN",
-          link: "/app/profile/tin",
-        },
-        {
-          title: "Face/Fingerprint Access",
-          link: "/app/profile/access",
-        },
-        {
-          title: "Delete Account",
-          link: "/app/profile/delete",
-        },
+        // {
+        //   title: "Edit Payer ID/TIN",
+        //   link: "/app/profile/tin",
+        // },
+        // {
+        //   title: "Face/Fingerprint Access",
+        //   link: "/app/profile/access",
+        // },
+        // {
+        //   title: "Delete Account",
+        //   link: "/app/profile/delete",
+        // },
       ],
     },
   ],

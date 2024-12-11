@@ -1,3 +1,7 @@
+import { UseFormReturn } from "react-hook-form";
+import { schema } from "@/lib/schemas/profile/company-profile";
+import * as yup from "yup";
+
 export interface IIndividualOnboardingInput {
   id_type: string;
   id_number: string;
@@ -109,3 +113,7 @@ export interface IConsultantVerifyIdentity {
   last_name: string;
   phone_number_1: string;
 }
+
+export type CompanyProfileUpdateType = yup.InferType<typeof schema>
+
+export type CompanyProfileUpdate = UseFormReturn<CompanyProfileUpdateType>;
