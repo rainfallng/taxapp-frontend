@@ -10,10 +10,10 @@ export const ProfileLinks: Record<string, IProfileMenuBar[]> = {
       title: "Family Relations",
       link: "/app/profile/relations",
     },
-    {
-      title: "Support Staff",
-      link: "/app/profile/staff",
-    },
+    // {
+    //   title: "Support Staff",
+    //   link: "/app/profile/staff",
+    // },
     {
       title: "Linked Corporation",
       link: "/app/profile/corporation",

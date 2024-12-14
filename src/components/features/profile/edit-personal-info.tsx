@@ -1,4 +1,3 @@
-import DatePicker from "@/components/ui/date-picker";
 import Input from "@/components/ui/input";
 import PhoneInput from "@/components/ui/phone-input";
 import Select, { MenuItem } from "@/components/ui/select";
@@ -11,15 +10,15 @@ import {
   MaritalStatusType,
   TitleType,
 } from "@/types";
-import { IIndividualProfile } from "@/types/form";
 import { Grid, capitalize } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { FC } from "react";
 import { UseFormReturn } from "react-hook-form";
+import { individualProfileSchema } from "@/lib/schemas/profile/individual-profile";
 
-const EditMode: FC<{ form: UseFormReturn<Partial<IIndividualProfile>> }> = ({
-  form,
-}) => {
+const EditMode: FC<{
+  form: UseFormReturn<Partial<typeof individualProfileSchema.defaultValues>>;
+}> = ({ form }) => {
   const { api } = useAPI();
   const { data: states, isLoading: isLoadingStates } = useQuery({
     queryKey: [QueryKeys.STATES],
@@ -30,15 +29,6 @@ const EditMode: FC<{ form: UseFormReturn<Partial<IIndividualProfile>> }> = ({
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={4}>
-        <Input label="First Name" name="first_name" form={form} />
-      </Grid>
-      <Grid item xs={4}>
-        <Input label="Last Name" name="last_name" form={form} />
-      </Grid>
-      <Grid item xs={4}>
-        <Input label="Other Names" name="middle_name" form={form} />
-      </Grid>
       <Grid item xs={4}>
         <Select
           sx={{ height: "5.6rem" }}
@@ -53,14 +43,6 @@ const EditMode: FC<{ form: UseFormReturn<Partial<IIndividualProfile>> }> = ({
             </MenuItem>
           ))}
         </Select>
-      </Grid>
-      <Grid item xs={4}>
-        <DatePicker
-          label="Date of Birth"
-          name="date_of_birth"
-          format="YYYY-MM-DD"
-          form={form}
-        />
       </Grid>
       <Grid item xs={4}>
         <Select

@@ -10,7 +10,7 @@ import Select, { MenuItem } from "@/components/ui/select";
 import { useStore } from "@/store";
 import { getValue } from "@/lib/utils";
 import { FieldValues, Path, UseFormReturn } from "react-hook-form";
-import { UserType } from "@/types";
+import { CompanyProfile, IndividualProfile, UserType } from "@/types";
 
 interface AddressInfoProps<T extends FieldValues> {
   editMode: boolean;
@@ -26,17 +26,30 @@ const AddressInfo = <T extends FieldValues>({
   const user = useStore((s) => s.user);
   const { api } = useAPI();
 
-  const tinProfile =
-    user.user_type === UserType.INDIVIDUAL
-      ? user?.profile
-      : user?.company_profile;
+  const isCompany = user.user_type === UserType.COMPANY;
+
+  const isIndividual = user.user_type === UserType.INDIVIDUAL;
+
+  const tinProfile = isIndividual ? user?.profile : user?.company_profile;
 
   const { data: states, isLoading: isLoadingStates } = useQuery({
     queryKey: [QueryKeys.STATES],
     queryFn: api.getStates,
   });
 
-  const state = editMode ? form.watch("state" as Path<T>) : tinProfile?.state;
+  const lgaKey = isCompany ? "lga" : "lga_of_residence";
+
+  const stateKey = isCompany ? "state" : "state_of_residence";
+
+  const lgaValue = isCompany
+    ? (tinProfile as CompanyProfile)?.lga
+    : (tinProfile as IndividualProfile)?.lga_of_residence;
+
+  const stateValue = isCompany
+    ? (tinProfile as CompanyProfile)?.state
+    : (tinProfile as IndividualProfile)?.state_of_residence;
+
+  const state = editMode ? form.watch(stateKey as Path<T>) : stateValue;
 
   const { data: lgas, isLoading: isLoadingLgas } = useQuery({
     queryKey: [QueryKeys.LGA, state],
@@ -154,9 +167,11 @@ const AddressInfo = <T extends FieldValues>({
             <Select
               sx={{ height: "5.6rem" }}
               placeholder="State"
-              value={form.watch("state" as Path<T>)}
-              {...form.register("state" as Path<T>)}
-              errorMessage={form.formState.errors.state?.message as string}
+              value={form.watch(stateKey as Path<T>)}
+              {...form.register(stateKey as Path<T>)}
+              errorMessage={
+                form.formState.errors.state_of_residence?.message as string
+              }
             >
               {states?.map((state) => (
                 <MenuItem key={state.id} value={state.id}>
@@ -183,9 +198,8 @@ const AddressInfo = <T extends FieldValues>({
                 }}
               >
                 {getValue(
-                  tinProfile?.state
-                    ? states?.find((s) => s.id === Number(tinProfile?.state))
-                        ?.name
+                  stateValue
+                    ? states?.find((s) => s.id === Number(stateValue))?.name
                     : ""
                 )}
               </Typography>
@@ -198,9 +212,11 @@ const AddressInfo = <T extends FieldValues>({
             <Select
               sx={{ height: "5.6rem" }}
               placeholder="LGA"
-              value={form.watch("lga" as Path<T>)}
-              {...form.register("lga" as Path<T>)}
-              errorMessage={form.formState.errors.lga?.message as string}
+              value={form.watch(lgaKey as Path<T>)}
+              {...form.register(lgaKey as Path<T>)}
+              errorMessage={
+                form.formState.errors.lga_of_residence?.message as string
+              }
             >
               {lgas?.map((lga) => (
                 <MenuItem key={lga.id} value={lga.id}>
@@ -227,8 +243,8 @@ const AddressInfo = <T extends FieldValues>({
                 }}
               >
                 {getValue(
-                  tinProfile?.lga
-                    ? lgas?.find((l) => l.id === Number(tinProfile?.lga))?.name
+                  lgaValue
+                    ? lgas?.find((l) => l.id === Number(lgaValue))?.name
                     : ""
                 )}
               </Typography>

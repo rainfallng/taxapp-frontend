@@ -95,8 +95,8 @@ export type IndividualProfile = {
   modified_by: string;
   user: string;
   state_of_origin: string;
-  state: number;
-  lga: number;
+  state_of_residence: number;
+  lga_of_residence: number;
 };
 
 export type CompanyProfile = {
@@ -199,7 +199,7 @@ export interface IIndividualOnboarding {
   one_off_allowance: number | null;
   consolidated_relief_allowance: number | null;
   first_time_filling: boolean | null;
-  state_of_origin: string | number;
+  state_of_origin: string;
   state_of_residence: string | number;
   lga_of_residence: string | number;
   past_tax_filling: string;

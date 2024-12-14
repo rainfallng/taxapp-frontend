@@ -7,12 +7,12 @@ import DetailsMode from "./details-personal-info";
 import EditMode from "./edit-personal-info";
 import { FC } from "react";
 import { UseFormReturn } from "react-hook-form";
-import { IIndividualProfile } from "@/types/form";
+import { individualProfileSchema } from "@/lib/schemas/profile/individual-profile";
 
 const PersonalInfo: FC<{
   editMode: boolean;
   setEditMode: () => void;
-  form: UseFormReturn<Partial<IIndividualProfile>>;
+  form: UseFormReturn<Partial<typeof individualProfileSchema.defaultValues>>;
 }> = ({ editMode, setEditMode, form }) => {
   const theme = useTheme();
 

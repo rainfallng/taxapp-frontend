@@ -8,7 +8,7 @@ import { individualProfileSchema } from "@/lib/schemas/profile/individual-profil
 import { handleFormToastErrors } from "@/lib/utils";
 import { useStore } from "@/store";
 import { IIndividualOnboarding, UserType } from "@/types";
-import { CompanyProfileUpdateType, IIndividualProfile } from "@/types/form";
+import { CompanyProfileUpdateType } from "@/types/form";
 import { Box, Typography, useTheme } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
@@ -40,13 +40,20 @@ const MyProfile = () => {
   });
 
   const onSave = (
-    values: Partial<IIndividualOnboarding> | CompanyProfileUpdateType
+    values:
+      | Partial<typeof individualProfileSchema.defaultValues>
+      | CompanyProfileUpdateType
   ) => {
-    toast.promise(updateProfile(values), {
-      success: "Identification successful",
-      loading: "Please wait...",
-      error: (error) => handleFormToastErrors(error, "Identification failed"),
-    });
+    toast.promise(
+      updateProfile(
+        values as Partial<IIndividualOnboarding> | CompanyProfileUpdateType
+      ),
+      {
+        success: "Identification successful",
+        loading: "Please wait...",
+        error: (error) => handleFormToastErrors(error, "Identification failed"),
+      }
+    );
   };
 
   const getFieldValue = useMemo(() => {
@@ -57,10 +64,12 @@ const MyProfile = () => {
         [key]:
           profile?.[key] ??
           individualForm.watch(
-            key as unknown as WatchObserver<IIndividualProfile>
+            key as unknown as WatchObserver<
+              Partial<typeof individualProfileSchema.defaultValues>
+            >
           ),
       }),
-      {} as Partial<IIndividualOnboarding>
+      {} as Partial<typeof individualProfileSchema.defaultValues>
     );
   }, [individualForm, user?.profile]);
 
@@ -82,12 +91,12 @@ const MyProfile = () => {
   }, [companyForm, user?.company_profile]);
 
   useEffect(() => {
-    individualForm.reset(getFieldValue);
-  }, [individualForm, getFieldValue]);
+    if (editMode) individualForm.reset(getFieldValue);
+  }, [individualForm, getFieldValue, editMode]);
 
   useEffect(() => {
-    companyForm.reset(getCompanyFieldValue);
-  }, [companyForm, getCompanyFieldValue]);
+    if (editMode) companyForm.reset(getCompanyFieldValue);
+  }, [companyForm, editMode, getCompanyFieldValue]);
 
   return (
     <form
