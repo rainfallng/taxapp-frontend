@@ -12,7 +12,7 @@ const personalInfoSchemaObject = yup.object({
   state_of_origin: yup.string().required("Select a state"),
   state_of_residence: yup.string().required("Select a state"),
   lga_of_residence: yup.string().required("Select a LGA"),
-  tax_station: yup.string().required("Tax station is a required field"),
+  tax_station: yup.string().optional(),
   business_type: yup.string().required("Select a business type"),
   lcda: yup.string().required("LCDA is required"),
   occupation: yup.string().required("Occupation is required"),
@@ -22,7 +22,7 @@ const personalInfoSchemaObject = yup.object({
     .required("Phone number is a required field"),
   email_address: yup.string().email().required("Email is a required field"),
   is_public_servant: yup.boolean(),
-  lasra: yup.string().required("LASRA is a required field"),
+  lasra: yup.string().optional(),
   house_number: yup.number().required("House number is a required field"),
   street: yup.string().required("Street is a required field")
 });

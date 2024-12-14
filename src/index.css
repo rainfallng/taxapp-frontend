@@ -127,3 +127,6 @@ html {
   font-size: 62.5%;
   font-family: "Poppins", "Roboto", "Arial", "sans-serif";
 }
+.MuiPickersDay-root {
+  font-size: 1.2rem !important;
+}

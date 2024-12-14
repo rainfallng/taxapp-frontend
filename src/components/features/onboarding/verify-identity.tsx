@@ -3,6 +3,7 @@ import DatePicker from "@/components/ui/date-picker";
 import Input from "@/components/ui/input";
 import Select, { MenuItem } from "@/components/ui/select";
 import { Box, FormLabel, Typography, useTheme } from "@mui/material";
+import dayjs from "dayjs";
 import { FieldValues, Path, UseFormReturn } from "react-hook-form";
 
 interface VerifyIdentityProps<T extends FieldValues> {
@@ -108,6 +109,7 @@ function VerifyIdentity<T extends FieldValues>({
               form={form}
               name={getField("date_of_birth")}
               format="YYYY-MM-DD"
+              maxDate={dayjs()}
             />
           </Box>
         )}

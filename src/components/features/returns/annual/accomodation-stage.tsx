@@ -20,6 +20,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import Modal from "../../modals";
+import dayjs from "dayjs";
 
 const AccomodationStage: FC<{
   incomeId: string;
@@ -36,7 +37,9 @@ const AccomodationStage: FC<{
     mutationFn: (variables: IIndividualAnnualAccomodationInput) =>
       api.postIndividualAccomodation(incomeId, variables),
     onSuccess() {
-      navigate(`/app/returns/annual/${year}?id=${incomeId}&billId=${billId}&showBill=true`)
+      navigate(
+        `/app/returns/annual/${year}?id=${incomeId}&billId=${billId}&showBill=true`
+      );
     },
   });
 
@@ -227,7 +230,12 @@ const AccomodationStage: FC<{
           >
             Date End
           </FormLabel>
-          <DatePicker name="end_date" format="YYYY-MM-DD" form={form} />
+          <DatePicker
+            name="end_date"
+            format="YYYY-MM-DD"
+            form={form}
+            minDate={dayjs(form.watch("start_date"))}
+          />
         </Grid>
       </Grid>
       <Box

@@ -25,10 +25,10 @@ export const ProfileLinks: Record<string, IProfileMenuBar[]> = {
           title: "Change Password",
           link: "/app/profile/password",
         },
-        {
-          title: "Edit Payer ID/TIN",
-          link: "/app/profile/tin",
-        },
+        // {
+        //   title: "Edit Payer ID/TIN",
+        //   link: "/app/profile/tin",
+        // },
         // {
         //   title: "Face/Fingerprint Access",
         //   link: "/app/profile/access",
