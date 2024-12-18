@@ -102,8 +102,8 @@ const DashboardHome = () => {
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
           <Typography sx={{ fontSize: "2rem", fontWeight: 500 }}>
-            {MONTH_INDEX_MAPPER[month]} 10: deadline for your tax returns
-            for {dayjs().year()} is close
+            {MONTH_INDEX_MAPPER[month]} 10: deadline for your tax returns for{" "}
+            {dayjs().year()} is close
           </Typography>
           <Box
             component="img"
@@ -113,7 +113,11 @@ const DashboardHome = () => {
           />
           <Box
             component={Link}
-            to={`/app/returns/paye/create/${MONTH_INDEX_MAPPER[prevMonth]}`}
+            to={
+              isCompany
+                ? `/app/returns/paye/create/${MONTH_INDEX_MAPPER[prevMonth]}`
+                : "/app/returns"
+            }
             sx={{
               fontSize: "1.8rem",
               color: theme.palette.success.main,
@@ -297,7 +301,7 @@ const DashboardHome = () => {
               <Typography
                 sx={{ fontSize: "1.6rem", fontWeight: 500, mb: "0.8rem" }}
               >
-                Total PAYE Filed
+                Total {isCompany ? "PAYE Filed" : "Annual Returns"}
               </Typography>
               <Typography
                 sx={{ fontSize: "3.2rem", fontWeight: 600, mb: "1.2rem" }}
