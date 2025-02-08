@@ -35,7 +35,7 @@ const InitialOnboarding = () => {
         tin,
         user.user_type === UserType.COMPANY ? "company_profile" : "profile"
       );
-      navigate("/auth/onboarding/tin/verify");
+      navigate("/auth/onboarding/success");
     },
   });
 
