@@ -1,9 +1,9 @@
-import SelectDropdown from "@/components/ui/menu";
 import { useAPI } from "@/hooks/useApi";
 import { useLoader } from "@/hooks/useLoader";
 import { QueryKeys } from "@/lib/queryKeys";
 import {
   Box,
+  Button,
   Table,
   TableBody,
   TableCell,
@@ -14,24 +14,27 @@ import {
   useTheme,
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import Button from "@/components/ui/button";
+import { currentYear, MONTH_INDEX_MAPPER, YEARS } from "@/lib/constants";
 import dayjs from "dayjs";
-import { MONTH_INDEX_MAPPER } from "@/lib/constants";
 
 const PayeReturns = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { api } = useAPI();
-  const [year, setYear] = useState("2024");
-  const month = dayjs().month();
-  const prevMonth = month === 0 ? 11 : month - 1;
+  const [year, setYear] = useState(currentYear.toString());
+
+  const months =
+    year === currentYear.toString()
+      ? Object.keys(MONTH_INDEX_MAPPER)
+          .filter((m) => Number(m) <= dayjs().month())
+          .map((m) => MONTH_INDEX_MAPPER[Number(m)])
+      : Object.values(MONTH_INDEX_MAPPER);
 
   const { data: returns, isLoading: isLoadingReturns } = useQuery({
     queryKey: [QueryKeys.COMPANY_RETURNS, year],
-    queryFn: () => api.getCompanyReturns({ year }),
+    queryFn: () => api.getMonthlyReturns({ year }),
   });
 
   useLoader(isLoadingReturns, "Fetching returns...");
@@ -66,22 +69,13 @@ const PayeReturns = () => {
               cursor: "pointer",
             }}
           >
-            <option value="2024">2024</option>
-            <option value="2023">2023</option>
-            <option value="2022">2022</option>
-            <option value="2021">2021</option>
+            {YEARS.map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
           </Box>
         </Box>
-        <Button
-          rounded
-          onClick={() =>
-            navigate(
-              `/app/returns/paye/create/${MONTH_INDEX_MAPPER[prevMonth]}`
-            )
-          }
-        >
-          File Return
-        </Button>
       </Box>
       <Box>
         <TableContainer>
@@ -128,16 +122,6 @@ const PayeReturns = () => {
                     fontSize: "1.4rem",
                     color: theme.palette.grey[600],
                     pr: "4.8rem",
-                    width: "20%",
-                  }}
-                >
-                  No of Employees
-                </TableCell>
-                <TableCell
-                  sx={{
-                    fontSize: "1.4rem",
-                    color: theme.palette.grey[600],
-                    pr: "4.8rem",
                     width: "16%",
                   }}
                 >
@@ -174,7 +158,7 @@ const PayeReturns = () => {
                       width: "12%",
                     }}
                   >
-                    {item.month_name}
+                    {item.month}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -194,17 +178,7 @@ const PayeReturns = () => {
                       width: "18%",
                     }}
                   >
-                    {item.reference}
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      fontSize: "1.4rem",
-                      color: theme.palette.grey[600],
-                      pr: "4.8rem",
-                      width: "20%",
-                    }}
-                  >
-                    {item.number_of_employees}
+                    {item.return_type}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -214,9 +188,7 @@ const PayeReturns = () => {
                       width: "16%",
                     }}
                   >
-                    {item.bill.status.toLowerCase() !== "created"
-                      ? "Filed"
-                      : "Not Filed"}
+                    {item.is_submitted ? "Filed" : "Not Filed"}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -226,28 +198,91 @@ const PayeReturns = () => {
                       width: "16%",
                     }}
                   >
-                    <SelectDropdown
-                      options={[
-                        item.bill.status.toLowerCase() === "created"
-                          ? {
-                              name: "Proceed to payment",
-                              onClick: () =>
-                                navigate(
-                                  `/app/returns/paye/bill/${item.month_name}/${item.bill.id}`
-                                ),
-                            }
-                          : {
-                              name: "Statement of Income",
-                              onClick: () =>
-                                navigate(`/app/returns/paye/${year}`),
-                            },
-                      ]}
-                    >
-                      <MoreVertIcon />
-                    </SelectDropdown>
+                    {!item.is_submitted && (
+                      <Button
+                        onClick={() =>
+                          navigate(
+                            `/app/returns/paye/create/${item.year}/${item.month}`
+                          )
+                        }
+                      >
+                        Click to file return
+                      </Button>
+                    )}
                   </TableCell>
                 </TableRow>
               ))}
+              {months
+                .filter(
+                  (m) =>
+                    !returns?.results?.some(
+                      (r) => r.month === m && r.year === Number(year)
+                    )
+                )
+                .map((month, index) => (
+                  <TableRow
+                    key={month}
+                    sx={{
+                      py: "0.7rem",
+                      ...(index % 2 === 0 && {
+                        bgcolor: "#F8F8F8",
+                      }),
+                    }}
+                  >
+                    <TableCell
+                      sx={{
+                        fontSize: "1.4rem",
+                        color: theme.palette.grey[600],
+                        pl: "2rem",
+                        width: "12%",
+                      }}
+                    >
+                      {month}
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        fontSize: "1.4rem",
+                        color: theme.palette.grey[600],
+                        pr: "4.8rem",
+                        width: "18%",
+                      }}
+                    ></TableCell>
+                    <TableCell
+                      sx={{
+                        fontSize: "1.4rem",
+                        color: theme.palette.grey[600],
+                        pr: "4.8rem",
+                        width: "18%",
+                      }}
+                    ></TableCell>
+                    <TableCell
+                      sx={{
+                        fontSize: "1.4rem",
+                        color: theme.palette.grey[600],
+                        pr: "4.8rem",
+                        width: "16%",
+                      }}
+                    >
+                      Not Filed
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        fontSize: "1.4rem",
+                        color: theme.palette.grey[600],
+                        pr: "4.8rem",
+                        width: "16%",
+                      }}
+                    >
+                      <Button
+                        onClick={() =>
+                          navigate(`/app/returns/paye/create/${year}/${month}`)
+                        }
+                      >
+                        Click to file return
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>

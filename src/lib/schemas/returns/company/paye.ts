@@ -3,25 +3,25 @@ import { AddCompanyStaffReturn } from "@/types/returns";
 import * as yup from "yup";
 
 export const payeStaffInput = {
-  tin: "",
-  name: "",
-  designation: "",
-  basic: null,
-  housing: null,
-  transport: null,
-  others: null,
-  bonus: null,
-  state_of_residence: null,
+  staff_tax_payer_id: "",
+  basic: 0,
+  transport: 0,
+  housing: 0,
+  others: 0,
+  bonus: 0,
+  npf: 0,
+  nhf: 0,
+  state_of_residence: 0,
 };
 
-const payeSchemaObject = yup.object({
-  returns: yup
+export const payeSchemaObject = yup.object({
+  monthly_payees: yup
     .array()
     .of(
       yup.object({
-        tin: yup.string().required("TIN is a required field"),
-        name: yup.string().required("Name is a required field"),
-        designation: yup.string().required("Designation is a required field"),
+        staff_tax_payer_id: yup
+          .string()
+          .required("Staff tax payer ID is a required field"),
         basic: yup
           .number()
           .typeError("Field must be a number")
@@ -46,13 +46,21 @@ const payeSchemaObject = yup.object({
           .number()
           .typeError("Field must be a number")
           .required("Field is required"),
+        npf: yup
+          .number()
+          .typeError("Field must be a number")
+          .required("Field is required"),
+        nhf: yup
+          .number()
+          .typeError("Field must be a number")
+          .required("Field is required"),
       })
     )
     .required("At least one staff entry is required"),
 });
 
-const payeDefaultValues: { returns: AddCompanyStaffReturn[] } = {
-  returns: [payeStaffInput],
+const payeDefaultValues: AddCompanyStaffReturn = {
+  monthly_payees: [payeStaffInput],
 };
 
 export const payeSchema = resolveSchema({

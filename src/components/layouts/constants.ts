@@ -1,12 +1,12 @@
 import { ISidebar, UserType } from "@/types";
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
-import FilePresentOutlinedIcon from "@mui/icons-material/FilePresentOutlined";
 // import SegmentOutlinedIcon from "@mui/icons-material/SegmentOutlined";
 // import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 // import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
 import BusinessCenterOutlinedIcon from '@mui/icons-material/BusinessCenterOutlined';
+// import FilePresentIcon from '@mui/icons-material/FilePresent';
 
 export const SIDEBAR_LINKS: Record<string, ISidebar[]> = {
   [UserType.COMPANY]: [
@@ -25,8 +25,13 @@ export const SIDEBAR_LINKS: Record<string, ISidebar[]> = {
       icon: FileCopyOutlinedIcon,
       subs: [
         {
-          title: "PAYE",
+          title: "Monthly PAYE",
           link: "/app/returns/paye",
+        },
+
+        {
+          title: "Annual Returns",
+          link: "/app/returns/annual",
         },
         // {
         //   title: "Withholding Tax Returns",
@@ -44,10 +49,10 @@ export const SIDEBAR_LINKS: Record<string, ISidebar[]> = {
         //   title: "Schedule Returns",
         //   link: "/app/returns/schedule",
         // },
-        {
-          title: "Filing History",
-          link: "/app/returns/history",
-        },
+        // {
+        //   title: "Filing History",
+        //   link: "/app/returns/history",
+        // },
       ],
     },
     // {
@@ -79,18 +84,19 @@ export const SIDEBAR_LINKS: Record<string, ISidebar[]> = {
     },
     {
       title: "File Returns",
-      icon: FilePresentOutlinedIcon,
+      icon: FileCopyOutlinedIcon,
       subs: [
         {
-          title: "Annual Returns",
+          title: "Personal Income Tax",
           link: "/app/returns",
-        },
-        {
-          title: "Filing History",
-          link: "/app/returns/history",
         },
       ],
     },
+    // {
+    //   title: "Filing History",
+    //   link: "/app/returns/history",
+    //   icon: FilePresentIcon,
+    // },
     // {
     //   title: "Statement",
     //   link: "/app/statement",

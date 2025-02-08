@@ -12,3 +12,21 @@ export const MONTH_INDEX_MAPPER: Record<number, string> = {
   10: "November",
   11: "December",
 };
+
+export const WITHOLDING_TAX_TYPE = [
+  "BANK INTEREST",
+  "BUILDING CONSTRUCTION BRIDGES",
+  "COMMISSION",
+  "CONSULTANCY",
+  "CONTRACT",
+  "DIRECTORS_FEES",
+  "DIVIDEND",
+  "RENT",
+  "ROYALTY",
+  "TECHNICAL SERVICES"
+];
+
+
+export const currentYear = new Date().getFullYear();
+
+export const YEARS = Array.from({ length: 5 }, (_, index) => currentYear - index);

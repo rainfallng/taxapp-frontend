@@ -1,6 +1,10 @@
 import { UseFormReturn } from "react-hook-form";
 import { schema } from "@/lib/schemas/profile/company-profile";
 import * as yup from "yup";
+import { annualReturnSchemaObject } from "@/lib/schemas/returns/company/annual-returns";
+import { projectionReturnSchemaObject } from "@/lib/schemas/returns/company/projection-returns";
+import { withholdingTaxSchemaObject } from "@/lib/schemas/returns/company/witholding-tax";
+import { scheduleReturnSchemaObject } from "@/lib/schemas/returns/company/schedule-returns";
 
 export interface IIndividualOnboardingInput {
   id_type: string;
@@ -114,6 +118,20 @@ export interface IConsultantVerifyIdentity {
   phone_number_1: string;
 }
 
-export type CompanyProfileUpdateType = yup.InferType<typeof schema>
+export type CompanyProfileUpdateType = yup.InferType<typeof schema>;
 
 export type CompanyProfileUpdate = UseFormReturn<CompanyProfileUpdateType>;
+
+export type AnnualReturnType = yup.InferType<typeof annualReturnSchemaObject>;
+
+export type ProjectionReturnType = yup.InferType<
+  typeof projectionReturnSchemaObject
+>;
+
+export type WitholdingTaxType = yup.InferType<
+  typeof withholdingTaxSchemaObject
+>;
+
+export type ScheduleReturnTaxType = yup.InferType<
+  typeof scheduleReturnSchemaObject
+>;

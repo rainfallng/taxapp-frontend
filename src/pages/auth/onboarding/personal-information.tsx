@@ -51,6 +51,11 @@ const PersonalInformation = () => {
     reset,
   } = form;
 
+  const { data: countries, isLoading: isLoadingCountries } = useQuery({
+    queryKey: [QueryKeys.COUNTRIES],
+    queryFn: api.getCountries,
+  });
+
   const { data: states, isLoading: isLoadingStates } = useQuery({
     queryKey: [QueryKeys.STATES],
     queryFn: api.getStates,
@@ -82,7 +87,7 @@ const PersonalInformation = () => {
     });
   };
 
-  useLoader(isLoadingStates, "Please wait...");
+  useLoader(isLoadingStates || isLoadingCountries, "Please wait...");
 
   useEffect(() => {
     reset({
@@ -615,7 +620,20 @@ const PersonalInformation = () => {
             >
               Nationality
             </FormLabel>
-            <Input label="Nationality" name="nationality" form={form} />
+
+            <Select
+              sx={{ height: "5.6rem" }}
+              placeholder="Select Nationality"
+              value={form.watch(`nationality`)}
+              {...form.register(`nationality`)}
+              errorMessage={form.formState.errors?.nationality?.message}
+            >
+              {countries?.map((n) => (
+                <MenuItem key={n.id} value={n.id}>
+                  {n.name}
+                </MenuItem>
+              ))}
+            </Select>
           </Grid>
           <Grid item xs={4}>
             <FormLabel

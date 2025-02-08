@@ -1,7 +1,7 @@
-import AccomodationStage from "@/components/features/returns/annual/accomodation-stage";
-import IDStage from "@/components/features/returns/annual/id-stage";
-import IncomeStage from "@/components/features/returns/annual/income-stage";
-import TaxImplicationBill from "@/components/features/returns/annual/tax-implication-bill";
+import AccomodationStage from "@/components/features/returns/individual/accomodation-stage";
+import IDStage from "@/components/features/returns/individual/id-stage";
+import IncomeStage from "@/components/features/returns/individual/income-stage";
+import TaxImplicationBill from "@/components/features/returns/individual/tax-implication-bill";
 import GoBack from "@/components/ui/go-back";
 import { IAnnualReturnStage } from "@/types/returns";
 import { Box } from "@mui/material";

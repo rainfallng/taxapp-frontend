@@ -2,6 +2,8 @@ import axios, { AxiosInstance } from "axios";
 import { getStore, onDownloadBlob } from "@/lib/utils";
 import {
   AddCompanyStaffReturn,
+  AnnualReturnList,
+  AnnualReturnType,
   BillList,
   CompanyReturnsList,
   ICompanyOnboarding,
@@ -20,8 +22,15 @@ import {
   IState,
   IUser,
   IVerifyCAC,
+  Nationality,
+  ProjectionReturnList,
+  ProjectionReturnType,
   ReturnGraph,
   ReturnStat,
+  ScheduleReturnList,
+  ScheduleReturnTaxType,
+  WitholdingTaxList,
+  WitholdingTaxType,
   YearOrMonthParam,
 } from "@/types";
 
@@ -106,7 +115,7 @@ export class APIRequest {
   };
 
   getStates = async () => {
-    const { data } = await axios.get(`/api/v1/location/state`, {
+    const { data } = await axios.get(`/api/v1/location/countries/nigeria/states/`, {
       headers: {
         Authorization: `JWT ${this.accessToken}`,
       },
@@ -117,7 +126,7 @@ export class APIRequest {
 
   getLGAs = async (stateId: number) => {
     const { data } = await axios.get(
-      `/api/v1/location/state/${stateId}/lgas/`,
+      `/api/v1/location/countries/${stateId}/lgas/`,
       {
         headers: {
           Authorization: `JWT ${this.accessToken}`,
@@ -165,6 +174,22 @@ export class APIRequest {
   ) => {
     const { data } = await axios.post(
       `/api/v1/ums/profile/verify-identity/`,
+      body,
+      {
+        headers: {
+          Authorization: `JWT ${this.accessToken}`,
+        },
+      }
+    );
+
+    return data;
+  };
+
+  updateTaxPayerId = async (
+    body: { tax_payer_id: string }
+  ) => {
+    const { data } = await axios.patch(
+      `/api/v1/ums/profile/update/tax-payer-id/`,
       body,
       {
         headers: {
@@ -248,8 +273,18 @@ export class APIRequest {
   };
 
   updateIndividual = async (body: Partial<IIndividualProfileOnboarding>) => {
+    const { data } = await axios.patch(`/api/v1/ums/profile/me/update/`, body, {
+      headers: {
+        Authorization: `JWT ${this.accessToken}`,
+      },
+    });
+
+    return data;
+  };
+
+  updateCompany = async (body: Partial<ICompanyOnboarding>) => {
     const { data } = await axios.patch(
-      `/api/v1/ums/profile/me/update/`,
+      `/api/v1/ums/profile/me/update-company/`,
       body,
       {
         headers: {
@@ -257,16 +292,6 @@ export class APIRequest {
         },
       }
     );
-
-    return data;
-  };
-
-  updateCompany = async (body: Partial<ICompanyOnboarding>) => {
-    const { data } = await axios.patch(`/api/v1/ums/profile/me/update-company/`, body, {
-      headers: {
-        Authorization: `JWT ${this.accessToken}`,
-      },
-    });
 
     return data;
   };
@@ -438,11 +463,14 @@ export class APIRequest {
     return data as CompanyReturnsList;
   };
 
-  postCompanyReturns = async (variables: {
-    returns: AddCompanyStaffReturn[];
-  }) => {
+  postCompanyPayeeReturns = async (
+    variables: {
+      year: string;
+      month: string;
+    } & AddCompanyStaffReturn
+  ) => {
     const { data } = await axios.post(
-      `/api/v1/returns/company/staff/create/`,
+      `/api/v1/returns/company/monthly-returns/monthly-payee/`,
       variables,
       {
         headers: {
@@ -467,9 +495,37 @@ export class APIRequest {
     return data;
   };
 
-  uploadCompanyReturns = async (variables: FormData) => {
+  uploadCompanyPayeReturns = async (variables: FormData) => {
     const { data } = await axios.post(
-      `/api/v1/returns/company/staff/upload/`,
+      `/api/v1/returns/company/monthly-returns/monthly-payee/`,
+      variables,
+      {
+        headers: {
+          Authorization: `JWT ${this.accessToken}`,
+        },
+      }
+    );
+
+    return data;
+  };
+
+  uploadCompanyAnnualReturns = async (variables: FormData) => {
+    const { data } = await axios.post(
+      `/api/v1/returns/company/annual-returns/annual-returns/upload/`,
+      variables,
+      {
+        headers: {
+          Authorization: `JWT ${this.accessToken}`,
+        },
+      }
+    );
+
+    return data;
+  };
+
+  uploadCompanyProjectionReturns = async (variables: FormData) => {
+    const { data } = await axios.post(
+      `/api/v1/returns/company/annual-returns/projection-returns/upload/`,
       variables,
       {
         headers: {
@@ -547,19 +603,185 @@ export class APIRequest {
     return data as IPaginatedResponse<IConsultant>;
   };
 
-  downloadStaffReturnTemplate = async (filename: string) => {
-    const response = await axios.get(
-      `/api/v1/returns/company/staff/template/`,
+  getCountries = async () => {
+    const { data } = await axios.get(`/api/v1/location/countries/`, {
+      headers: {
+        Authorization: `JWT ${this.accessToken}`,
+      },
+    });
+
+    return data as Nationality[];
+  };
+
+  downloadMonthlyPayeTemplate = async (filename: string) => {
+    return this.downloadTemplate(
+      `/api/v1/returns/company/monthly-returns/monthly-payee/template/`,
+      filename
+    );
+  };
+
+  downloadAnnualReturnTemplate = async (filename: string) => {
+    return this.downloadTemplate(
+      `/api/v1/returns/company/annual-returns/annual-returns/template/`,
+      filename
+    );
+  };
+
+  downloadProjectionReturnTemplate = async (filename: string) => {
+    return this.downloadTemplate(
+      `/api/v1/returns/company/annual-returns/projection-returns/template/`,
+      filename
+    );
+  };
+
+  downloadTemplate = async (endpoint: string, filename: string) => {
+    const response = await axios.get(endpoint, {
+      responseType: "blob",
+      headers: {
+        Authorization: `JWT ${this.accessToken}`,
+      },
+    });
+
+    onDownloadBlob(response.data, filename);
+
+    return response.data;
+  };
+
+  postCompanyAnnualReturns = async (
+    variables: AnnualReturnType & {
+      year: number;
+    }
+  ) => {
+    const { data } = await axios.post(
+      `/api/v1/returns/company/annual-returns/annual-returns/`,
+      variables,
       {
-        responseType: "blob",
         headers: {
           Authorization: `JWT ${this.accessToken}`,
         },
       }
     );
 
-    onDownloadBlob(response.data, filename);
+    return data;
+  };
 
-    return response.data;
+  postCompanyProjectionReturns = async (
+    variables: ProjectionReturnType & {
+      year: number;
+    }
+  ) => {
+    const { data } = await axios.post(
+      `/api/v1/returns/company/annual-returns/projection-returns/`,
+      variables,
+      {
+        headers: {
+          Authorization: `JWT ${this.accessToken}`,
+        },
+      }
+    );
+
+    return data;
+  };
+
+  postCompanyWitholdingTax = async (
+    variables: WitholdingTaxType & {
+      year: number;
+    }
+  ) => {
+    const { data } = await axios.post(
+      `/api/v1/returns/company/annual-returns/witholding-tax/`,
+      variables,
+      {
+        headers: {
+          Authorization: `JWT ${this.accessToken}`,
+        },
+      }
+    );
+
+    return data;
+  };
+
+  postCompanyScheduleReturns = async (
+    variables: ScheduleReturnTaxType & {
+      year: number;
+    }
+  ) => {
+    const { data } = await axios.post(
+      `/api/v1/returns/company/annual-returns/schedule-returns/`,
+      variables,
+      {
+        headers: {
+          Authorization: `JWT ${this.accessToken}`,
+        },
+      }
+    );
+
+    return data;
+  };
+
+  getAnnualReturns = async () => {
+    const { data } = await axios.get(
+      `/api/v1/returns/company/annual-returns/annual-returns/`,
+      {
+        headers: {
+          Authorization: `JWT ${this.accessToken}`,
+        },
+      }
+    );
+
+    return data as AnnualReturnList;
+  };
+
+  getProjectionReturns = async () => {
+    const { data } = await axios.get(
+      `/api/v1/returns/company/annual-returns/projection-returns/`,
+      {
+        headers: {
+          Authorization: `JWT ${this.accessToken}`,
+        },
+      }
+    );
+
+    return data as ProjectionReturnList;
+  };
+
+  getScheduleReturns = async () => {
+    const { data } = await axios.get(
+      `/api/v1/returns/company/annual-returns/schedule-returns/`,
+      {
+        headers: {
+          Authorization: `JWT ${this.accessToken}`,
+        },
+      }
+    );
+
+    return data as ScheduleReturnList;
+  };
+
+  getWitholdingTax = async () => {
+    const { data } = await axios.get(
+      `/api/v1/returns/company/annual-returns/witholding-tax/`,
+      {
+        headers: {
+          Authorization: `JWT ${this.accessToken}`,
+        },
+      }
+    );
+
+    return data as WitholdingTaxList;
+  };
+
+  getMonthlyReturns = async (params?: { year: string }) => {
+    const { data } = await axios.get(
+      `/api/v1/returns/company/monthly-returns/`,
+      {
+        params,
+        headers: {
+          Authorization: `JWT ${this.accessToken}`,
+        },
+      }
+    );
+
+    return data as CompanyReturnsList;
   };
 }

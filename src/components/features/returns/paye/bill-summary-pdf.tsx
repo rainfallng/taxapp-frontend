@@ -237,7 +237,7 @@ const BillSummaryPDF = ({
                 color: "#2A2A2A",
               }}
             >
-              {tinProfile?.tin ?? "--"}
+              {tinProfile?.tax_payer_id ?? "--"}
             </Text>
           </Grid>
           <Grid item>

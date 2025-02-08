@@ -59,7 +59,7 @@ const AccomodationStage: FC<{
         Statement of Income (Gross Annual Income)
       </Typography>
       <Grid container columnSpacing={3.2} rowSpacing={2.4}>
-        {/* <Grid item xs={12}>
+        <Grid item xs={12}>
           <FormLabel
             sx={{
               fontSize: "2rem",
@@ -72,7 +72,7 @@ const AccomodationStage: FC<{
             Address
           </FormLabel>
           <Input name="owner_address" label="Enter Address" form={form} />
-        </Grid> */}
+        </Grid>
         <Grid item xs={12} sm={6}>
           <FormLabel
             sx={{

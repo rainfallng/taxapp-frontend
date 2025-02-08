@@ -12,8 +12,9 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import BillSummaryPDF from "./bill-summary-pdf";
 import { usePDF } from "@react-pdf/renderer";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { CompanyProfile } from "@/types";
+import Modal from "../../modals";
 
 const TaxImplicationBill = ({
   billId,
@@ -26,6 +27,7 @@ const TaxImplicationBill = ({
   const navigate = useNavigate();
   const { api } = useAPI();
   const { user } = useStore();
+  const [open, setOpen] = useState(false);
 
   const tinProfile = user?.company_profile;
 
@@ -167,7 +169,7 @@ const TaxImplicationBill = ({
               color: theme.palette.grey[800],
             }}
           >
-            {tinProfile?.tin ?? "--"}
+            {tinProfile?.tax_payer_id ?? "--"}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -329,6 +331,67 @@ const TaxImplicationBill = ({
           Proceed To Payment
         </Button>
       </Box>
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        sx={{ maxWidth: "60rem" }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "1.6rem",
+            textAlign: "center",
+            justifyContent: "center",
+            alignItems: "center",
+            py: "4rem",
+          }}
+        >
+          <Box
+            component="img"
+            src="/assets/svgs/info-warning-gold.svg"
+            alt=""
+            sx={{ width: "8.8rem", height: "8.8rem" }}
+          />
+          <Typography
+            variant="h5"
+            sx={{
+              fontSize: "2.6rem",
+              fontWeight: 600,
+              color: theme.palette.grey[800],
+            }}
+          >
+            Crosscheck your entries
+          </Typography>
+          <Typography
+            sx={{ fontSize: "1.6rem", color: theme.palette.grey[500] }}
+          >
+            Check all your information before you proceed because you will not
+            be able to edit your entries after submitting
+          </Typography>
+          <Box width="100%" display="flex" justifyContent="center">
+            <Button
+              variant="outlined"
+              rounded
+              sx={{ width: "50%", maxWidth: "19.5rem" }}
+              onClick={() => {
+                if (pdfInstance.blob)
+                  onDownloadBlob(pdfInstance.blob, "paye-bill-summary.pdf");
+              }}
+            >
+              Go back
+            </Button>
+            <Button
+              rounded
+              disabled={isPending || paymentInitiating}
+              sx={{ width: "50%", maxWidth: "19.5rem", ml: "1.6rem" }}
+              onClick={onInitiatePayment}
+            >
+              Proceed
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
     </Box>
   );
 };

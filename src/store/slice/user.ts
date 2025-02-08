@@ -11,6 +11,7 @@ export interface IUserSlice extends IToken {
       id_verified: boolean;
     }
   >;
+  setTaxPayerId: (value: string, type: "profile" | "company_profile") => void;
   setRefreshToken: (value: string) => void;
   setAccessToken: (value: string) => void;
   setUser: (user: Partial<IUser>) => void;
@@ -43,7 +44,7 @@ const defaultState = {
     },
   },
   user: {} as IUser,
-  consultant: {} as IConsultant
+  consultant: {} as IConsultant,
 };
 
 export const userSlice: StateCreator<IUserSlice> = (set) => ({
@@ -51,8 +52,19 @@ export const userSlice: StateCreator<IUserSlice> = (set) => ({
   setRefreshToken: (value) => set({ refresh: value }),
   setAccessToken: (value) => set({ access: value }),
   setToken: (access, refresh) => set({ access, refresh }),
-  setUser: (value) => set((s) => ({ ...s, user: { ...s.user, ...value as IUser } })),
-  setConsultant: (value) => set((s) => ({ ...s, consultant: { ...s.consultant, ...value as IConsultant } })),
+  setTaxPayerId: (value, type) => {
+    set((s) => ({
+      ...s,
+      user: { ...s.user, [type]: { ...s.user[type], tax_payer_id: value } },
+    }));
+  },
+  setUser: (value) =>
+    set((s) => ({ ...s, user: { ...s.user, ...(value as IUser) } })),
+  setConsultant: (value) =>
+    set((s) => ({
+      ...s,
+      consultant: { ...s.consultant, ...(value as IConsultant) },
+    })),
   setOnboarded: (value) =>
     set((s) => ({
       ...s,

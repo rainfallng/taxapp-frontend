@@ -31,13 +31,13 @@ const DashboardLayout = () => {
     navigate("/auth/login");
   };
 
-  if (
-    !user.phone &&
-    !([UserType.ADMIN, UserType.TAX_CONSULTANT] as Array<string>).includes(
-      user?.user_type
-    )
-  )
-    return <Navigate to="/auth/verify-phone" />;
+  // if (
+  //   !user.phone &&
+  //   !([UserType.ADMIN, UserType.TAX_CONSULTANT] as Array<string>).includes(
+  //     user?.user_type
+  //   )
+  // )
+  //   return <Navigate to="/auth/verify-phone" />;
 
   if (
     (!user?.phone || !onboarded[UserType.TAX_CONSULTANT].id_verified) &&

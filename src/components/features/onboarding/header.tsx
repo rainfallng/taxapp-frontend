@@ -19,11 +19,9 @@ const OnboardingHeader: FC<{
       }}
     >
       <Typography
-        variant="h4"
         sx={{
-          fontSize: "3.2rem",
-          fontWeight: 600,
-          color: theme.palette.grey[800],
+          fontSize: "1.8rem",
+          color: theme.palette.grey[500],
           mx: "auto",
           maxWidth: "45rem",
           ...titleSx,
@@ -35,8 +33,9 @@ const OnboardingHeader: FC<{
         <Typography
           sx={{
             color: theme.palette.grey[800],
-            fontSize: "1.6rem",
-            mt: "1.6rem",
+            fontSize: "2.2rem",
+            mt: "2rem",
+            fontWeight: 500,
           }}
         >
           {description}
