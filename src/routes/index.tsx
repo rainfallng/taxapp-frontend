@@ -146,10 +146,10 @@ const AppRoutes = () => {
           <Route path="password" element={<ChangePassword />} />
           <Route path="address" element={<Address />} />
         </Route>
+        <Route path="filing-history" element={<FilingHistory />} />
         <Route path="returns" element={<Outlet />}>
           <Route index element={<FileReturns />} />
           <Route path="success" element={<ReturnsSuccess />} />
-          <Route path="history" element={<FilingHistory />} />
           <Route path="personal-income-tax" element={<Outlet />}>
             <Route index element={<CreatePersonalIncomeTax />} />
             <Route path=":id/:year" element={<PersonalIncomeTaxCompute />} />
@@ -157,23 +157,20 @@ const AppRoutes = () => {
           <Route path="annual" element={<Outlet />}>
             <Route index element={<AnnualReturns />} />
             <Route path="create" element={<CreateAnnualReturn />} />
-            <Route
-              path="annual/:year"
-              element={<ComputeAnnualReturns />}
-            />
+            <Route path="annual/:year" element={<ComputeAnnualReturns />} />
             <Route
               path="projection/:year"
               element={<ComputeProjectionReturns />}
             />
-            <Route
-              path="witholding/:year"
-              element={<WitholdingTax />}
-            />
+            <Route path="witholding/:year" element={<WitholdingTax />} />
           </Route>
           <Route path="paye" element={<Outlet />}>
             <Route index element={<PayeReturns />} />
             <Route path="bill/:month/:billId" element={<PayeBill />} />
-            <Route path="create/:year/:month" element={<ComputePayeReturns />} />
+            <Route
+              path="create/:year/:month"
+              element={<ComputePayeReturns />}
+            />
           </Route>
         </Route>
         <Route index element={<Navigate replace to="/app/quick-menu" />} />

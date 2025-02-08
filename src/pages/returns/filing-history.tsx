@@ -24,8 +24,8 @@ const FilingHistory = () => {
   const { api } = useAPI();
 
   const { data, isPending } = useQuery({
-    queryKey: [QueryKeys.BILL],
-    queryFn: api.getIndividualBillList,
+    queryKey: [QueryKeys.RETURNS, "history"],
+    queryFn: api.getIndividualReturns,
   });
 
   useLoader(isPending, "Fetching history...");
@@ -67,7 +67,7 @@ const FilingHistory = () => {
                   width: "20%",
                 }}
               >
-                Amount
+                Year in View
               </TableCell>
               <TableCell
                 sx={{
@@ -115,7 +115,7 @@ const FilingHistory = () => {
                     width: "25%",
                   }}
                 >
-                  {dayjs(res.created).format("DD/MM/YYYY")}
+                  {dayjs(res.created).format("DD/MM/YYYY HH:mm A")}
                 </TableCell>
                 <TableCell
                   sx={{
@@ -124,7 +124,7 @@ const FilingHistory = () => {
                     width: "20%",
                   }}
                 >
-                  ₦{Number(res?.amount ?? "0").toLocaleString()}
+                 {res.year_in_view}
                 </TableCell>
                 <TableCell
                   sx={{

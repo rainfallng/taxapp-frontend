@@ -16,6 +16,7 @@ import {
   IIndividualReturn,
   ILGAs,
   ILogin,
+  IndividualReturnsList,
   IPaginatedResponse,
   IRegister,
   IResetPassword,
@@ -796,5 +797,18 @@ export class APIRequest {
     );
 
     return data as CompanyReturnsList;
+  };
+
+  getIndividualReturns = async () => {
+    const { data } = await axios.get(
+      `/api/v1/returns/individual/`,
+      {
+        headers: {
+          Authorization: `JWT ${this.accessToken}`,
+        },
+      }
+    );
+
+    return data as IndividualReturnsList;
   };
 }
