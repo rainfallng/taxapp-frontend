@@ -141,7 +141,7 @@ const TaxImplicationBill = ({ billId }: { billId: string }) => {
               color: theme.palette.grey[800],
             }}
           >
-            {user.profile?.tin ?? "--"}
+            {/* {user.profile?.tin ?? "--"} */}
           </Typography>
         </Grid>
         <Grid item md={4}>

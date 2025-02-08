@@ -126,7 +126,7 @@ const AddressInfo = <T extends FieldValues>({
                   fontWeight: 500,
                 }}
               >
-                {getValue(tinProfile?.street_number)}
+                {/* {getValue(tinProfile?.street_number)} */}
               </Typography>
             </>
           )}
@@ -156,7 +156,7 @@ const AddressInfo = <T extends FieldValues>({
                   fontWeight: 500,
                 }}
               >
-                {getValue(tinProfile?.street_name)}
+                {/* {getValue(tinProfile?.street_name)} */}
               </Typography>
             </>
           )}
