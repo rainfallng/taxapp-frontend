@@ -165,57 +165,56 @@ const AnnualReturns = () => {
                 </TableCell>
               </TableRow>
             ))}
-            {YEARS
-              .filter(
-                (year) =>
-                  !data?.results?.some((r) => r.company_return.year === year)
-              )
-              .map((year, key) => (
-                <TableRow
-                  key={year}
+            {YEARS.filter(
+              (year) =>
+                !data?.results?.some((r) => r.company_return.year === year) ||
+                year !== new Date().getFullYear()
+            ).map((year, key) => (
+              <TableRow
+                key={year}
+                sx={{
+                  ...(key % 2 !== 0 && {
+                    bgcolor: "rgba(231, 231, 231, 0.4)",
+                  }),
+                }}
+              >
+                <TableCell
                   sx={{
-                    ...(key % 2 !== 0 && {
-                      bgcolor: "rgba(231, 231, 231, 0.4)",
-                    }),
+                    color: theme.palette.grey[800],
+                    fontSize: "1.6rem",
+                    width: "40%",
                   }}
                 >
-                  <TableCell
-                    sx={{
-                      color: theme.palette.grey[800],
-                      fontSize: "1.6rem",
-                      width: "40%",
-                    }}
+                  {year}
+                </TableCell>
+                <TableCell
+                  sx={{
+                    color: theme.palette.grey[800],
+                    fontSize: "1.6rem",
+                    width: "40%",
+                  }}
+                >
+                  Not Filed
+                </TableCell>
+                <TableCell
+                  sx={{
+                    color: theme.palette.grey[800],
+                    fontSize: "1.6rem",
+                    width: "20%",
+                  }}
+                >
+                  <Button
+                    onClick={() =>
+                      navigate(
+                        `/app/returns/annual/create?tab=${activeTab}&year=${year}`
+                      )
+                    }
                   >
-                    {year}
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      color: theme.palette.grey[800],
-                      fontSize: "1.6rem",
-                      width: "40%",
-                    }}
-                  >
-                    Not Filed
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      color: theme.palette.grey[800],
-                      fontSize: "1.6rem",
-                      width: "20%",
-                    }}
-                  >
-                    <Button
-                      onClick={() =>
-                        navigate(
-                          `/app/returns/annual/create?tab=${activeTab}&year=${year}`
-                        )
-                      }
-                    >
-                      Click to file return
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
+                    Click to file return
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>

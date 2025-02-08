@@ -117,7 +117,7 @@ const StaffForm = ({
                 color: theme.palette.grey[800],
               }}
             >
-              Payer ID/Tax Identification Number (TIN)
+              Payer ID
             </FormLabel>
             <Input
               name={`monthly_payees.${index}.staff_tax_payer_id`}

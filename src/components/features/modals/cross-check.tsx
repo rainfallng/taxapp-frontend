@@ -15,7 +15,14 @@ const CrossCheckModal = ({
   const theme = useTheme();
 
   return (
-    <Modal open={open} onClose={toggle} sx={{ maxWidth: "60rem" }}>
+    <Modal
+      open={open}
+      onClose={toggle}
+      sx={{
+        alignSelf: "center",
+        justifySelf: "center",
+      }}
+    >
       <Box
         sx={{
           display: "flex",
@@ -24,7 +31,11 @@ const CrossCheckModal = ({
           textAlign: "center",
           justifyContent: "center",
           alignItems: "center",
-          py: "4rem",
+          py: "8rem",
+          px: "5.4rem",
+          bgcolor: "white",
+          maxWidth: "60rem",
+          borderRadius: "1.5rem"
         }}
       >
         <Box

@@ -10,6 +10,7 @@ import KeyboardArrowUpOutlinedIcon from "@mui/icons-material/KeyboardArrowUpOutl
 import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
 import { useEffect, useMemo, useState } from "react";
 import { annualReturnInput } from "@/lib/schemas/returns/company/annual-returns";
+import PhoneInput from "@/components/ui/phone-input";
 
 const AnnualReturnsForm = ({
   form,
@@ -298,6 +299,55 @@ const AnnualReturnsForm = ({
               label="Enter Email Address"
               name={`annual_returns.${index}.staff_email_address`}
               form={form}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormLabel
+              sx={{
+                fontSize: "2rem",
+                display: "block",
+                fontWeight: 500,
+                mb: "1.6rem",
+                color: (theme) => theme.palette.grey[800],
+              }}
+            >
+              Taxpayer ID
+            </FormLabel>
+            <Input
+              sx={{ height: "5.6rem" }}
+              label="Enter Taxpayer ID"
+              name={`annual_returns.${index}.tax_payer_id`}
+              form={form}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormLabel
+              sx={{
+                fontSize: "2rem",
+                display: "block",
+                fontWeight: 500,
+                mb: "1.6rem",
+                color: (theme) => theme.palette.grey[800],
+              }}
+            >
+              Staff Phone Number
+            </FormLabel>
+            <PhoneInput
+              value={form.watch(`annual_returns.${index}.staff_phone_number`)}
+              onChange={(value) =>
+                form.setValue(
+                  `annual_returns.${index}.staff_phone_number`,
+                  value
+                )
+              }
+              errorMessage={
+                form.formState.errors.annual_returns?.[index]
+                  ?.staff_phone_number?.message
+              }
+              label="Enter Number"
+              sx={{
+                height: "5.6rem",
+              }}
             />
           </Grid>
         </Grid>

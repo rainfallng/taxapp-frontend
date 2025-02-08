@@ -28,7 +28,7 @@ const PayeReturns = () => {
   const months =
     year === currentYear.toString()
       ? Object.keys(MONTH_INDEX_MAPPER)
-          .filter((m) => Number(m) <= dayjs().month())
+          .filter((m) => Number(m) < dayjs().month())
           .map((m) => MONTH_INDEX_MAPPER[Number(m)])
       : Object.values(MONTH_INDEX_MAPPER);
 
@@ -216,7 +216,7 @@ const PayeReturns = () => {
                 .filter(
                   (m) =>
                     !returns?.results?.some(
-                      (r) => r.month === m && r.year === Number(year)
+                      (r) => r.month.toLowerCase() === m.toLowerCase() && r.year === Number(year)
                     )
                 )
                 .map((month, index) => (

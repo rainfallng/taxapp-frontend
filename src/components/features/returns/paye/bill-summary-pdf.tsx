@@ -229,7 +229,7 @@ const BillSummaryPDF = ({
                 marginBottom: 5,
               }}
             >
-              Tax Payer ID/Tax Identification Number (TIN)
+              Tax Payer ID
             </Text>
             <Text
               style={{

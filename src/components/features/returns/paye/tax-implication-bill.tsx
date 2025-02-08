@@ -161,7 +161,7 @@ const TaxImplicationBill = ({
               mb: "0.8rem",
             }}
           >
-            Tax Payer ID/Tax Identification Number (TIN)
+            Tax Payer ID
           </Typography>
           <Typography
             sx={{

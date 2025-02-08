@@ -51,7 +51,7 @@ const IDStage: FC<{ setStage: (stage: IAnnualReturnStage) => void }> = ({
               color: (theme) => theme.palette.grey[800],
             }}
           >
-            Your Tax Payer ID/Tax Identification Number (TIN)
+            Your Tax Payer ID
           </FormLabel>
           <Input sx={{ height: "5.6rem" }} label="Enter Number" disabled />
         </Grid>
