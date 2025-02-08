@@ -35,9 +35,9 @@ import SupportStaff from "@/pages/profile/staff";
 import FileReturns from "@/pages/returns";
 import AnnualReturn from "@/pages/returns/annual";
 import FilingHistory from "@/pages/returns/filing-history";
-import PayeReturns from "@/pages/returns/paye";
-import ComputePayeReturns from "@/pages/returns/paye/compute";
-import PayeBill from "@/pages/returns/paye/bill";
+import PayeReturns from "@/pages/returns/company/paye";
+import ComputePayeReturns from "@/pages/returns/company/paye/compute";
+import PayeBill from "@/pages/returns/company/paye/bill";
 import VerifyCompany from "@/pages/auth/onboarding/verify-company";
 import CreatePassword from "@/pages/auth/create-password";
 import ConsultantRequestForm from "@/pages/auth/onboarding/consultant-request-form";
@@ -47,6 +47,13 @@ import VerifyConsultantIdentity from "@/pages/auth/onboarding/verify-consultant-
 import ConsultantRequestSuccess from "@/pages/auth/onboarding/consultant-request-success";
 import ConsultantSuccess from "@/pages/auth/onboarding/consultant-success";
 import VerifyIndividual from "@/pages/auth/onboarding/verify-individual";
+import CreatePersonalIncomeTax from "@/pages/returns/individual/personal-income-tax/create";
+import AnnualReturns from "@/pages/returns/company/annual";
+import CreateAnnualReturn from "@/pages/returns/company/annual/create-annual-return";
+import ComputeAnnualReturns from "@/pages/returns/company/annual/compute-annual-returns";
+import ComputeProjectionReturns from "@/pages/returns/company/annual/compute-projection-returns";
+import WitholdingTax from "@/pages/returns/company/annual/withholding-tax";
+import ReturnsSuccess from "@/pages/returns/success";
 
 const AppRoutes = () => {
   return (
@@ -141,13 +148,33 @@ const AppRoutes = () => {
         </Route>
         <Route path="returns" element={<Outlet />}>
           <Route index element={<FileReturns />} />
+          <Route path="success" element={<ReturnsSuccess />} />
           <Route path="history" element={<FilingHistory />} />
-          <Route path="annual/:year" element={<AnnualReturn />} />
+          <Route path="personal-income-tax" element={<Outlet />}>
+            <Route index element={<CreatePersonalIncomeTax />} />
+          </Route>
+          <Route path="annual" element={<Outlet />}>
+            <Route index element={<AnnualReturns />} />
+            <Route path="create" element={<CreateAnnualReturn />} />
+            <Route
+              path="annual/:year"
+              element={<ComputeAnnualReturns />}
+            />
+            <Route
+              path="projection/:year"
+              element={<ComputeProjectionReturns />}
+            />
+            <Route
+              path="witholding/:year"
+              element={<WitholdingTax />}
+            />
+            <Route path=":year" element={<AnnualReturn />} />
+            <Route path=":year" element={<AnnualReturn />} />
+          </Route>
           <Route path="paye" element={<Outlet />}>
             <Route index element={<PayeReturns />} />
-            {/* <Route path="history" element={<CompanyFilingHistory />} /> */}
             <Route path="bill/:month/:billId" element={<PayeBill />} />
-            <Route path="create/:month" element={<ComputePayeReturns />} />
+            <Route path="create/:year/:month" element={<ComputePayeReturns />} />
           </Route>
         </Route>
         <Route index element={<Navigate replace to="/app/quick-menu" />} />

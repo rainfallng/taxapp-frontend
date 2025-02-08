@@ -38,7 +38,7 @@ const QuickMenu = () => {
         />
       </Grid>
 
-      <Grid item xs={4}>
+      <Grid item xs={4} display="none">
         <QuickMenuCard
           link="/app/tax-certificate"
           text="Get Tax Clearance Certificate"
@@ -51,7 +51,7 @@ const QuickMenu = () => {
         />
       </Grid>
 
-      <Grid item xs={4}>
+      <Grid item xs={4} display="none">
         <QuickMenuCard
           link="/app/tin"
           text="Get your Tax Identification Number"
@@ -64,7 +64,7 @@ const QuickMenu = () => {
         />
       </Grid>
 
-      <Grid item xs={4}>
+      <Grid item xs={4} display="none">
         <QuickMenuCard
           link="/app/payments"
           text="Payments"
@@ -77,7 +77,7 @@ const QuickMenu = () => {
         />
       </Grid>
 
-      <Grid item xs={4}>
+      <Grid item xs={4} display="none">
         <QuickMenuCard
           link="/app/assessment"
           text="Assessment"

@@ -1,3 +1,12 @@
+import { payeSchemaObject } from "@/lib/schemas/returns/company/paye";
+import * as yup from "yup";
+import {
+  AnnualReturnType,
+  ProjectionReturnType,
+  ScheduleReturnTaxType,
+  WitholdingTaxType,
+} from "./form";
+
 export type IAnnualReturnStage = "id" | "income" | "accomodation";
 
 export type IndividualReturn = {
@@ -54,16 +63,13 @@ export interface ICompanyReturn {
   modified: string;
   is_active: boolean;
   return_type: string;
-  month: number;
+  month: string;
   year: number;
   created_by: string;
   modified_by: string;
   company_profile: number;
-  bill: Bill;
   amount: string;
-  reference: string;
-  number_of_employees: number;
-  month_name: string;
+  is_submitted: boolean;
 }
 
 export type CompanyReturnsList = {
@@ -73,32 +79,72 @@ export type CompanyReturnsList = {
   results: ICompanyReturn[];
 };
 
-export type AddCompanyStaffReturn = {
-  tin: string;
-  name: string;
-  designation: string;
-  basic: number | null;
-  housing: number | null;
-  transport: number | null;
-  others: number | null;
-  bonus: number | null;
-  state_of_residence: number | null;
-};
+export type AddCompanyStaffReturn = yup.InferType<typeof payeSchemaObject>;
 
 export type ReturnGraph = {
   month_name: string;
   amount: number;
 };
 
-export type YearParam = { year: number }
+export type YearParam = { year: number };
 
-export type MonthParam = { month: string }
+export type MonthParam = { month: string };
 
-export type YearOrMonthParam = YearParam | MonthParam
+export type YearOrMonthParam = YearParam | MonthParam;
 
 export type ReturnStat = {
   count: number;
   amount: number;
 };
 
+export type CompanyReturn = {
+  id: number;
+  icode: string;
+  amount: string;
+  created: string;
+  modified: string;
+  is_active: boolean;
+  return_type: string;
+  month: string;
+  year: number;
+  is_submitted: boolean;
+  created_by: string;
+  modified_by: string;
+  company_profile: number;
+};
 
+export type CompanyReturnSchema = {
+  company_return: CompanyReturn;
+  id: number;
+  icode: string;
+  created_by: string;
+  modified_by: string;
+};
+
+export type AnnualReturnList = {
+  count: number;
+  page: number;
+  pages: number;
+  results: (CompanyReturnSchema & AnnualReturnType)[];
+};
+
+export type ProjectionReturnList = {
+  count: number;
+  page: number;
+  pages: number;
+  results: (CompanyReturnSchema & ProjectionReturnType)[];
+};
+
+export type ScheduleReturnList = {
+  count: number;
+  page: number;
+  pages: number;
+  results: (CompanyReturnSchema & ScheduleReturnTaxType)[];
+};
+
+export type WitholdingTaxList = {
+  count: number;
+  page: number;
+  pages: number;
+  results: (CompanyReturnSchema & WitholdingTaxType)[];
+};

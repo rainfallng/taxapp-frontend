@@ -72,15 +72,12 @@ export type IndividualProfile = {
   created: string;
   modified: string;
   is_active: boolean;
-  tin: string;
   lasrra: string;
   title: string;
   marital_status: string;
   place_of_birth: string;
   date_of_birth: string;
   gender: string;
-  street_number: string;
-  street_name: string;
   city: string;
   lcda: string;
   phone_number_1: string;
@@ -97,6 +94,14 @@ export type IndividualProfile = {
   state_of_origin: string;
   state_of_residence: number;
   lga_of_residence: number;
+  tax_payer_id: string | null;
+  tax_station: string | null;
+  first_time_filling: string | null;
+  past_tax_filling: string | null;
+  age: number |null;
+  nationality: string;
+  house_number: null;
+  street: string | null;
 };
 
 export type CompanyProfile = {
@@ -105,24 +110,15 @@ export type CompanyProfile = {
   created: string;
   modified: string;
   is_active: boolean;
-  tin: string;
-  lasrra: string;
   name: string;
-  marital_status: string;
-  place_of_birth: string;
   place_of_business: string;
-  gender: string;
   street_number: string;
   street_name: string;
   city: string;
   lcda: string;
   phone_number: string;
   email: string;
-  residential_address: string;
-  is_public_servant: boolean;
   business_type: string;
-  employment_status: string;
-  occupation: string;
   created_by: string;
   modified_by: string;
   user: string;
@@ -131,6 +127,10 @@ export type CompanyProfile = {
   number_of_directors: number;
   number_of_employees: number;
   past_tax_filling: null;
+  tax_payer_id: string;
+  tax_station: string | null;
+  first_time_filling: null;
+  reg_no: string;
 };
 
 export interface IUser {

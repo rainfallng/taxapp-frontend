@@ -25,8 +25,7 @@ const VerifyPhone = () => {
   return (
     <Protected>
       <VerifyCode
-        shortText="phone number and email"
-        phone={user.phone}
+        shortText="email address"
         email={user.email}
         verifying={isPending}
         verify={async (code) => mutateAsync({ token: code })}

@@ -90,7 +90,7 @@ const VerifyCode: FC<{
         color="#4A4A68"
         sx={{ fontSize: "1.8rem", my: "2.4rem" }}
       >
-        Enter the verification code we sent you to verify your {shortText}
+        Enter the verification code sent to your {shortText}
       </Typography>
       {phone && (
         <>

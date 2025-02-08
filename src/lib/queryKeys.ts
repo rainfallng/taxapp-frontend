@@ -2,6 +2,7 @@ export const QueryKeys = {
   TENANTS: "TENANTS",
   USER: "USER",
   STATES: "STATES",
+  COUNTRIES: "COUNTRIES",
   LGA: "LGA",
   INDIVIDUAL: "INDIVIDUAL",
   COMPANY: "COMPANY",

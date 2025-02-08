@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Input from "@/components/ui/input";
 import { useMutation } from "@tanstack/react-query";
 import { useAPI } from "@/hooks/useApi";
-import { handleFormToastErrors, setLS } from "@/lib/utils";
+import { handleFormToastErrors } from "@/lib/utils";
 import toast from "react-hot-toast";
 import { useStore } from "@/store";
 import { UserType } from "@/types";
@@ -16,11 +16,7 @@ const InitialOnboarding = () => {
   const [tin, setTIN] = useState("");
   const navigate = useNavigate();
   const { api } = useAPI();
-  const { user } = useStore()
-
-  const isCompany = user.user_type === UserType.COMPANY;
-
-  const id_type = isCompany ? "CTIN" : "TIN";
+  const { user, setTaxPayerId } = useStore();
 
   const onCheck = (value: number, level = 0) => {
     if (level === 0) {
@@ -33,9 +29,12 @@ const InitialOnboarding = () => {
   const isValid = (firstCheck === 0 && !!tin) || firstCheck === 1;
 
   const { mutateAsync: verifyTIN, isPending } = useMutation({
-    mutationFn: api.profileIdentification,
+    mutationFn: api.updateTaxPayerId,
     onSuccess() {
-      setLS("tin", { tin });
+      setTaxPayerId(
+        tin,
+        user.user_type === UserType.COMPANY ? "company_profile" : "profile"
+      );
       navigate("/auth/onboarding/tin/verify");
     },
   });
@@ -44,8 +43,7 @@ const InitialOnboarding = () => {
     if (firstCheck === 1) return navigate("/auth/onboarding/success");
     toast.promise(
       verifyTIN({
-        id_type,
-        id_number: tin,
+        tax_payer_id: tin,
       }),
       {
         success: "Update successful",
@@ -58,8 +56,8 @@ const InitialOnboarding = () => {
   return (
     <Box>
       <OnboardingHeader
-        title="Welcome on board!"
-        description="Let's get you set up with these few steps."
+        title="Lagos Inland Revenue Service Setup"
+        description="Let's set up your Lagos Inland Revenue Service"
       />
       <Box sx={{ mt: "2.4rem" }}>
         <FormGroup>
@@ -74,13 +72,13 @@ const InitialOnboarding = () => {
                 onChange={() => onCheck(0)}
               />
             }
-            label="I already have a Taxpayer ID/Tax Identification Number (TIN)"
+            label="I already have a Taxpayer ID"
           />
           {firstCheck === 0 && (
             <FormGroup sx={{ ml: "3.2rem", mt: "0.8rem" }}>
               <Input
                 sx={{ height: "5.6rem" }}
-                label="Enter Taxpayer ID/Tax Identification Number"
+                label="Enter Taxpayer ID"
                 value={tin}
                 onChange={({ target: { value } }) => {
                   setTIN(value);
@@ -100,7 +98,7 @@ const InitialOnboarding = () => {
                 onChange={() => onCheck(1)}
               />
             }
-            label="I don’t have a Taxpayer ID/Tax Identification Number (TIN)"
+            label="I don't have a Taxpayer ID"
           />
         </FormGroup>
       </Box>

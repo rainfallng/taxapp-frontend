@@ -6,21 +6,21 @@ import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 import UploadMultipleReturns from "../upload-multiple-returns";
 
-const Multiple = () => {
+const MultipleAnnualReturnsUpload = () => {
   const navigate = useNavigate();
   const [file, setFile] = useState<File | null | undefined>(null);
   const { api } = useAPI();
-  const { month = "", year = "" } = useParams();
+  const { year = "" } = useParams();
 
   const { isPending, mutateAsync } = useMutation({
-    mutationFn: api.uploadCompanyPayeReturns,
+    mutationFn: api.uploadCompanyAnnualReturns,
     onSuccess() {
       navigate(`/app/returns/success`);
     },
   });
 
   const download = async () => {
-    api.downloadMonthlyPayeTemplate("company_paye_return.csv");
+    api.downloadAnnualReturnTemplate("company_annual_return.csv");
   };
 
   const onUpload = () => {
@@ -28,7 +28,6 @@ const Multiple = () => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("year", year);
-    formData.append("month", month.toUpperCase());
     toast.promise(mutateAsync(formData), {
       success: "Successful",
       loading: "Submitting...",
@@ -47,4 +46,4 @@ const Multiple = () => {
   );
 };
 
-export default Multiple;
+export default MultipleAnnualReturnsUpload;

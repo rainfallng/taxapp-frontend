@@ -8,60 +8,64 @@ import { useForm } from "react-hook-form";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { useNavigate, useParams } from "react-router-dom";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { payeSchema } from "@/lib/schemas/returns/company/paye";
-import StaffForm from "./staff-form";
 import { handleFormErrors, handleFormToastErrors } from "@/lib/utils";
 import { AxiosError } from "axios";
-import { AddCompanyStaffReturn } from "@/types/returns";
 import toast from "react-hot-toast";
+import { annualReturnSchema } from "@/lib/schemas/returns/company/annual-returns";
+import { AnnualReturnType } from "@/types";
+import AnnualReturnsForm from "./annual-returns-form";
 import CrossCheckModal from "../../modals/cross-check";
 import { useReducerState } from "@/hooks/useReducerState";
 
-const Single = () => {
-  const form = useForm(payeSchema);
+const SingleAnnualReturnCompute = () => {
+  const form = useForm(annualReturnSchema);
   const navigate = useNavigate();
   const { api } = useAPI();
-  const { month = "", year = "" } = useParams();
+  const { year = "" } = useParams();
   const [modalState, setModalState] = useReducerState({
     open: false,
-    values: {} as AddCompanyStaffReturn,
+    values: {} as AnnualReturnType,
   });
 
-  const { data: states, isLoading: isLoadingStates } = useQuery({
-    queryKey: [QueryKeys.STATES],
-    queryFn: api.getStates,
+  const { data: countries, isLoading: isLoadingCountries } = useQuery({
+    queryKey: [QueryKeys.COUNTRIES],
+    queryFn: api.getCountries,
   });
 
   const { isPending, mutateAsync } = useMutation({
-    mutationFn: api.postCompanyPayeeReturns,
+    mutationFn: api.postCompanyAnnualReturns,
     onSuccess() {
       navigate(`/app/returns/success`);
     },
-    onError: (error: AxiosError<{ [message: string]: string | string[] }>) =>
-      handleFormErrors(error, form.setError),
+    onError: (error: AxiosError<{ [message: string]: string | string[] }>) => {
+      setModalState({ open: false, values: {} as AnnualReturnType });
+      handleFormErrors(error, form.setError);
+    },
   });
 
-  const onSubmit = (values: AddCompanyStaffReturn) => {
+  const onSubmit = (values: AnnualReturnType) => {
     setModalState({ open: true, values });
   };
 
   const onProceed = () => {
-    toast.promise(
-      mutateAsync({ ...modalState.values, year, month: month.toUpperCase() }),
-      {
-        success: "Successful",
-        loading: "Submitting...",
-        error: (error) => handleFormToastErrors(error, "Failed"),
-      }
-    );
+    toast.promise(mutateAsync({ ...modalState.values, year: Number(year) }), {
+      success: "Successful",
+      loading: "Submitting...",
+      error: (error) => handleFormToastErrors(error, "Failed"),
+    });
   };
 
-  useLoader(isLoadingStates, "Please wait...");
+  useLoader(isLoadingCountries, "Please wait...");
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
-      {form.watch("monthly_payees").map((_, key) => (
-        <StaffForm key={key} form={form} index={key} states={states} />
+      {form.watch("annual_returns").map((_, key) => (
+        <AnnualReturnsForm
+          key={key}
+          form={form}
+          index={key}
+          countries={countries ?? []}
+        />
       ))}
       <Box
         sx={{
@@ -103,7 +107,7 @@ const Single = () => {
       <CrossCheckModal
         open={modalState.open}
         toggle={() =>
-          setModalState({ open: false, values: {} as AddCompanyStaffReturn })
+          setModalState({ open: false, values: {} as AnnualReturnType })
         }
         onProceed={onProceed}
       />
@@ -111,4 +115,4 @@ const Single = () => {
   );
 };
 
-export default Single;
+export default SingleAnnualReturnCompute;

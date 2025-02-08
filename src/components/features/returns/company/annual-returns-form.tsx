@@ -1,55 +1,49 @@
+import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
 import Select, { MenuItem } from "@/components/ui/select";
-import { IState } from "@/types";
-import { AddCompanyStaffReturn } from "@/types/returns";
-import {
-  Box,
-  capitalize,
-  FormLabel,
-  Grid,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { AnnualReturnType, Nationality } from "@/types";
+import { Box, FormLabel, Grid, useTheme } from "@mui/material";
 import { UseFormReturn } from "react-hook-form";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import KeyboardArrowUpOutlinedIcon from "@mui/icons-material/KeyboardArrowUpOutlined";
 import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
-import Button from "@/components/ui/button";
 import { useEffect, useMemo, useState } from "react";
-import { payeStaffInput } from "@/lib/schemas/returns/company/paye";
-import { useParams } from "react-router-dom";
+import { annualReturnInput } from "@/lib/schemas/returns/company/annual-returns";
 
-const StaffForm = ({
+const AnnualReturnsForm = ({
   form,
   index,
-  states,
+  countries,
 }: {
+  form: UseFormReturn<AnnualReturnType>;
   index: number;
-  form: UseFormReturn<AddCompanyStaffReturn>;
-  states?: IState[];
+  countries: Nationality[];
 }) => {
   const theme = useTheme();
   const [open, setOpen] = useState(true);
-  const { month = "" } = useParams();
-  const monthly_payees = form.watch("monthly_payees");
+  const annualReturns = form.watch("annual_returns");
   const isFirst = useMemo(() => index === 0, [index]);
   const isOnly = useMemo(
-    () => isFirst && monthly_payees.length === 1,
-    [isFirst, monthly_payees]
+    () => isFirst && annualReturns.length === 1,
+    [isFirst, annualReturns]
   );
-  const isLast = useMemo(() => index === monthly_payees.length - 1, [index, monthly_payees]);
+  const isLast = useMemo(
+    () => index === annualReturns.length - 1,
+    [index, annualReturns]
+  );
 
   const CaretIcon = open
     ? KeyboardArrowUpOutlinedIcon
     : KeyboardArrowDownOutlinedIcon;
 
-  const onAdd = () => form.setValue("monthly_payees", [...monthly_payees, payeStaffInput]);
+  const onAdd = () =>
+    form.setValue("annual_returns", [...annualReturns, annualReturnInput]);
 
   const onRemove = () => {
     if (isOnly) return;
-    const format = monthly_payees.filter((_, key) => key !== index);
-    form.reset({ monthly_payees: format });
+    const format = annualReturns.filter((_, key) => key !== index);
+    form.reset({ annual_returns: format });
   };
 
   useEffect(() => {
@@ -72,7 +66,7 @@ const StaffForm = ({
             onClick={() => setOpen(!open)}
           >
             <CaretIcon sx={{ mr: "1.6rem", fontSize: "1.6rem" }} />
-            PAYE Filing {index + 1}
+            Annual Returns Filing {index + 1}
           </Button>
           <Button onClick={onRemove} variant="text">
             <DeleteOutlineIcon />
@@ -80,90 +74,108 @@ const StaffForm = ({
         </Box>
       )}
       {open && (
-        <Grid
-          container
-          rowSpacing={3.2}
-          columnSpacing={2.4}
-          sx={{ mt: "2.4rem", width: "100%", mx: "auto" }}
-        >
-          <Grid item xs={12}>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: "0.2rem",
-              }}
-            >
-              <Box
-                component="img"
-                src="/assets/svgs/info-gold.svg"
-                alt=""
-                sx={{ width: "2rem", height: "2rem" }}
-              />
-              <Typography
-                sx={{ fontSize: "1.4rem", color: theme.palette.grey[500] }}
-              >
-                Convert all amounts to yearly amount
-              </Typography>
-            </Box>
-          </Grid>
+        <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             <FormLabel
               sx={{
-                fontSize: "1.6rem",
+                fontSize: "2rem",
                 display: "block",
                 fontWeight: 500,
                 mb: "1.6rem",
-                color: theme.palette.grey[800],
+                color: (theme) => theme.palette.grey[800],
               }}
             >
-              Payer ID/Tax Identification Number (TIN)
+              Surname
             </FormLabel>
             <Input
-              name={`monthly_payees.${index}.staff_tax_payer_id`}
-              label="Enter Number"
+              sx={{ height: "5.6rem" }}
+              label="Enter Surname"
+              name={`annual_returns.${index}.surname`}
               form={form}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <FormLabel
               sx={{
-                fontSize: "1.6rem",
+                fontSize: "2rem",
                 display: "block",
                 fontWeight: 500,
                 mb: "1.6rem",
-                color: theme.palette.grey[800],
+                color: (theme) => theme.palette.grey[800],
               }}
             >
-              Month in View
+              First Name
             </FormLabel>
-            <Input value={capitalize(month)} disabled />
+            <Input
+              sx={{ height: "5.6rem" }}
+              label="Enter First Name"
+              name={`annual_returns.${index}.first_name`}
+              form={form}
+            />
           </Grid>
           <Grid item xs={12} sm={6}>
             <FormLabel
               sx={{
-                fontSize: "1.6rem",
+                fontSize: "2rem",
                 display: "block",
                 fontWeight: 500,
                 mb: "1.6rem",
-                color: theme.palette.grey[800],
+                color: (theme) => theme.palette.grey[800],
               }}
             >
-              State of Residence
+              Middle Name
+            </FormLabel>
+            <Input
+              sx={{ height: "5.6rem" }}
+              label="Enter Middle Name"
+              name={`annual_returns.${index}.middle_name`}
+              form={form}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormLabel
+              sx={{
+                fontSize: "2rem",
+                display: "block",
+                fontWeight: 500,
+                mb: "1.6rem",
+                color: (theme) => theme.palette.grey[800],
+              }}
+            >
+              Designation
+            </FormLabel>
+            <Input
+              sx={{ height: "5.6rem" }}
+              label="Enter Designation"
+              name={`annual_returns.${index}.designation`}
+              form={form}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormLabel
+              sx={{
+                fontSize: "2rem",
+                display: "block",
+                fontWeight: 500,
+                mb: "1.6rem",
+                color: (theme) => theme.palette.grey[800],
+              }}
+            >
+              Nationality
             </FormLabel>
             <Select
               sx={{ height: "5.6rem" }}
-              placeholder="Select state"
-              value={form.watch(`monthly_payees.${index}.state_of_residence`)}
-              {...form.register(`monthly_payees.${index}.state_of_residence`)}
+              placeholder="Select Nationality"
+              value={form.watch(`annual_returns.${index}.nationality`)}
+              {...form.register(`annual_returns.${index}.nationality`)}
               errorMessage={
-                form.formState.errors.monthly_payees?.[index]?.state_of_residence
+                form.formState.errors.annual_returns?.[index]?.nationality
                   ?.message
               }
             >
-              {states?.map((state) => (
-                <MenuItem key={state.id} value={state.id}>
-                  {state.name}
+              {countries?.map((n) => (
+                <MenuItem key={n.id} value={n.id}>
+                  {n.name}
                 </MenuItem>
               ))}
             </Select>
@@ -171,134 +183,121 @@ const StaffForm = ({
           <Grid item xs={12} sm={6}>
             <FormLabel
               sx={{
-                fontSize: "1.6rem",
+                fontSize: "2rem",
                 display: "block",
                 fontWeight: 500,
                 mb: "1.6rem",
-                color: theme.palette.grey[800],
+                color: (theme) => theme.palette.grey[800],
               }}
             >
-              Basic
+              Number of Months
             </FormLabel>
             <Input
-              name={`monthly_payees.${index}.basic`}
-              label="Enter Amount"
-              form={form}
+              sx={{ height: "5.6rem" }}
               isNumber
+              label="Enter Number"
+              name={`annual_returns.${index}.number_of_months`}
+              form={form}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <FormLabel
               sx={{
-                fontSize: "1.6rem",
+                fontSize: "2rem",
                 display: "block",
                 fontWeight: 500,
                 mb: "1.6rem",
-                color: theme.palette.grey[800],
+                color: (theme) => theme.palette.grey[800],
               }}
             >
-              Transport
+              Development Levy
             </FormLabel>
             <Input
-              name={`monthly_payees.${index}.transport`}
-              label="Enter Amount"
-              form={form}
               isNumber
+              sx={{ height: "5.6rem" }}
+              label="Enter Amount"
+              name={`annual_returns.${index}.development_levy`}
+              form={form}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <FormLabel
               sx={{
-                fontSize: "1.6rem",
+                fontSize: "2rem",
                 display: "block",
                 fontWeight: 500,
                 mb: "1.6rem",
-                color: theme.palette.grey[800],
+                color: (theme) => theme.palette.grey[800],
               }}
             >
-              Housing
+              Gross Income
             </FormLabel>
             <Input
-              name={`monthly_payees.${index}.housing`}
-              label="Enter Amount"
-              form={form}
               isNumber
+              sx={{ height: "5.6rem" }}
+              label="Enter Amount"
+              name={`annual_returns.${index}.gross_income`}
+              form={form}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <FormLabel
               sx={{
-                fontSize: "1.6rem",
+                fontSize: "2rem",
                 display: "block",
                 fontWeight: 500,
                 mb: "1.6rem",
-                color: theme.palette.grey[800],
+                color: (theme) => theme.palette.grey[800],
               }}
             >
-              NHF
+              Chargeable Income
             </FormLabel>
             <Input
-              name={`monthly_payees.${index}.nhf`}
-              label="Enter Amount"
-              form={form}
               isNumber
+              sx={{ height: "5.6rem" }}
+              label="Enter Amount"
+              name={`annual_returns.${index}.chargeable_income`}
+              form={form}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <FormLabel
               sx={{
-                fontSize: "1.6rem",
+                fontSize: "2rem",
                 display: "block",
                 fontWeight: 500,
                 mb: "1.6rem",
-                color: theme.palette.grey[800],
+                color: (theme) => theme.palette.grey[800],
               }}
             >
-              NPF
+              Annual Tax Paid
             </FormLabel>
             <Input
-              name={`monthly_payees.${index}.npf`}
-              label="Enter Amount"
-              form={form}
               isNumber
+              sx={{ height: "5.6rem" }}
+              label="Enter Amount"
+              name={`annual_returns.${index}.annual_tax_paid`}
+              form={form}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <FormLabel
               sx={{
-                fontSize: "1.6rem",
+                fontSize: "2rem",
                 display: "block",
                 fontWeight: 500,
                 mb: "1.6rem",
-                color: theme.palette.grey[800],
+                color: (theme) => theme.palette.grey[800],
               }}
             >
-              Bonus
+              Staff Email Address
             </FormLabel>
             <Input
-              name={`monthly_payees.${index}.bonus`}
-              label="Enter Amount"
+              type="email"
+              sx={{ height: "5.6rem" }}
+              label="Enter Email Address"
+              name={`annual_returns.${index}.staff_email_address`}
               form={form}
-              isNumber
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormLabel
-              sx={{
-                fontSize: "1.6rem",
-                display: "block",
-                fontWeight: 500,
-                mb: "1.6rem",
-                color: theme.palette.grey[800],
-              }}
-            >
-              Others
-            </FormLabel>
-            <Input
-              name={`monthly_payees.${index}.others`}
-              label="Enter Amount"
-              form={form}
-              isNumber
             />
           </Grid>
         </Grid>
@@ -314,11 +313,11 @@ const StaffForm = ({
           onClick={onAdd}
         >
           <AddCircleIcon sx={{ mr: "0.8rem" }} />
-          Add another employee&apos;s PAYE
+          Add another employee&apos;s annual return
         </Button>
       )}
     </Box>
   );
 };
 
-export default StaffForm;
+export default AnnualReturnsForm;
