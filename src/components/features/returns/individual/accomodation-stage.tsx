@@ -18,28 +18,23 @@ import { useMutation } from "@tanstack/react-query";
 import { FC } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Modal from "../../modals";
 import dayjs from "dayjs";
 
-const AccomodationStage: FC<{
-  incomeId: string;
-  billId: string;
-}> = ({ incomeId, billId }) => {
+const AccomodationStage: FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const { year = "" } = useParams();
   const { api } = useAPI();
+  const { id: returnId = "" } = useParams();
 
   const form = useForm(individualAccomodationSchema);
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: (variables: IIndividualAnnualAccomodationInput) =>
-      api.postIndividualAccomodation(incomeId, variables),
+      api.postIndividualAccomodation(returnId, variables),
     onSuccess() {
-      navigate(
-        `/app/returns/annual/${year}?id=${incomeId}&billId=${billId}&showBill=true`
-      );
+      navigate(`/app/returns/success`);
     },
   });
 
@@ -50,8 +45,6 @@ const AccomodationStage: FC<{
       error: (error) => handleFormToastErrors(error, "Failed"),
     });
   };
-
-  if (!incomeId) <Navigate to="/app/returns" />;
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>

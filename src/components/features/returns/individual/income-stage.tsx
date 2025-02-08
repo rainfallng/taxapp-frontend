@@ -1,6 +1,6 @@
 import { FileUpload } from "@/components/ui/file-upload";
 import { Box, FormLabel, Grid, Typography, useTheme } from "@mui/material";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import UploadOutlinedIcon from "@mui/icons-material/UploadOutlined";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
@@ -17,11 +17,15 @@ import toast from "react-hot-toast";
 import { handleFormToastErrors } from "@/lib/utils";
 import { IAnnualReturnStage } from "@/types/returns";
 
-const IncomeStage: FC<{ setStage: (stage: IAnnualReturnStage) => void }> = ({ setStage }) => {
+const IncomeStage: FC<{ setStage: (stage: IAnnualReturnStage) => void }> = ({
+  setStage,
+}) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const { api } = useAPI();
   const { year = "" } = useParams();
+  const { id: returnId = "" } = useParams();
+  const [file, setFile] = useState<File | null>(null);
   const form = useForm(individualIncomeSchema);
   const otherIncomes = form.watch("other_incomes") ?? [];
 
@@ -35,12 +39,12 @@ const IncomeStage: FC<{ setStage: (stage: IAnnualReturnStage) => void }> = ({ se
     mutationFn: (variables: IIndividualAnnualIncome) =>
       api.postIndividualIncome({
         ...variables,
-        statement_of_income: "",
+        statement_of_income: file || "",
         year_in_view: Number(year),
+        returnId
       }),
-    onSuccess(data) {
-      setStage("accomodation")
-      navigate(`/app/returns/annual/${year}?id=${data?.data?.id}&billId=${data?.data?.bill}`)
+    onSuccess() {
+      setStage("accomodation");
     },
   });
 
@@ -62,12 +66,12 @@ const IncomeStage: FC<{ setStage: (stage: IAnnualReturnStage) => void }> = ({ se
       <Typography sx={{ mb: "4rem", fontSize: "2rem", fontWeight: 500 }}>
         Statement of Income (Gross Annual Income)
       </Typography>
-      <FileUpload>
+      <FileUpload onChange={(e) => setFile(e.target.files?.[0] ?? null)}>
         <Box sx={{ display: "flex", gap: "1.2rem", alignItems: "center" }}>
           <Box
             width="100%"
             sx={{
-              maxWidth: "22.1rem",
+              maxWidth: "23rem",
               p: "1rem 2.4rem",
               color: "#278F76",
               borderRadius: "5rem",
@@ -82,8 +86,23 @@ const IncomeStage: FC<{ setStage: (stage: IAnnualReturnStage) => void }> = ({ se
             <UploadOutlinedIcon sx={{ mr: "0.3rem" }} /> Choose file to upload
           </Box>
           <Typography sx={{ color: "#717171", fontSize: "1.4rem" }}>
-            No file chosen
+            {file?.name ?? " No file chosen"}
           </Typography>
+          {file && (
+            <Button
+              type="button"
+              variant="text"
+              onClick={() => setFile(null)}
+              sx={{
+                color: "#717171",
+                fontSize: "1.4rem",
+                bgcolor: "transparent",
+                height: "fit-content",
+              }}
+            >
+              <CloseOutlinedIcon />
+            </Button>
+          )}
         </Box>
       </FileUpload>
       <Grid
@@ -269,7 +288,11 @@ const IncomeStage: FC<{ setStage: (stage: IAnnualReturnStage) => void }> = ({ se
         <Button
           type="button"
           variant="text"
-          onClick={() => form.setValue("other_incomes", [...otherIncomes, { name: "", value: "" }])
+          onClick={() =>
+            form.setValue("other_incomes", [
+              ...otherIncomes,
+              { name: "", value: "" },
+            ])
           }
         >
           <AddCircleOutlineOutlinedIcon sx={{ mr: "1.5rem" }} /> Add Income

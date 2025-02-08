@@ -33,7 +33,6 @@ import Payroll from "@/pages/profile/payroll";
 import FamilyRelations from "@/pages/profile/relations";
 import SupportStaff from "@/pages/profile/staff";
 import FileReturns from "@/pages/returns";
-import AnnualReturn from "@/pages/returns/annual";
 import FilingHistory from "@/pages/returns/filing-history";
 import PayeReturns from "@/pages/returns/company/paye";
 import ComputePayeReturns from "@/pages/returns/company/paye/compute";
@@ -54,6 +53,7 @@ import ComputeAnnualReturns from "@/pages/returns/company/annual/compute-annual-
 import ComputeProjectionReturns from "@/pages/returns/company/annual/compute-projection-returns";
 import WitholdingTax from "@/pages/returns/company/annual/withholding-tax";
 import ReturnsSuccess from "@/pages/returns/success";
+import PersonalIncomeTaxCompute from "@/pages/returns/individual/personal-income-tax/compute";
 
 const AppRoutes = () => {
   return (
@@ -152,6 +152,7 @@ const AppRoutes = () => {
           <Route path="history" element={<FilingHistory />} />
           <Route path="personal-income-tax" element={<Outlet />}>
             <Route index element={<CreatePersonalIncomeTax />} />
+            <Route path=":id/:year" element={<PersonalIncomeTaxCompute />} />
           </Route>
           <Route path="annual" element={<Outlet />}>
             <Route index element={<AnnualReturns />} />
@@ -168,8 +169,6 @@ const AppRoutes = () => {
               path="witholding/:year"
               element={<WitholdingTax />}
             />
-            <Route path=":year" element={<AnnualReturn />} />
-            <Route path=":year" element={<AnnualReturn />} />
           </Route>
           <Route path="paye" element={<Outlet />}>
             <Route index element={<PayeReturns />} />

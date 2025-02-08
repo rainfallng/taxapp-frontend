@@ -15,7 +15,9 @@ import { useStore } from "@/store";
 
 const IdentificationForm = ({
   onSubmit,
+  isPending,
 }: {
+  isPending?: boolean;
   onSubmit: (data: yup.InferType<typeof postReturnSchemaObject>) => void;
 }) => {
   const navigate = useNavigate();
@@ -26,7 +28,9 @@ const IdentificationForm = ({
   const year = params.get("year");
 
   useEffect(() => {
-    form.reset({ year_in_view: year || "", tin: user?.company_profile?.tax_payer_id || user?.profile?.tax_payer_id || "123" });
+    form.reset({
+      year_in_view: year || "",
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [year]);
 
@@ -48,8 +52,11 @@ const IdentificationForm = ({
           <Input
             sx={{ height: "5.6rem" }}
             label="Enter Number"
-            name="tin"
-            form={form}
+            value={
+              user?.company_profile?.tax_payer_id ||
+              user?.profile?.tax_payer_id ||
+              ""
+            }
             disabled
           />
         </Grid>
@@ -95,7 +102,7 @@ const IdentificationForm = ({
         >
           Cancel
         </Button>
-        <Button type="submit" rounded>
+        <Button type="submit" rounded disabled={isPending}>
           Proceed
         </Button>
       </Box>

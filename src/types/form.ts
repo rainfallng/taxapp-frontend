@@ -76,13 +76,13 @@ export interface IIndividualAnnualIncome {
   dividend: string;
   interest: string;
   rent: string;
-  statement_of_income: string;
+  statement_of_income: string | File;
   year_in_view?: number;
 }
 
 export interface IIndividualReturn {
   year_in_view: number | string;
-  tin: string;
+  return_type: string;
 }
 
 export interface IIndividualAnnualAccomodationInput {

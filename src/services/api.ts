@@ -115,11 +115,14 @@ export class APIRequest {
   };
 
   getStates = async () => {
-    const { data } = await axios.get(`/api/v1/location/countries/nigeria/states/`, {
-      headers: {
-        Authorization: `JWT ${this.accessToken}`,
-      },
-    });
+    const { data } = await axios.get(
+      `/api/v1/location/countries/nigeria/states/`,
+      {
+        headers: {
+          Authorization: `JWT ${this.accessToken}`,
+        },
+      }
+    );
 
     return data as IState[];
   };
@@ -185,9 +188,7 @@ export class APIRequest {
     return data;
   };
 
-  updateTaxPayerId = async (
-    body: { tax_payer_id: string }
-  ) => {
+  updateTaxPayerId = async (body: { tax_payer_id: string }) => {
     const { data } = await axios.patch(
       `/api/v1/ums/profile/update/tax-payer-id/`,
       body,
@@ -399,12 +400,24 @@ export class APIRequest {
     return data;
   };
 
-  postIndividualIncome = async (body: IIndividualAnnualIncome) => {
-    const { statement_of_income, ...rest } = body;
-    console.log(statement_of_income);
+  postIndividualIncome = async (
+    body: IIndividualAnnualIncome & { returnId: string }
+  ) => {
+    let value;
+    const { statement_of_income, returnId, ...rest } = body;
+    if (statement_of_income) {
+      const formData = new FormData();
+      Object.entries(body).forEach(([key, value]) => {
+        if (key === "returnId") return;
+        formData.append(key, value as string);
+      });
+      value = formData;
+    } else {
+      value = rest;
+    }
     const { data } = await axios.post(
-      `/api/v1/returns/individual/income/`,
-      rest,
+      `/api/v1/returns/individual/${returnId}/income/`,
+      value,
       {
         headers: {
           Authorization: `JWT ${this.accessToken}`,
@@ -416,11 +429,11 @@ export class APIRequest {
   };
 
   postIndividualAccomodation = async (
-    incomeId: string,
+    returnId: string,
     body: IIndividualAnnualAccomodationInput
   ) => {
     const { data } = await axios.post(
-      `/api/v1/returns/individual/${incomeId}/accommodation/`,
+      `/api/v1/returns/individual/${returnId}/accommodation/`,
       body,
       {
         headers: {

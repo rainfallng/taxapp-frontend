@@ -30,8 +30,8 @@ const IDStage: FC<{ setStage: (stage: IAnnualReturnStage) => void }> = ({
       handleFormErrors(error, form.setError),
   });
 
-  const onSubmit = (values: IIndividualReturn) => {
-    toast.promise(mutateAsync(values), {
+  const onSubmit = (values: Omit<IIndividualReturn, "return_type">) => {
+    toast.promise(mutateAsync({ ...values, return_type: "individual" }), {
       success: "Successful",
       loading: "Please wait...",
       error: (error) => handleFormToastErrors(error, "Failed"),
@@ -53,12 +53,7 @@ const IDStage: FC<{ setStage: (stage: IAnnualReturnStage) => void }> = ({
           >
             Your Tax Payer ID/Tax Identification Number (TIN)
           </FormLabel>
-          <Input
-            sx={{ height: "5.6rem" }}
-            label="Enter Number"
-            name="tin"
-            form={form}
-          />
+          <Input sx={{ height: "5.6rem" }} label="Enter Number" disabled />
         </Grid>
         <Grid item xs={4}>
           <FormLabel
