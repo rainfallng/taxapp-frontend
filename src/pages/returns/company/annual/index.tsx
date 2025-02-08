@@ -142,7 +142,7 @@ const AnnualReturns = () => {
                     width: "40%",
                   }}
                 >
-                  {return_.company_return.is_submitted ? "Filed" : "Not Filed"}
+                  {return_.company_return.status}
                 </TableCell>
                 <TableCell
                   sx={{
@@ -151,7 +151,7 @@ const AnnualReturns = () => {
                     width: "20%",
                   }}
                 >
-                  {!return_.company_return.is_submitted && (
+                  {!return_.company_return.status && (
                     <Button
                       onClick={() =>
                         navigate(

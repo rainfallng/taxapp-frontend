@@ -1,7 +1,6 @@
 import { payeSchemaObject } from "@/lib/schemas/returns/company/paye";
 import * as yup from "yup";
 import {
-  AnnualReturnType,
   ProjectionReturnType,
   ScheduleReturnTaxType,
   WitholdingTaxType,
@@ -21,7 +20,7 @@ export type IndividualReturn = {
         icode: string;
         created: string;
         modified: string;
-        is_active: true;
+        is_active: boolean;
         name: string;
         details: string;
         value: string;
@@ -32,7 +31,7 @@ export type IndividualReturn = {
     ];
     created: string;
     modified: string;
-    is_active: true;
+    is_active: boolean;
     salary: string;
     commission: string;
     trade_income: string;
@@ -54,7 +53,7 @@ export type IndividualReturn = {
     icode: string;
     created: string;
     modified: string;
-    is_active: true;
+    is_active: boolean;
     accommodation_type: string;
     ownership_type: string;
     owner_name: string;
@@ -70,7 +69,7 @@ export type IndividualReturn = {
   };
   created: string;
   modified: string;
-  is_active: true;
+  is_active: boolean;
   return_type: string;
   year_in_view: number;
   reference: string;
@@ -92,7 +91,7 @@ export type Bill = {
   icode: string;
   created: string;
   modified: string;
-  is_active: true;
+  is_active: boolean;
   name: string;
   details: string;
   amount: string;
@@ -158,16 +157,17 @@ export type ReturnStat = {
 export type CompanyReturn = {
   id: number;
   icode: string;
-  amount: string;
+  amount: number | null;
   created: string;
   modified: string;
   is_active: boolean;
   return_type: string;
-  month: string;
+  month: string |null;
   year: number;
-  is_submitted: boolean;
+  reference: string | null;
+  status: string;
   created_by: string;
-  modified_by: string;
+  modified_by: string | null;
   company_profile: number;
 };
 
@@ -179,11 +179,35 @@ export type CompanyReturnSchema = {
   modified_by: string;
 };
 
+export type AnnualReturnData = {
+  id: number;
+  icode: string;
+  company_return: CompanyReturn;
+  tax_payer_id: string;
+  created: string;
+  modified: string;
+  is_active: boolean;
+  surname: string;
+  first_name: string;
+  middle_name: string;
+  designation: string;
+  gross_income: string;
+  staff_phone_number: string;
+  staff_email_address: string;
+  number_of_months: number;
+  development_levy: string;
+  chargeable_income: string;
+  annual_tax_paid: string;
+  created_by: string;
+  modified_by: null;
+  nationality: number;
+};
+
 export type AnnualReturnList = {
   count: number;
   page: number;
   pages: number;
-  results: (CompanyReturnSchema & AnnualReturnType)[];
+  results: AnnualReturnData[];
 };
 
 export type ProjectionReturnList = {

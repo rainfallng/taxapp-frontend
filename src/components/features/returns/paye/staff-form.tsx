@@ -38,13 +38,17 @@ const StaffForm = ({
     () => isFirst && monthly_payees.length === 1,
     [isFirst, monthly_payees]
   );
-  const isLast = useMemo(() => index === monthly_payees.length - 1, [index, monthly_payees]);
+  const isLast = useMemo(
+    () => index === monthly_payees.length - 1,
+    [index, monthly_payees]
+  );
 
   const CaretIcon = open
     ? KeyboardArrowUpOutlinedIcon
     : KeyboardArrowDownOutlinedIcon;
 
-  const onAdd = () => form.setValue("monthly_payees", [...monthly_payees, payeStaffInput]);
+  const onAdd = () =>
+    form.setValue("monthly_payees", [...monthly_payees, payeStaffInput]);
 
   const onRemove = () => {
     if (isOnly) return;
@@ -55,6 +59,26 @@ const StaffForm = ({
   useEffect(() => {
     if (isOnly) setOpen(true);
   }, [isOnly]);
+
+  const basic = Number(form.watch(`monthly_payees.${index}.basic`) || 0);
+  const housing = Number(form.watch(`monthly_payees.${index}.housing`) || 0);
+  const transport = Number(
+    form.watch(`monthly_payees.${index}.transport`) || 0
+  );
+  const others = Number(form.watch(`monthly_payees.${index}.others`) || 0);
+  const bonus = Number(form.watch(`monthly_payees.${index}.bonus`) || 0);
+  const npf = Number(form.watch(`monthly_payees.${index}.npf`) || 0);
+  const nhf = Number(form.watch(`monthly_payees.${index}.nhf`) || 0);
+
+  const grossEmolument = basic + housing + transport + others + bonus;
+
+  const consolidatedRelief =
+    grossEmolument <= 300000 ? 0 : 0.2 * grossEmolument + 200000;
+
+  const chargeableIncome =
+    grossEmolument <= 300000
+      ? grossEmolument
+      : grossEmolument - (npf + nhf + consolidatedRelief);
 
   return (
     <Box sx={{ py: "1.6rem", borderTop: "1px solid #D0D0D0" }}>
@@ -157,8 +181,8 @@ const StaffForm = ({
               value={form.watch(`monthly_payees.${index}.state_of_residence`)}
               {...form.register(`monthly_payees.${index}.state_of_residence`)}
               errorMessage={
-                form.formState.errors.monthly_payees?.[index]?.state_of_residence
-                  ?.message
+                form.formState.errors.monthly_payees?.[index]
+                  ?.state_of_residence?.message
               }
             >
               {states?.map((state) => (
@@ -299,6 +323,63 @@ const StaffForm = ({
               label="Enter Amount"
               form={form}
               isNumber
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <FormLabel
+              sx={{
+                fontSize: "1.6rem",
+                display: "block",
+                fontWeight: 500,
+                mb: "1.6rem",
+                color: theme.palette.grey[800],
+              }}
+            >
+              Gross Emolument
+            </FormLabel>
+            <Input
+              label="Enter Amount"
+              isNumber
+              value={grossEmolument}
+              disabled
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormLabel
+              sx={{
+                fontSize: "1.6rem",
+                display: "block",
+                fontWeight: 500,
+                mb: "1.6rem",
+                color: theme.palette.grey[800],
+              }}
+            >
+              Chargeable Income
+            </FormLabel>
+            <Input
+              value={chargeableIncome}
+              label="Enter Amount"
+              isNumber
+              disabled
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormLabel
+              sx={{
+                fontSize: "1.6rem",
+                display: "block",
+                fontWeight: 500,
+                mb: "1.6rem",
+                color: theme.palette.grey[800],
+              }}
+            >
+              Consolidated Relief
+            </FormLabel>
+            <Input
+              value={consolidatedRelief}
+              label="Enter Amount"
+              isNumber
+              disabled
             />
           </Grid>
         </Grid>
