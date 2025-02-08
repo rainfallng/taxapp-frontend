@@ -6,7 +6,7 @@ import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined
 // import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
 import BusinessCenterOutlinedIcon from '@mui/icons-material/BusinessCenterOutlined';
-// import FilePresentIcon from '@mui/icons-material/FilePresent';
+import FilePresentIcon from '@mui/icons-material/FilePresent';
 
 export const SIDEBAR_LINKS: Record<string, ISidebar[]> = {
   [UserType.COMPANY]: [
@@ -91,6 +91,11 @@ export const SIDEBAR_LINKS: Record<string, ISidebar[]> = {
           link: "/app/returns",
         },
       ],
+    },
+    {
+      title: "Filing History",
+      link: "/app/filing-history",
+      icon: FilePresentIcon,
     },
     // {
     //   title: "Filing History",

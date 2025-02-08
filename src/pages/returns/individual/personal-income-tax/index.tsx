@@ -1,3 +1,4 @@
+import { YEARS } from "@/lib/constants";
 import {
   Box,
   Button,
@@ -10,9 +11,11 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const PersonalIncomeTax = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
 
   return (
     <Box sx={{ p: "4rem" }}>
@@ -61,64 +64,48 @@ const PersonalIncomeTax = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            <TableRow>
-              <TableCell
+            {YEARS.map((y, key) => (
+              <TableRow
+                key={y}
                 sx={{
-                  color: theme.palette.grey[800],
-                  fontSize: "1.6rem",
-                  width: "40%",
+                  ...(key % 2 !== 0 && { bgcolor: "rgba(231, 231, 231, 0.4)" }),
                 }}
               >
-                2025
-              </TableCell>
-              <TableCell
-                sx={{
-                  color: theme.palette.grey[800],
-                  fontSize: "1.6rem",
-                  width: "40%",
-                }}
-              >
-                Not Filed
-              </TableCell>
-              <TableCell
-                sx={{
-                  color: theme.palette.grey[800],
-                  fontSize: "1.6rem",
-                  width: "20%",
-                }}
-              >
-                <Button>Click to file return</Button>
-              </TableCell>
-            </TableRow>
-            <TableRow sx={{ bgcolor: "rgba(231, 231, 231, 0.4)" }}>
-              <TableCell
-                sx={{
-                  color: theme.palette.grey[800],
-                  fontSize: "1.6rem",
-                  width: "40%",
-                }}
-              >
-                2025
-              </TableCell>
-              <TableCell
-                sx={{
-                  color: theme.palette.grey[800],
-                  fontSize: "1.6rem",
-                  width: "40%",
-                }}
-              >
-                Not Filed
-              </TableCell>
-              <TableCell
-                sx={{
-                  color: theme.palette.grey[800],
-                  fontSize: "1.6rem",
-                  width: "20%",
-                }}
-              >
-                <Button>Click to file return</Button>
-              </TableCell>
-            </TableRow>
+                <TableCell
+                  sx={{
+                    color: theme.palette.grey[800],
+                    fontSize: "1.6rem",
+                    width: "40%",
+                  }}
+                >
+                  {y}
+                </TableCell>
+                <TableCell
+                  sx={{
+                    color: theme.palette.grey[800],
+                    fontSize: "1.6rem",
+                    width: "40%",
+                  }}
+                >
+                  Not Filed
+                </TableCell>
+                <TableCell
+                  sx={{
+                    color: theme.palette.grey[800],
+                    fontSize: "1.6rem",
+                    width: "20%",
+                  }}
+                >
+                  <Button
+                    onClick={() =>
+                      navigate(`/app/returns/personal-income-tax?year=${y}`)
+                    }
+                  >
+                    Click to file return
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
