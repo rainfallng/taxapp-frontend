@@ -54,7 +54,7 @@ export const handleFormErrors = <T extends FieldValues>(
       if (Object.keys(errorsObj).includes(key))
         setError(key as Path<T>, {
           type: "manual",
-          message: errMsg,
+          message: JSON.stringify(errMsg),
         });
     });
   }
@@ -64,16 +64,19 @@ export const handleFormToastErrors = (
   error: AxiosError<{ [message: string]: string | string[] }>,
   message: string = ""
 ) => {
-  console.log({ error })
   const errorData = error.response?.data;
   if (errorData?.message) return errorData?.message as string;
-  if (error?.response?.status === 400 && errorData?.errors)
-    return Object.values(errorData.errors)?.[0][0];
+  if (error?.response?.status === 400 && errorData?.errors) {
+    const m = Object.values(errorData.errors)?.[0][0];
+    return typeof m === "string"
+      ? m
+      : `${Object.entries(m)[0]}: ${Object.entries(m)[1]}`;
+  }
   const err = Object.values(errorData ?? {})?.[0];
   if (err) {
     return Array.isArray(err) ? err?.[0] : err;
   }
-  return message;
+  return JSON.stringify(message);
 };
 
 export const getValue = (value?: string | number) => value || "--";

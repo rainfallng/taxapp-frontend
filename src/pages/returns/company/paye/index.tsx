@@ -4,6 +4,7 @@ import { QueryKeys } from "@/lib/queryKeys";
 import {
   Box,
   Button,
+  capitalize,
   Table,
   TableBody,
   TableCell,
@@ -158,7 +159,7 @@ const PayeReturns = () => {
                       width: "12%",
                     }}
                   >
-                    {item.month}
+                    {capitalize(item.month.toLowerCase())}
                   </TableCell>
                   <TableCell
                     sx={{

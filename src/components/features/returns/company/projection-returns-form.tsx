@@ -10,6 +10,7 @@ import Input from "@/components/ui/input";
 import { Nationality, ProjectionReturnType } from "@/types";
 import Select, { MenuItem } from "@/components/ui/select";
 import { projectionReturnInput } from "@/lib/schemas/returns/company/projection-returns";
+import PhoneInput from "@/components/ui/phone-input";
 
 const ProjectionReturnsForm = ({
   form,
@@ -221,6 +222,55 @@ const ProjectionReturnsForm = ({
               label="Enter Email Address"
               name={`projection_returns.${index}.staff_email_address`}
               form={form}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormLabel
+              sx={{
+                fontSize: "2rem",
+                display: "block",
+                fontWeight: 500,
+                mb: "1.6rem",
+                color: (theme) => theme.palette.grey[800],
+              }}
+            >
+              Taxpayer ID
+            </FormLabel>
+            <Input
+              sx={{ height: "5.6rem" }}
+              label="Enter Taxpayer ID"
+              name={`projection_returns.${index}.tax_payer_id`}
+              form={form}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormLabel
+              sx={{
+                fontSize: "2rem",
+                display: "block",
+                fontWeight: 500,
+                mb: "1.6rem",
+                color: (theme) => theme.palette.grey[800],
+              }}
+            >
+              Staff Phone Number
+            </FormLabel>
+            <PhoneInput
+              value={form.watch(`projection_returns.${index}.staff_phone_number`)}
+              onChange={(value) =>
+                form.setValue(
+                  `projection_returns.${index}.staff_phone_number`,
+                  value
+                )
+              }
+              errorMessage={
+                form.formState.errors.projection_returns?.[index]
+                  ?.staff_phone_number?.message
+              }
+              label="Enter Number"
+              sx={{
+                height: "5.6rem",
+              }}
             />
           </Grid>
         </Grid>
