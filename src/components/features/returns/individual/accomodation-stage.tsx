@@ -34,7 +34,7 @@ const AccomodationStage: FC = () => {
   const { mutateAsync, isPending } = useMutation({
     mutationFn: (variables: IIndividualAnnualAccomodationInput) =>
       api.postIndividualAccomodation(returnId, variables),
-    onSettled() {
+    onError() {
       setStartCalculating(false);
     },
   });
