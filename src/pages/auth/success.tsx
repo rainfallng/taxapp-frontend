@@ -17,7 +17,7 @@ const SuccessPage = () => {
         title={
           verified
             ? "Congratulation!"
-            : "Thank you! our Tax Identification Number will be generated in a few days"
+            : "Thank you! your Tax Identification Number will be generated in a few days"
         }
         description={
           verified

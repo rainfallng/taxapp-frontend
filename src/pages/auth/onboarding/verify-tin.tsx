@@ -23,7 +23,7 @@ const VerifyTIN = () => {
     onSuccess(data) {
       removeLS("tin");
       setUser(data?.data);
-      navigate("/auth/onboarding/success");
+      navigate(`/auth/onboarding/success?verified=true`);
     },
   });
 

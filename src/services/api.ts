@@ -36,6 +36,7 @@ import {
   WitholdingTaxType,
   YearOrMonthParam,
 } from "@/types";
+import toast from "react-hot-toast";
 
 export class APIRequest {
   private endpoint?: string;
@@ -93,6 +94,8 @@ export class APIRequest {
         Authorization: `JWT ${this.accessToken}`,
       },
     });
+
+    toast.success(data?.message);
 
     return data;
   };
