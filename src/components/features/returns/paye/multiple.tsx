@@ -53,7 +53,9 @@ const Multiple = () => {
         isLoading={isPending}
         open={startCalculating}
         onClose={() =>
-          navigate(`/app/returns/paye/summary/${payeId}?success=true`)
+          navigate(
+            `/app/returns/paye/summary/${payeId}?success=true&month=${month}`
+          )
         }
       />
     </>

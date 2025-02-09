@@ -122,7 +122,9 @@ const Single = () => {
         isLoading={isPending}
         open={modalState.openCalculate}
         onClose={() =>
-          navigate(`/app/returns/paye/summary/${payeId}?success=true`)
+          navigate(
+            `/app/returns/paye/summary/${payeId}?success=true&month=${month}`
+          )
         }
       />
     </form>
