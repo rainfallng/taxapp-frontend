@@ -297,13 +297,20 @@ const TaxImplicationBill = ({ id, name }: { id: string; name: string }) => {
           rounded
           sx={{ width: "50%" }}
           onClick={() => {
-            if (fromSuccess) return navigate("/app/returns/success");
+            if (fromSuccess) return navigate("/app/returns");
             navigate(-1);
           }}
         >
           Cancel
         </Button>
-        <Button rounded sx={{ width: "50%" }} onClick={onInitiatePayment}>
+        <Button
+          rounded
+          sx={{ width: "50%" }}
+          onClick={() => {
+            if (fromSuccess) return navigate("/app/returns/success");
+            navigate(-1);
+          }}
+        >
           Contine
         </Button>
       </Box>

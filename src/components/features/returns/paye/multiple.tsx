@@ -13,12 +13,13 @@ const Multiple = () => {
   const { api } = useAPI();
   const { month = "", year = "" } = useParams();
   const [startCalculating, setStartCalculating] = useState(false);
+  const [payeId, setPayeId] = useState("");
 
   const { isPending, mutateAsync } = useMutation({
     mutationFn: api.uploadCompanyPayeReturns,
     onSuccess(data) {
-      console.log({ data });
       setStartCalculating(true);
+      setPayeId(data?.data?.id);
     },
   });
 
@@ -51,7 +52,9 @@ const Multiple = () => {
       <CalculateReturnsModal
         isLoading={isPending}
         open={startCalculating}
-        onClose={() => navigate("/app/returns/success")}
+        onClose={() =>
+          navigate(`/app/returns/paye/summary/${payeId}?success=true`)
+        }
       />
     </>
   );
