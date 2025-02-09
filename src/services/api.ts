@@ -191,6 +191,8 @@ export class APIRequest {
       }
     );
 
+    toast.success(data?.message);
+
     return data;
   };
 
