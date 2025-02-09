@@ -55,6 +55,7 @@ import WitholdingTax from "@/pages/returns/company/annual/withholding-tax";
 import ReturnsSuccess from "@/pages/returns/success";
 import PersonalIncomeTaxCompute from "@/pages/returns/individual/personal-income-tax/compute";
 import PersonalIncomeTaxBill from "@/pages/returns/individual/personal-income-tax/bill";
+import ScheduleReturns from "@/pages/returns/company/annual/schedule-returns";
 
 const AppRoutes = () => {
   return (
@@ -165,6 +166,7 @@ const AppRoutes = () => {
               element={<ComputeProjectionReturns />}
             />
             <Route path="witholding/:year" element={<WitholdingTax />} />
+            <Route path="schedule/:year" element={<ScheduleReturns />} />
           </Route>
           <Route path="paye" element={<Outlet />}>
             <Route index element={<PayeReturns />} />
