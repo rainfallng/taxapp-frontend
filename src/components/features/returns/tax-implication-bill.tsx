@@ -5,7 +5,7 @@ import { useLoader } from "@/hooks/useLoader";
 import { QueryKeys } from "@/lib/queryKeys";
 import { handleFormToastErrors } from "@/lib/utils";
 import { useStore } from "@/store";
-import { Box, Grid, Typography, useTheme } from "@mui/material";
+import { Box, capitalize, Grid, Typography, useTheme } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import toast from "react-hot-toast";
@@ -111,21 +111,21 @@ const TaxImplicationBill = ({
   useLoader(isPending, "Please wait...");
 
   useEffect(() => {
-    if (payeSummary) {
+    if (payeSummary && type === "paye") {
       setData({
         amount: payeSummary?.data?.amount,
-        month: payeSummary?.data?.month ?? month,
-        email_address: payeSummary?.data?.email_address,
+        month: capitalize(payeSummary?.data?.month?.toLowerCase() || month?.toLowerCase() || ""),
+        email_address: payeSummary?.data?.email_address?.toLowerCase() ?? "",
         company_name: payeSummary?.data?.company_name,
         tax_payer_id: payeSummary?.data?.tax_payer_id,
         created_at: payeSummary?.data?.created_at,
         phone_number: payeSummary?.data?.phone_number,
       });
     }
-  }, [payeSummary, month]);
+  }, [payeSummary, month, type]);
 
   useEffect(() => {
-    if (pitSummary) {
+    if (pitSummary && type === "pit") {
       setData({
         amount: pitSummary?.data?.amount,
         biller: pitSummary?.data?.biller,
@@ -136,7 +136,7 @@ const TaxImplicationBill = ({
         phone_number: pitSummary?.data?.phone_number,
       });
     }
-  }, [pitSummary]);
+  }, [pitSummary, type]);
 
   return (
     <Box sx={{ p: "4rem" }}>

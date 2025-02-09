@@ -39,12 +39,12 @@ const EditMode = ({ form }: { form: CompanyProfileUpdate }) => {
           ))}
         </Select>
       </Grid>
-      <Grid item xs={6}>
+      {/* <Grid item xs={6}>
         <Input label="No of Employees" form={form} name="number_of_employees" />
       </Grid>
       <Grid item xs={6}>
         <Input label="No of Directors" form={form} name="number_of_directors" />
-      </Grid>
+      </Grid> */}
       <Grid item xs={6}>
         <Select
           sx={{ height: "5.6rem" }}

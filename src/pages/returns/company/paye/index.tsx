@@ -169,7 +169,9 @@ const PayeReturns = () => {
                       width: "18%",
                     }}
                   >
-                    {item.amount ? `₦${item.amount.toLocaleString()}` : "--"}
+                    {item.amount
+                      ? `₦${Number(item.amount).toLocaleString()}`
+                      : "--"}
                   </TableCell>
                   <TableCell
                     sx={{

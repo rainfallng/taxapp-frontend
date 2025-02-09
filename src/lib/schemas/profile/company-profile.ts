@@ -5,8 +5,8 @@ const defaultValues = {
   name: "",
   email: '',
   phone_number: "",
-  number_of_employees: 0,
-  number_of_directors: 0,
+  // number_of_employees: 0,
+  // number_of_directors: 0,
   place_of_business: "",
   street_number: "",
   street_name: "",
@@ -22,8 +22,8 @@ export const schema = yup.object({
   phone_number: yup
     .string()
     .max(15, "Phone number cannot be more than 15 characters").optional(),
-  number_of_employees: yup.number().default(0),
-  number_of_directors: yup.number().default(0),
+  // number_of_employees: yup.number().default(0),
+  // number_of_directors: yup.number().default(0),
   place_of_business: yup.string(),
   street_number: yup.string(),
   street_name: yup.string(),

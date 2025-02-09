@@ -48,7 +48,7 @@ const DetailsMode = () => {
           {user.company_profile?.place_of_business}
         </Typography>
       </Grid>
-      <Grid item md={6}>
+      {/* <Grid item md={6}>
         <Typography
           sx={{
             color: theme.palette.grey[400],
@@ -67,8 +67,8 @@ const DetailsMode = () => {
         >
           {user.company_profile?.number_of_employees ?? 0}
         </Typography>
-      </Grid>
-      <Grid item md={6}>
+      </Grid> */}
+      {/* <Grid item md={6}>
         <Typography
           sx={{
             color: theme.palette.grey[400],
@@ -87,7 +87,7 @@ const DetailsMode = () => {
         >
           {user.company_profile?.number_of_directors ?? 0}
         </Typography>
-      </Grid>
+      </Grid> */}
       <Grid item md={6}>
         <Typography
           sx={{
