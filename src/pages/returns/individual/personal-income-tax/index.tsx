@@ -1,4 +1,4 @@
-import { YEARS } from "@/lib/constants";
+import { PREVIOUS_YEARS } from "@/lib/constants";
 import {
   Box,
   Button,
@@ -64,7 +64,7 @@ const PersonalIncomeTax = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {YEARS.map((y, key) => (
+            {PREVIOUS_YEARS.map((y, key) => (
               <TableRow
                 key={y}
                 sx={{

@@ -126,7 +126,8 @@ export interface ICompanyReturn {
   modified_by: string;
   company_profile: number;
   amount: string;
-  is_submitted: boolean;
+  reference: string | null;
+  status: string;
 }
 
 export type CompanyReturnsList = {
@@ -162,7 +163,7 @@ export type CompanyReturn = {
   modified: string;
   is_active: boolean;
   return_type: string;
-  month: string |null;
+  month: string | null;
   year: number;
   reference: string | null;
   status: string;
@@ -229,4 +230,17 @@ export type WitholdingTaxList = {
   page: number;
   pages: number;
   results: (CompanyReturnSchema & WitholdingTaxType)[];
+};
+
+export type PayeSummary = {
+  success: boolean;
+  data: {
+    month: string;
+    email_address: string | null;
+    amount: number;
+    company_name: string;
+    tax_payer_id: string | null;
+    created_at: string;
+    phone_number: string |null;
+  };
 };

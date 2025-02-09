@@ -23,7 +23,7 @@ import {
   ScheduleReturnList,
   WitholdingTaxList,
 } from "@/types";
-import { YEARS } from "@/lib/constants";
+import { PREVIOUS_YEARS } from "@/lib/constants";
 
 const AnnualReturns = () => {
   const theme = useTheme();
@@ -165,10 +165,9 @@ const AnnualReturns = () => {
                 </TableCell>
               </TableRow>
             ))}
-            {YEARS.filter(
+            {PREVIOUS_YEARS.filter(
               (year) =>
-                !data?.results?.some((r) => r.company_return.year === year) ||
-                year !== new Date().getFullYear()
+                !data?.results?.some((r) => r.company_return.year === year)
             ).map((year, key) => (
               <TableRow
                 key={year}

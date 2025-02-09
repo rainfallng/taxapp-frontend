@@ -166,7 +166,7 @@ const AppRoutes = () => {
           </Route>
           <Route path="paye" element={<Outlet />}>
             <Route index element={<PayeReturns />} />
-            <Route path="bill/:month/:billId" element={<PayeBill />} />
+            <Route path="summary/:id" element={<PayeBill />} />
             <Route
               path="create/:year/:month"
               element={<ComputePayeReturns />}

@@ -15,6 +15,7 @@ const individualAccomodationSchemaObject = yup.object({
   rent_paid_by_employer: yup.string().required("Rent paid by employer is a required field"),
   start_date: yup.string().required("Start date is a required field"),
   end_date: yup.string().required("End date is a required field"),
+  address: yup.string().required("Address is a required field"),
 });
 
 const individualAccomodationDefaultValues = {
@@ -27,6 +28,7 @@ const individualAccomodationDefaultValues = {
   rent_paid_by_employer: "",
   start_date: "",
   end_date: "",
+  address: "",
 };
 
 export const individualAccomodationSchema = resolveSchema({

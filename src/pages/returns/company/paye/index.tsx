@@ -145,7 +145,7 @@ const PayeReturns = () => {
                   key={item.id}
                   sx={{
                     py: "0.7rem",
-                    ...(index % 2 === 0 && {
+                    ...(index % 2 !== 0 && {
                       bgcolor: "#F8F8F8",
                     }),
                   }}
@@ -168,7 +168,7 @@ const PayeReturns = () => {
                       width: "18%",
                     }}
                   >
-                    {item.amount}
+                    {item.amount || '--'}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -178,7 +178,7 @@ const PayeReturns = () => {
                       width: "18%",
                     }}
                   >
-                    {item.return_type}
+                    {item.reference || '--'}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -188,7 +188,7 @@ const PayeReturns = () => {
                       width: "16%",
                     }}
                   >
-                    {item.is_submitted ? "Filed" : "Not Filed"}
+                    {item.status}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -198,17 +198,15 @@ const PayeReturns = () => {
                       width: "16%",
                     }}
                   >
-                    {!item.is_submitted && (
                       <Button
                         onClick={() =>
                           navigate(
-                            `/app/returns/paye/create/${item.year}/${item.month}`
+                            `/app/returns/paye/summary/${item.id}`
                           )
                         }
                       >
-                        Click to file return
+                        Click to view history
                       </Button>
-                    )}
                   </TableCell>
                 </TableRow>
               ))}

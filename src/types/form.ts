@@ -95,6 +95,7 @@ export interface IIndividualAnnualAccomodationInput {
   rent_paid_by_employer: string;
   start_date: string;
   end_date: string;
+  address?: string;
 }
 
 export interface IConsultantSignUp {

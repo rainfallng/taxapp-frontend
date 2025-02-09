@@ -1,7 +1,7 @@
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
 import { useAPI } from "@/hooks/useApi";
-import { identificationSchema } from "@/lib/schemas/onboarding/identification";
+import { identificationSchema } from "@/lib/schemas/onboarding/company-cac-verification";
 import { handleFormErrors, handleFormToastErrors, setLS } from "@/lib/utils";
 import { IIndividualOnboardingInput } from "@/types/form";
 import { Box, FormLabel, Typography, useTheme } from "@mui/material";

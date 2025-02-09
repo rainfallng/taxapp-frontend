@@ -1,4 +1,3 @@
-import Modal from "@/components/features/modals";
 import Multiple from "@/components/features/returns/paye/multiple";
 import Single from "@/components/features/returns/paye/single";
 import GoBack from "@/components/ui/go-back";
@@ -57,33 +56,6 @@ const ComputePayeReturns = () => {
         {isSingle && <Single />}
         {isSingle === false && <Multiple />}
       </Box>
-      <Modal sx={{ py: "11.4rem" }} open={false}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "2.4rem",
-          }}
-        >
-          <Box
-            component="img"
-            src="/assets/svgs/calculate.svg"
-            alt=""
-            sx={{ width: "9.6rem", height: "9.6rem" }}
-          />
-          <Typography
-            sx={{
-              fontWeight: 500,
-              fontSize: "2.2rem",
-              color: (theme) => theme.palette.grey[800],
-              textAlign: "center",
-            }}
-          >
-            Calculating Tax Implication...
-          </Typography>
-        </Box>
-      </Modal>
     </Box>
   );
 };

@@ -16,6 +16,7 @@ import { AnnualReturnType } from "@/types";
 import AnnualReturnsForm from "./annual-returns-form";
 import CrossCheckModal from "../../modals/cross-check";
 import { useReducerState } from "@/hooks/useReducerState";
+import CalculateReturnsModal from "../../modals/calculate-returns";
 
 const SingleAnnualReturnCompute = () => {
   const form = useForm(annualReturnSchema);
@@ -25,6 +26,7 @@ const SingleAnnualReturnCompute = () => {
   const [modalState, setModalState] = useReducerState({
     open: false,
     values: {} as AnnualReturnType,
+    startCalculating: false,
   });
 
   const { data: countries, isLoading: isLoadingCountries } = useQuery({
@@ -34,11 +36,12 @@ const SingleAnnualReturnCompute = () => {
 
   const { isPending, mutateAsync } = useMutation({
     mutationFn: api.postCompanyAnnualReturns,
-    onSuccess() {
-      navigate(`/app/returns/success`);
-    },
     onError: (error: AxiosError<{ [message: string]: string | string[] }>) => {
-      setModalState({ open: false, values: {} as AnnualReturnType });
+      setModalState({
+        open: false,
+        startCalculating: false,
+        values: {} as AnnualReturnType,
+      });
       handleFormErrors(error, form.setError);
     },
   });
@@ -48,6 +51,7 @@ const SingleAnnualReturnCompute = () => {
   };
 
   const onProceed = () => {
+    setModalState({ open: false, startCalculating: true });
     toast.promise(mutateAsync({ ...modalState.values, year: Number(year) }), {
       success: "Successful",
       loading: "Submitting...",
@@ -110,6 +114,12 @@ const SingleAnnualReturnCompute = () => {
           setModalState({ open: false, values: {} as AnnualReturnType })
         }
         onProceed={onProceed}
+      />
+
+      <CalculateReturnsModal
+        isLoading={isPending}
+        open={modalState.startCalculating}
+        onClose={() => navigate("/app/returns/success")}
       />
     </form>
   );

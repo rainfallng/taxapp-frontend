@@ -15,30 +15,32 @@ import {
   useTheme,
 } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
-import Modal from "../../modals";
 import dayjs from "dayjs";
+import CalculateReturnsModal from "../../modals/calculate-returns";
 
 const AccomodationStage: FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { api } = useAPI();
   const { id: returnId = "" } = useParams();
+  const [startCalculating, setStartCalculating] = useState(false);
 
   const form = useForm(individualAccomodationSchema);
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: (variables: IIndividualAnnualAccomodationInput) =>
       api.postIndividualAccomodation(returnId, variables),
-    onSuccess() {
-      navigate(`/app/returns/success`);
+    onSettled() {
+      setStartCalculating(false);
     },
   });
 
   const onSubmit = (values: IIndividualAnnualAccomodationInput) => {
+    setStartCalculating(true);
     toast.promise(mutateAsync(values), {
       success: "Successful",
       loading: "Please wait...",
@@ -49,7 +51,7 @@ const AccomodationStage: FC = () => {
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
       <Typography sx={{ mb: "4rem", fontSize: "2rem", fontWeight: 500 }}>
-        Statement of Income (Gross Annual Income)
+        Mandatory Disclosure of Accommodation
       </Typography>
       <Grid container columnSpacing={3.2} rowSpacing={2.4}>
         <Grid item xs={12}>
@@ -64,7 +66,7 @@ const AccomodationStage: FC = () => {
           >
             Address
           </FormLabel>
-          <Input name="owner_address" label="Enter Address" form={form} />
+          <Input name="address" label="Enter Address" form={form} />
         </Grid>
         <Grid item xs={12} sm={6}>
           <FormLabel
@@ -250,33 +252,11 @@ const AccomodationStage: FC = () => {
           Next
         </Button>
       </Box>
-      <Modal sx={{ py: "11.4rem" }} open={isPending}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "2.4rem",
-          }}
-        >
-          <Box
-            component="img"
-            src="/assets/svgs/calculate.svg"
-            alt=""
-            sx={{ width: "9.6rem", height: "9.6rem" }}
-          />
-          <Typography
-            sx={{
-              fontWeight: 500,
-              fontSize: "2.2rem",
-              color: theme.palette.grey[800],
-              textAlign: "center",
-            }}
-          >
-            Calculating Tax Implication...
-          </Typography>
-        </Box>
-      </Modal>
+      <CalculateReturnsModal
+        isLoading={isPending}
+        open={startCalculating}
+        onClose={() => navigate("/app/returns/success")}
+      />
     </form>
   );
 };

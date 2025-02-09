@@ -1,4 +1,3 @@
-import Modal from "@/components/features/modals";
 import MultipleAnnualReturnsUpload from "@/components/features/returns/company/multiple-annual-returns-upload";
 import SingleAnnualReturnCompute from "@/components/features/returns/company/single-annual-returns";
 import GoBack from "@/components/ui/go-back";
@@ -56,33 +55,6 @@ const ComputeAnnualReturns = () => {
         {isSingle && <SingleAnnualReturnCompute />}
         {isSingle === false && <MultipleAnnualReturnsUpload />}
       </Box>
-      <Modal sx={{ py: "11.4rem" }} open={false}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "2.4rem",
-          }}
-        >
-          <Box
-            component="img"
-            src="/assets/svgs/calculate.svg"
-            alt=""
-            sx={{ width: "9.6rem", height: "9.6rem" }}
-          />
-          <Typography
-            sx={{
-              fontWeight: 500,
-              fontSize: "2.2rem",
-              color: (theme) => theme.palette.grey[800],
-              textAlign: "center",
-            }}
-          >
-            Calculating Tax Implication...
-          </Typography>
-        </Box>
-      </Modal>
     </Box>
   );
 };

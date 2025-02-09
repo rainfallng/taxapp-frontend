@@ -16,6 +16,8 @@ import { AddCompanyStaffReturn } from "@/types/returns";
 import toast from "react-hot-toast";
 import CrossCheckModal from "../../modals/cross-check";
 import { useReducerState } from "@/hooks/useReducerState";
+import CalculateReturnsModal from "../../modals/calculate-returns";
+import { useState } from "react";
 
 const Single = () => {
   const form = useForm(payeSchema);
@@ -24,8 +26,10 @@ const Single = () => {
   const { month = "", year = "" } = useParams();
   const [modalState, setModalState] = useReducerState({
     open: false,
+    openCalculate: false,
     values: {} as AddCompanyStaffReturn,
   });
+  const [payeId, setPayeId] = useState("");
 
   const { data: states, isLoading: isLoadingStates } = useQuery({
     queryKey: [QueryKeys.STATES],
@@ -34,11 +38,17 @@ const Single = () => {
 
   const { isPending, mutateAsync } = useMutation({
     mutationFn: api.postCompanyPayeeReturns,
-    onSuccess() {
-      navigate(`/app/returns/success`);
+    onSuccess(data) {
+      setPayeId(data?.data?.id);
     },
-    onError: (error: AxiosError<{ [message: string]: string | string[] }>) =>
-      handleFormErrors(error, form.setError),
+    onError: (error: AxiosError<{ [message: string]: string | string[] }>) => {
+      handleFormErrors(error, form.setError);
+      setModalState({
+        open: false,
+        openCalculate: false,
+        values: {} as AddCompanyStaffReturn,
+      });
+    },
   });
 
   const onSubmit = (values: AddCompanyStaffReturn) => {
@@ -46,6 +56,7 @@ const Single = () => {
   };
 
   const onProceed = () => {
+    setModalState({ openCalculate: true, open: false });
     toast.promise(
       mutateAsync({ ...modalState.values, year, month: month.toUpperCase() }),
       {
@@ -106,6 +117,13 @@ const Single = () => {
           setModalState({ open: false, values: {} as AddCompanyStaffReturn })
         }
         onProceed={onProceed}
+      />
+      <CalculateReturnsModal
+        isLoading={isPending}
+        open={modalState.openCalculate}
+        onClose={() =>
+          navigate(`/app/returns/paye/summary/${payeId}?success=true`)
+        }
       />
     </form>
   );

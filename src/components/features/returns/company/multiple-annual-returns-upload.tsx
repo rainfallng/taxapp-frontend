@@ -5,17 +5,19 @@ import { useAPI } from "@/hooks/useApi";
 import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 import UploadMultipleReturns from "../upload-multiple-returns";
+import CalculateReturnsModal from "../../modals/calculate-returns";
 
 const MultipleAnnualReturnsUpload = () => {
   const navigate = useNavigate();
   const [file, setFile] = useState<File | null | undefined>(null);
   const { api } = useAPI();
   const { year = "" } = useParams();
+  const [startCalculating, setStartCalculating] = useState(false);
 
   const { isPending, mutateAsync } = useMutation({
     mutationFn: api.uploadCompanyAnnualReturns,
-    onSuccess() {
-      navigate(`/app/returns/success`);
+    onError() {
+      setStartCalculating(false);
     },
   });
 
@@ -25,6 +27,7 @@ const MultipleAnnualReturnsUpload = () => {
 
   const onUpload = () => {
     if (!file) return;
+    setStartCalculating(true);
     const formData = new FormData();
     formData.append("file", file);
     formData.append("year", year);
@@ -36,13 +39,20 @@ const MultipleAnnualReturnsUpload = () => {
   };
 
   return (
-    <UploadMultipleReturns
-      download={download}
-      onUpload={onUpload}
-      isPending={isPending}
-      file={file}
-      setFile={setFile}
-    />
+    <>
+      <UploadMultipleReturns
+        download={download}
+        onUpload={onUpload}
+        isPending={isPending}
+        file={file}
+        setFile={setFile}
+      />
+      <CalculateReturnsModal
+        isLoading={isPending}
+        open={startCalculating}
+        onClose={() => navigate("/app/returns/success")}
+      />
+    </>
   );
 };
 

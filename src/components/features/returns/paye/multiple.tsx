@@ -5,17 +5,20 @@ import { useAPI } from "@/hooks/useApi";
 import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 import UploadMultipleReturns from "../upload-multiple-returns";
+import CalculateReturnsModal from "../../modals/calculate-returns";
 
 const Multiple = () => {
   const navigate = useNavigate();
   const [file, setFile] = useState<File | null | undefined>(null);
   const { api } = useAPI();
   const { month = "", year = "" } = useParams();
+  const [startCalculating, setStartCalculating] = useState(false);
 
   const { isPending, mutateAsync } = useMutation({
     mutationFn: api.uploadCompanyPayeReturns,
-    onSuccess() {
-      navigate(`/app/returns/success`);
+    onSuccess(data) {
+      console.log({ data });
+      setStartCalculating(true);
     },
   });
 
@@ -37,13 +40,20 @@ const Multiple = () => {
   };
 
   return (
-    <UploadMultipleReturns
-      download={download}
-      onUpload={onUpload}
-      isPending={isPending}
-      file={file}
-      setFile={setFile}
-    />
+    <>
+      <UploadMultipleReturns
+        download={download}
+        onUpload={onUpload}
+        isPending={isPending}
+        file={file}
+        setFile={setFile}
+      />
+      <CalculateReturnsModal
+        isLoading={isPending}
+        open={startCalculating}
+        onClose={() => navigate("/app/returns/success")}
+      />
+    </>
   );
 };
 

@@ -189,7 +189,7 @@ const VerifyCode: FC<{
           color: "#2C2EC6",
         }}
       >
-        I didn't get a text message
+        I didn't get an OTP
       </Button>
     </Box>
   );

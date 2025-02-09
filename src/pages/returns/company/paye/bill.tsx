@@ -2,9 +2,9 @@ import TaxImplicationBill from "@/components/features/returns/paye/tax-implicati
 import { useParams } from "react-router-dom";
 
 const PayeBill = () => {
-  const { billId = "", month = "" } = useParams();
+  const { id = "" } = useParams();
 
-  return <TaxImplicationBill billId={billId} month={month} />;
+  return <TaxImplicationBill id={id} name="Monthly PAYE" />;
 };
 
 export default PayeBill;

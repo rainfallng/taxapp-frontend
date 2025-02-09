@@ -24,6 +24,7 @@ import {
   IUser,
   IVerifyCAC,
   Nationality,
+  PayeSummary,
   ProjectionReturnList,
   ProjectionReturnType,
   ReturnGraph,
@@ -511,7 +512,7 @@ export class APIRequest {
 
   uploadCompanyPayeReturns = async (variables: FormData) => {
     const { data } = await axios.post(
-      `/api/v1/returns/company/monthly-returns/monthly-payee/`,
+      `/api/v1/returns/company/monthly-returns/monthly-payee/upload/`,
       variables,
       {
         headers: {
@@ -800,8 +801,18 @@ export class APIRequest {
   };
 
   getIndividualReturns = async () => {
+    const { data } = await axios.get(`/api/v1/returns/individual/`, {
+      headers: {
+        Authorization: `JWT ${this.accessToken}`,
+      },
+    });
+
+    return data as IndividualReturnsList;
+  };
+
+  getPayeSummary = async (id: string) => {
     const { data } = await axios.get(
-      `/api/v1/returns/individual/`,
+      `/api/v1/returns/company/monthly-returns/${id}/monthly-payee/summary/`,
       {
         headers: {
           Authorization: `JWT ${this.accessToken}`,
@@ -809,6 +820,6 @@ export class APIRequest {
       }
     );
 
-    return data as IndividualReturnsList;
+    return data as PayeSummary;
   };
 }

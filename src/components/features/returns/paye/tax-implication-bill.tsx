@@ -3,39 +3,37 @@ import GoBack from "@/components/ui/go-back";
 import { useAPI } from "@/hooks/useApi";
 import { useLoader } from "@/hooks/useLoader";
 import { QueryKeys } from "@/lib/queryKeys";
-import { handleFormToastErrors, onDownloadBlob } from "@/lib/utils";
+import { handleFormToastErrors } from "@/lib/utils";
 import { useStore } from "@/store";
 import { Box, Grid, Typography, useTheme } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
-import BillSummaryPDF from "./bill-summary-pdf";
-import { usePDF } from "@react-pdf/renderer";
-import { useEffect, useState } from "react";
-import { CompanyProfile } from "@/types";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useState } from "react";
 import Modal from "../../modals";
 
-const TaxImplicationBill = ({
-  billId,
-  month,
-}: {
-  billId: string;
-  month: string;
-}) => {
+const TaxImplicationBill = ({ id, name }: { id: string; name: string }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { api } = useAPI();
   const { user } = useStore();
   const [open, setOpen] = useState(false);
+  const [params] = useSearchParams();
+
+  const success = params.get("success");
+
+  const fromSuccess = success === "true";
 
   const tinProfile = user?.company_profile;
 
-  const { data, isPending } = useQuery({
-    queryKey: [QueryKeys.BILL, billId],
-    queryFn: () => api.getBillInvoice(billId),
-    enabled: !!billId,
+  const { data: summary, isPending } = useQuery({
+    queryKey: [QueryKeys.PAYE_SUMMARY, id],
+    queryFn: () => api.getPayeSummary(id),
+    enabled: !!id,
   });
+
+  const data = summary?.data;
 
   const { mutateAsync: initiatePayment, isPending: paymentInitiating } =
     useMutation({
@@ -46,31 +44,14 @@ const TaxImplicationBill = ({
     });
 
   const onInitiatePayment = () => {
-    toast.promise(initiatePayment(Number(billId)), {
+    toast.promise(initiatePayment(Number(id)), {
       success: "Payment initiated",
       loading: "Please wait...",
       error: (error) => handleFormToastErrors(error, "Failed"),
     });
   };
 
-  const amountDue = Number(data?.amount ?? "0") - Number(data?.charge ?? "0");
-
-  const PDF = () => (
-    <BillSummaryPDF
-      data={data}
-      tinProfile={tinProfile as CompanyProfile}
-      user={user}
-      amountDue={amountDue}
-      month={month}
-    />
-  );
-
-  const [pdfInstance, updateInstance] = usePDF({ document: <PDF /> });
-
-  useEffect(() => {
-    if (data) updateInstance(<PDF />);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
+  const amountDue = Number(data?.amount ?? "0");
 
   useLoader(isPending, "Please wait...");
 
@@ -99,7 +80,7 @@ const TaxImplicationBill = ({
             fontWeight: 500,
           }}
         >
-          Bill: {data?.name}
+          Bill: {name}
         </Typography>
         <Typography
           sx={{
@@ -112,7 +93,7 @@ const TaxImplicationBill = ({
         </Typography>
       </Box>
       <Grid container columnSpacing={2} rowSpacing="4.8rem">
-        <Grid item md={4}>
+        {/* <Grid item md={4}>
           <Typography
             sx={{
               color: theme.palette.grey[500],
@@ -130,6 +111,26 @@ const TaxImplicationBill = ({
             }}
           >
             {data?.reference}
+          </Typography>
+        </Grid> */}
+        <Grid item md={4}>
+          <Typography
+            sx={{
+              color: theme.palette.grey[500],
+              fontSize: "1.4rem",
+              fontWeight: 500,
+              mb: "0.8rem",
+            }}
+          >
+            Biller:
+          </Typography>
+          <Typography
+            sx={{
+              fontSize: "2rem",
+              color: theme.palette.grey[800],
+            }}
+          >
+            LIRS
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -149,7 +150,7 @@ const TaxImplicationBill = ({
               color: theme.palette.grey[800],
             }}
           >
-            {dayjs(data?.created).format("DD/MM/YYYY")}
+            {dayjs(data?.created_at).format("DD/MM/YYYY")}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -181,26 +182,6 @@ const TaxImplicationBill = ({
               mb: "0.8rem",
             }}
           >
-            Biller:
-          </Typography>
-          <Typography
-            sx={{
-              fontSize: "2rem",
-              color: theme.palette.grey[800],
-            }}
-          >
-            {data?.tax_collector_name ?? "--"}
-          </Typography>
-        </Grid>
-        <Grid item md={4}>
-          <Typography
-            sx={{
-              color: theme.palette.grey[500],
-              fontSize: "1.4rem",
-              fontWeight: 500,
-              mb: "0.8rem",
-            }}
-          >
             Tax Month in View
           </Typography>
           <Typography
@@ -209,7 +190,7 @@ const TaxImplicationBill = ({
               color: theme.palette.grey[800],
             }}
           >
-            {month}
+            {data?.month ?? "--"}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -229,27 +210,7 @@ const TaxImplicationBill = ({
               color: theme.palette.grey[800],
             }}
           >
-            {tinProfile?.name ?? "--"}
-          </Typography>
-        </Grid>
-        <Grid item md={4}>
-          <Typography
-            sx={{
-              color: theme.palette.grey[500],
-              fontSize: "1.4rem",
-              fontWeight: 500,
-              mb: "0.8rem",
-            }}
-          >
-            Surcharge:
-          </Typography>
-          <Typography
-            sx={{
-              fontSize: "2rem",
-              color: theme.palette.grey[800],
-            }}
-          >
-            ₦{Number(data?.charge ?? "0").toLocaleString()}
+            {data?.company_name ?? "--"}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -269,7 +230,7 @@ const TaxImplicationBill = ({
               color: theme.palette.grey[800],
             }}
           >
-            {tinProfile?.phone_number || user.phone || "--"}
+            {data?.phone_number || "--"}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -289,7 +250,27 @@ const TaxImplicationBill = ({
               color: theme.palette.grey[800],
             }}
           >
-            {tinProfile?.email || user.email}
+            {data?.email_address || "--"}
+          </Typography>
+        </Grid>
+        <Grid item md={4}>
+          <Typography
+            sx={{
+              color: theme.palette.grey[500],
+              fontSize: "1.4rem",
+              fontWeight: 500,
+              mb: "0.8rem",
+            }}
+          >
+            Surcharge:
+          </Typography>
+          <Typography
+            sx={{
+              fontSize: "2rem",
+              color: theme.palette.grey[800],
+            }}
+          >
+            ₦{Number("0").toLocaleString()}
           </Typography>
         </Grid>
       </Grid>
@@ -316,19 +297,14 @@ const TaxImplicationBill = ({
           rounded
           sx={{ width: "50%" }}
           onClick={() => {
-            if (pdfInstance.blob)
-              onDownloadBlob(pdfInstance.blob, "paye-bill-summary.pdf");
+            if (fromSuccess) return navigate("/app/returns/success");
+            navigate(-1);
           }}
         >
-          Download Bill
+          Cancel
         </Button>
-        <Button
-          rounded
-          disabled={isPending || paymentInitiating}
-          sx={{ width: "50%" }}
-          onClick={onInitiatePayment}
-        >
-          Proceed To Payment
+        <Button rounded sx={{ width: "50%" }} onClick={onInitiatePayment}>
+          Contine
         </Button>
       </Box>
       <Modal
@@ -374,10 +350,7 @@ const TaxImplicationBill = ({
               variant="outlined"
               rounded
               sx={{ width: "50%", maxWidth: "19.5rem" }}
-              onClick={() => {
-                if (pdfInstance.blob)
-                  onDownloadBlob(pdfInstance.blob, "paye-bill-summary.pdf");
-              }}
+              onClick={() => navigate("/app/home")}
             >
               Go back
             </Button>

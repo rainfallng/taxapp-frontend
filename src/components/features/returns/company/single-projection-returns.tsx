@@ -16,6 +16,7 @@ import { projectionReturnSchema } from "@/lib/schemas/returns/company/projection
 import ProjectionReturnsForm from "./projection-returns-form";
 import CrossCheckModal from "../../modals/cross-check";
 import { useReducerState } from "@/hooks/useReducerState";
+import CalculateReturnsModal from "../../modals/calculate-returns";
 
 const SingleProjectionReturnCompute = () => {
   const form = useForm(projectionReturnSchema);
@@ -25,6 +26,7 @@ const SingleProjectionReturnCompute = () => {
   const [modalState, setModalState] = useReducerState({
     open: false,
     values: {} as ProjectionReturnType,
+    startCalculating: false,
   });
 
   const { data: countries, isLoading: isLoadingCountries } = useQuery({
@@ -34,11 +36,12 @@ const SingleProjectionReturnCompute = () => {
 
   const { isPending, mutateAsync } = useMutation({
     mutationFn: api.postCompanyProjectionReturns,
-    onSuccess() {
-      navigate(`/app/returns/success`);
-    },
     onError: (error: AxiosError<{ [message: string]: string | string[] }>) => {
-      setModalState({ open: false, values: {} as ProjectionReturnType });
+      setModalState({
+        open: false,
+        startCalculating: false,
+        values: {} as ProjectionReturnType,
+      });
       handleFormErrors(error, form.setError);
     },
   });
@@ -48,6 +51,7 @@ const SingleProjectionReturnCompute = () => {
   };
 
   const onProceed = () => {
+    setModalState({ startCalculating: true, open: false });
     toast.promise(mutateAsync({ ...modalState.values, year: Number(year) }), {
       success: "Successful",
       loading: "Submitting...",
@@ -111,6 +115,12 @@ const SingleProjectionReturnCompute = () => {
           setModalState({ open: false, values: {} as ProjectionReturnType })
         }
         onProceed={onProceed}
+      />
+
+      <CalculateReturnsModal
+        isLoading={isPending}
+        open={modalState.startCalculating}
+        onClose={() => navigate("/app/returns/success")}
       />
     </form>
   );

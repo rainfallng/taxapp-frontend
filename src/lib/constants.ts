@@ -23,10 +23,19 @@ export const WITHOLDING_TAX_TYPE = [
   "DIVIDEND",
   "RENT",
   "ROYALTY",
-  "TECHNICAL SERVICES"
+  "TECHNICAL SERVICES",
 ];
-
 
 export const currentYear = new Date().getFullYear();
 
-export const YEARS = Array.from({ length: 5 }, (_, index) => currentYear - index);
+export const previousYear = currentYear - 1;
+
+export const YEARS = Array.from(
+  { length: 5 },
+  (_, index) => currentYear - index
+);
+
+export const PREVIOUS_YEARS = Array.from(
+  { length: 5 },
+  (_, index) => previousYear - index
+);
