@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import Select, { MenuItem } from "@/components/ui/select";
 import { useEffect } from "react";
-import { YEARS } from "@/lib/constants";
+import { PREVIOUS_YEARS } from "@/lib/constants";
 import { useStore } from "@/store";
 
 const IdentificationForm = ({
@@ -79,7 +79,7 @@ const IdentificationForm = ({
             {...form.register("year_in_view")}
             errorMessage={form.formState.errors.year_in_view?.message}
           >
-            {YEARS.map((val) => (
+            {PREVIOUS_YEARS.map((val) => (
               <MenuItem key={val} value={val}>
                 {val}
               </MenuItem>
