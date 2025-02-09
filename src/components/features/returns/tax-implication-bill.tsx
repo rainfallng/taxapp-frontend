@@ -44,6 +44,8 @@ const TaxImplicationBill = ({
 
   const success = params.get("success");
 
+  const month = params.get("month");
+
   const fromSuccess = success === "true";
 
   const tinProfile = user?.company_profile;
@@ -112,7 +114,7 @@ const TaxImplicationBill = ({
     if (payeSummary) {
       setData({
         amount: payeSummary?.data?.amount,
-        month: payeSummary?.data?.month,
+        month: payeSummary?.data?.month ?? month,
         email_address: payeSummary?.data?.email_address,
         company_name: payeSummary?.data?.company_name,
         tax_payer_id: payeSummary?.data?.tax_payer_id,
@@ -120,7 +122,7 @@ const TaxImplicationBill = ({
         phone_number: payeSummary?.data?.phone_number,
       });
     }
-  }, [payeSummary]);
+  }, [payeSummary, month]);
 
   useEffect(() => {
     if (pitSummary) {

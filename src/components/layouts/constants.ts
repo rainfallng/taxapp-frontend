@@ -2,7 +2,7 @@ import { ISidebar, UserType } from "@/types";
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 // import SegmentOutlinedIcon from "@mui/icons-material/SegmentOutlined";
 // import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+// import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 // import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
 import BusinessCenterOutlinedIcon from '@mui/icons-material/BusinessCenterOutlined';
@@ -10,11 +10,11 @@ import FilePresentIcon from '@mui/icons-material/FilePresent';
 
 export const SIDEBAR_LINKS: Record<string, ISidebar[]> = {
   [UserType.COMPANY]: [
-    {
-      title: "Profile",
-      link: "/app/profile",
-      icon: AccountCircleOutlinedIcon,
-    },
+    // {
+    //   title: "Profile",
+    //   link: "/app/profile",
+    //   icon: AccountCircleOutlinedIcon,
+    // },
     {
       title: "Dashboard",
       link: "/app/home",
@@ -72,11 +72,11 @@ export const SIDEBAR_LINKS: Record<string, ISidebar[]> = {
     // },
   ],
   [UserType.INDIVIDUAL]: [
-    {
-      title: "Profile",
-      link: "/app/profile",
-      icon: AccountCircleOutlinedIcon,
-    },
+    // {
+    //   title: "Profile",
+    //   link: "/app/profile",
+    //   icon: AccountCircleOutlinedIcon,
+    // },
     {
       title: "Dashboard",
       link: "/app/home",

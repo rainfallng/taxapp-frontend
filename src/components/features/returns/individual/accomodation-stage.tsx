@@ -87,7 +87,15 @@ const AccomodationStage: FC = () => {
             {...form.register("accommodation_type")}
             errorMessage={form.formState.errors.accommodation_type?.message}
           >
-            {["Apartment", "Hotel", "Hostel"].map((val) => (
+            {[
+              "Apartment",
+              "Hotel",
+              "Hostel",
+              " Office Suite",
+              "Business Center",
+              "Corporate Tower",
+              "Government Office Space",
+            ].map((val) => (
               <MenuItem key={val} value={val}>
                 {val}
               </MenuItem>
@@ -113,7 +121,7 @@ const AccomodationStage: FC = () => {
             {...form.register("ownership_type")}
             errorMessage={form.formState.errors.ownership_type?.message}
           >
-            {["Tenant", "Owner"].map((val) => (
+            {["Tenant", "Owner", "Others"].map((val) => (
               <MenuItem key={val} value={val.toUpperCase()}>
                 {val}
               </MenuItem>
@@ -255,11 +263,7 @@ const AccomodationStage: FC = () => {
       <CalculateReturnsModal
         isLoading={isPending}
         open={startCalculating}
-        onClose={() =>
-          navigate(
-            `/app/returns/personal-income-tax/summary/${returnId}?success=true`
-          )
-        }
+        onClose={() => navigate(`/app/returns/success`)}
       />
     </form>
   );

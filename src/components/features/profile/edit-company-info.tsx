@@ -26,6 +26,11 @@ const EditMode = ({ form }: { form: CompanyProfileUpdate }) => {
         <Select
           sx={{ height: "5.6rem" }}
           placeholder="Principal Place of Business"
+          value={form.watch("place_of_business")}
+          onChange={({ target: { value } }) =>
+            form.setValue("place_of_business", value as string)
+          }
+          errorMessage={form.formState.errors?.place_of_business?.message}
         >
           {states?.map((state) => (
             <MenuItem key={state.id} value={state.id}>

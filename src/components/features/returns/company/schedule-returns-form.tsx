@@ -45,6 +45,7 @@ const Form = ({
           label="Enter Item"
           name={`${type}_revenue_item`}
           form={form}
+          disabled
         />
       </Grid>
       <Grid item xs={12} sm={6}>

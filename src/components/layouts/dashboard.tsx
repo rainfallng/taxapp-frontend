@@ -166,7 +166,7 @@ const DashboardLayout = () => {
                   gap: "0.8rem",
                   cursor: "pointer",
                 }}
-                onClick={() => navigate("/app/profile")}
+                onClick={() => navigate("/app/home")}
               >
                 <Box
                   sx={{

@@ -17,7 +17,8 @@ export const BusinessType = {
 
 export const TitleType = {
   Mr: "Mr",
-  Ms: "Mrs",
+  Mrs: "Mrs",
+  Miss: "Miss",
 } as const;
 
 export const GenderType = {

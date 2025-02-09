@@ -169,7 +169,7 @@ const PayeReturns = () => {
                       width: "18%",
                     }}
                   >
-                    {item.amount || '--'}
+                    {item.amount ? `₦${item.amount.toLocaleString()}` : "--"}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -179,7 +179,7 @@ const PayeReturns = () => {
                       width: "18%",
                     }}
                   >
-                    {item.reference || '--'}
+                    {item.reference || "--"}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -199,15 +199,17 @@ const PayeReturns = () => {
                       width: "16%",
                     }}
                   >
-                      <Button
-                        onClick={() =>
-                          navigate(
-                            `/app/returns/paye/summary/${item.id}`
-                          )
-                        }
-                      >
-                        Click to view history
-                      </Button>
+                    <Button
+                      onClick={() =>
+                        navigate(
+                          `/app/returns/paye/summary/${
+                            item.id
+                          }?month=${capitalize(item.month.toLowerCase())}`
+                        )
+                      }
+                    >
+                      Click to view history
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -215,7 +217,9 @@ const PayeReturns = () => {
                 .filter(
                   (m) =>
                     !returns?.results?.some(
-                      (r) => r.month.toLowerCase() === m.toLowerCase() && r.year === Number(year)
+                      (r) =>
+                        r.month.toLowerCase() === m.toLowerCase() &&
+                        r.year === Number(year)
                     )
                 )
                 .map((month, index) => (

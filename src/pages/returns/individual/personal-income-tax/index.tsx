@@ -153,6 +153,7 @@ const PersonalIncomeTax = () => {
                   }}
                 >
                   <Button
+                    disabled={Boolean(res.income) && Boolean(res.accommodation)}
                     onClick={() => {
                       if (!res.income || !res.accommodation)
                         return navigate(
@@ -160,14 +161,9 @@ const PersonalIncomeTax = () => {
                             res.year_in_view
                           }?stage=${!res.income ? "income" : "accomodation"}`
                         );
-                        navigate(
-                          `/app/returns/personal-income-tax/summary/${res.id}`
-                        )
                     }}
                   >
-                    {!res.income || !res.accommodation
-                      ? "Click to file return"
-                      : "Click to view history"}
+                    Click to file return
                   </Button>
                 </TableCell>
               </TableRow>

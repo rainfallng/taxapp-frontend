@@ -19,7 +19,7 @@ import TaxRetrieval from "@/pages/auth/tax-retrieval";
 import TaxRetrievalSuccess from "@/pages/auth/tax-retrieval-success";
 import VerifyPhone from "@/pages/auth/verify-phone";
 import Error404 from "@/pages/error/404";
-import DashboardHome from "@/pages/home";
+// import DashboardHome from "@/pages/home";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import QuickMenu from "@/pages/quick-menu";
 import VerifyTIN from "@/pages/auth/onboarding/verify-tin";
@@ -124,7 +124,7 @@ const AppRoutes = () => {
           </TenantCheck>
         }
       >
-        <Route path="home" element={<DashboardHome />} />
+        {/* <Route path="home" element={<DashboardHome />} /> */}
         <Route path="quick-menu" element={<QuickMenu />} />
         <Route path="consultant" element={<TaxConsultant />} />
         <Route
@@ -132,7 +132,7 @@ const AppRoutes = () => {
           element={<GenerateTaxCertificate />}
         />
         <Route
-          path="profile"
+          path="home"
           element={
             <ProfileLayout>
               <Outlet />

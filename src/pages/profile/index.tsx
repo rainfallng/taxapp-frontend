@@ -7,7 +7,7 @@ import { companyProfileSchema } from "@/lib/schemas/profile/company-profile";
 import { individualProfileSchema } from "@/lib/schemas/profile/individual-profile";
 import { handleFormToastErrors } from "@/lib/utils";
 import { useStore } from "@/store";
-import { IIndividualOnboarding, UserType } from "@/types";
+import { ICompanyOnboarding, UserType } from "@/types";
 import { CompanyProfileUpdateType } from "@/types/form";
 import { Box, Typography, useTheme } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
@@ -44,10 +44,12 @@ const MyProfile = () => {
       | Partial<typeof individualProfileSchema.defaultValues>
       | CompanyProfileUpdateType
   ) => {
+    const { state, ...rest } = values as Record<string, string | number>;
     toast.promise(
-      updateProfile(
-        values as Partial<IIndividualOnboarding> | CompanyProfileUpdateType
-      ),
+      updateProfile({
+        ...rest,
+        ...(state !== 0 && { state }),
+      } as Partial<ICompanyOnboarding>),
       {
         success: "Identification successful",
         loading: "Please wait...",

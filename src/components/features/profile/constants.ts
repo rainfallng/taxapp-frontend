@@ -4,26 +4,26 @@ export const ProfileLinks: Record<string, IProfileMenuBar[]> = {
   [UserType.INDIVIDUAL]: [
     {
       title: "My Profile",
-      link: "/app/profile",
+      link: "/app/home",
     },
-    {
-      title: "Family Relations",
-      link: "/app/profile/relations",
-    },
+    // {
+    //   title: "Family Relations",
+    //   link: "/app/profile/relations",
+    // },
     // {
     //   title: "Support Staff",
     //   link: "/app/profile/staff",
     // },
-    {
-      title: "Linked Corporation",
-      link: "/app/profile/corporation",
-    },
+    // {
+    //   title: "Linked Corporation",
+    //   link: "/app/profile/corporation",
+    // },
     {
       title: "Security",
       subs: [
         {
           title: "Change Password",
-          link: "/app/profile/password",
+          link: "/app/home/password",
         },
         // {
         //   title: "Edit Payer ID/TIN",
@@ -43,20 +43,20 @@ export const ProfileLinks: Record<string, IProfileMenuBar[]> = {
   [UserType.COMPANY]: [
     {
       title: "Business Profile",
-      link: "/app/profile",
+      link: "/app/home",
     },
-    {
-      title: "Directors",
-      link: "/app/profile/directors",
-    },
+    // {
+    //   title: "Directors",
+    //   link: "/app/profile/directors",
+    // },
     {
       title: "Addresses",
-      link: "/app/profile/address",
+      link: "/app/home/address",
     },
-    {
-      title: "Payroll",
-      link: "/app/profile/payroll",
-    },
+    // {
+    //   title: "Payroll",
+    //   link: "/app/profile/payroll",
+    // },
     // {
     //   title: "Payments",
     //   link: "/app/profile/payments",
@@ -66,7 +66,7 @@ export const ProfileLinks: Record<string, IProfileMenuBar[]> = {
       subs: [
         {
           title: "Change Password",
-          link: "/app/profile/password",
+          link: "/app/home/password",
         },
         // {
         //   title: "Edit Payer ID/TIN",
