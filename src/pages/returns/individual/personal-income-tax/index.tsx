@@ -1,4 +1,7 @@
+import { useAPI } from "@/hooks/useApi";
+import { useLoader } from "@/hooks/useLoader";
 import { PREVIOUS_YEARS } from "@/lib/constants";
+import { QueryKeys } from "@/lib/queryKeys";
 import {
   Box,
   Button,
@@ -11,11 +14,20 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 const PersonalIncomeTax = () => {
   const theme = useTheme();
   const navigate = useNavigate();
+  const { api } = useAPI();
+
+  const { data, isPending } = useQuery({
+    queryKey: [QueryKeys.RETURNS, "history"],
+    queryFn: api.getIndividualReturns,
+  });
+
+  useLoader(isPending, "Fetching history...");
 
   return (
     <Box sx={{ p: "4rem" }}>
@@ -64,7 +76,9 @@ const PersonalIncomeTax = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {PREVIOUS_YEARS.map((y, key) => (
+            {PREVIOUS_YEARS.filter(
+              (y) => !data?.results?.some((res) => res.year_in_view === y)
+            ).map((y, key) => (
               <TableRow
                 key={y}
                 sx={{
@@ -103,6 +117,42 @@ const PersonalIncomeTax = () => {
                   >
                     Click to file return
                   </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+            {data?.results?.map((res, key) => (
+              <TableRow
+                key={res.id}
+                sx={{
+                  ...(key % 2 !== 0 && { bgcolor: "rgba(231, 231, 231, 0.4)" }),
+                }}
+              >
+                <TableCell
+                  sx={{
+                    color: theme.palette.grey[800],
+                    fontSize: "1.6rem",
+                    width: "40%",
+                  }}
+                >
+                  {res.year_in_view}
+                </TableCell>
+                <TableCell
+                  sx={{
+                    color: theme.palette.grey[800],
+                    fontSize: "1.6rem",
+                    width: "40%",
+                  }}
+                >
+                  {res.status}
+                </TableCell>
+                <TableCell
+                  sx={{
+                    color: theme.palette.grey[800],
+                    fontSize: "1.6rem",
+                    width: "20%",
+                  }}
+                >
+                  <Button disabled>Click to view history</Button>
                 </TableCell>
               </TableRow>
             ))}

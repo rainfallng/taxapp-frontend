@@ -124,7 +124,7 @@ const FilingHistory = () => {
                     width: "20%",
                   }}
                 >
-                 {res.year_in_view}
+                  {res.year_in_view}
                 </TableCell>
                 <TableCell
                   sx={{
@@ -133,7 +133,7 @@ const FilingHistory = () => {
                     width: "20%",
                   }}
                 >
-                  {res.icode}
+                  {res.reference || "--"}
                 </TableCell>
                 <TableCell
                   sx={{
@@ -153,7 +153,14 @@ const FilingHistory = () => {
                 >
                   <Button
                     variant="text"
+                    disabled={!res.income?.statement_of_income}
                     sx={{ color: theme.palette.grey[800], p: 0 }}
+                    onClick={() =>
+                      api.downloadTemplate(
+                        res.income?.statement_of_income,
+                        res.income?.statement_of_income.split("/")[-1]
+                      )
+                    }
                   >
                     Statement of Income{" "}
                     <DownloadOutlinedIcon

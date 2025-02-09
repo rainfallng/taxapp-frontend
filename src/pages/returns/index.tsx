@@ -1,7 +1,7 @@
 import { useStore } from "@/store";
 import { UserType } from "@/types";
 import PersonalIncomeTax from "./individual/personal-income-tax";
-import MonthlyPaye from "@/components/features/returns/company/monthly-paye";
+import { Navigate } from "react-router-dom";
 
 const FileReturns = () => {
   const user = useStore((state) => state.user);
@@ -10,7 +10,7 @@ const FileReturns = () => {
 
   if (user.user_type === UserType.INDIVIDUAL) return <PersonalIncomeTax />;
 
-  return <MonthlyPaye />;
+  return <Navigate to="/app/returns/paye" replace />;
 };
 
 export default FileReturns;
