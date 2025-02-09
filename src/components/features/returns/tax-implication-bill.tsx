@@ -10,16 +10,37 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import toast from "react-hot-toast";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useState } from "react";
-import Modal from "../../modals";
+import { useEffect, useState } from "react";
+import Modal from "../modals";
 
-const TaxImplicationBill = ({ id, name }: { id: string; name: string }) => {
+type Data = {
+  month?: string;
+  email_address: string | null;
+  amount: number;
+  company_name?: string;
+  tax_payer_id: string | null;
+  created_at: string;
+  phone_number: string | null;
+  biller?: string;
+  customer_name?: string;
+};
+
+const TaxImplicationBill = ({
+  id,
+  name,
+  type,
+}: {
+  id: string;
+  name: string;
+  type: string;
+}) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { api } = useAPI();
   const { user } = useStore();
   const [open, setOpen] = useState(false);
   const [params] = useSearchParams();
+  const [data, setData] = useState<Data | null>(null);
 
   const success = params.get("success");
 
@@ -27,13 +48,17 @@ const TaxImplicationBill = ({ id, name }: { id: string; name: string }) => {
 
   const tinProfile = user?.company_profile;
 
-  const { data: summary, isPending } = useQuery({
-    queryKey: [QueryKeys.PAYE_SUMMARY, id],
+  const { data: payeSummary, isLoading: payeSummaryLoading } = useQuery({
+    queryKey: [QueryKeys.RETURNS_SUMMARY, type, id],
     queryFn: () => api.getPayeSummary(id),
-    enabled: !!id,
+    enabled: !!id && type === "paye",
   });
 
-  const data = summary?.data;
+  const { data: pitSummary, isLoading: pitSummaryLoading } = useQuery({
+    queryKey: [QueryKeys.RETURNS_SUMMARY, type, id],
+    queryFn: () => api.getPITSummary(id),
+    enabled: !!id && type === "pit",
+  });
 
   const { mutateAsync: initiatePayment, isPending: paymentInitiating } =
     useMutation({
@@ -53,11 +78,67 @@ const TaxImplicationBill = ({ id, name }: { id: string; name: string }) => {
 
   const amountDue = Number(data?.amount ?? "0");
 
+  const specialAttributes: Record<
+    string,
+    Record<string, { label: string; value: string | null | undefined }>
+  > = {
+    name: {
+      pit: {
+        label: "Customer Name",
+        value: data?.customer_name,
+      },
+      paye: {
+        label: "Company Name",
+        value: data?.company_name,
+      },
+    },
+    email: {
+      pit: {
+        label: "Customer Email Address",
+        value: data?.email_address,
+      },
+      paye: {
+        label: "Company Email Address",
+        value: data?.email_address,
+      },
+    },
+  };
+
+  const isPending = payeSummaryLoading || pitSummaryLoading;
+
   useLoader(isPending, "Please wait...");
+
+  useEffect(() => {
+    if (payeSummary) {
+      setData({
+        amount: payeSummary?.data?.amount,
+        month: payeSummary?.data?.month,
+        email_address: payeSummary?.data?.email_address,
+        company_name: payeSummary?.data?.company_name,
+        tax_payer_id: payeSummary?.data?.tax_payer_id,
+        created_at: payeSummary?.data?.created_at,
+        phone_number: payeSummary?.data?.phone_number,
+      });
+    }
+  }, [payeSummary]);
+
+  useEffect(() => {
+    if (pitSummary) {
+      setData({
+        amount: pitSummary?.data?.amount,
+        biller: pitSummary?.data?.biller,
+        email_address: pitSummary?.data?.email_address,
+        customer_name: pitSummary?.data?.customer_name,
+        tax_payer_id: pitSummary?.data?.tax_payer_id,
+        created_at: pitSummary?.data?.created_at,
+        phone_number: pitSummary?.data?.phone_number,
+      });
+    }
+  }, [pitSummary]);
 
   return (
     <Box sx={{ p: "4rem" }}>
-      <GoBack onClick={() => navigate("/app/returns/paye")}>
+      <GoBack onClick={() => navigate("/app/returns")}>
         <Typography
           component="span"
           sx={{ fontSize: "2.4rem", fontWeight: 600 }}
@@ -76,6 +157,7 @@ const TaxImplicationBill = ({ id, name }: { id: string; name: string }) => {
         <Typography
           sx={{
             color: theme.palette.grey[800],
+            wordWrap: "break-word",
             fontSize: "2.2rem",
             fontWeight: 500,
           }}
@@ -85,6 +167,7 @@ const TaxImplicationBill = ({ id, name }: { id: string; name: string }) => {
         <Typography
           sx={{
             color: theme.palette.grey[800],
+            wordWrap: "break-word",
             fontSize: "2.2rem",
             fontWeight: 500,
           }}
@@ -108,6 +191,7 @@ const TaxImplicationBill = ({ id, name }: { id: string; name: string }) => {
             sx={{
               fontSize: "2rem",
               color: theme.palette.grey[800],
+              wordWrap: "break-word",
             }}
           >
             {data?.reference}
@@ -128,9 +212,10 @@ const TaxImplicationBill = ({ id, name }: { id: string; name: string }) => {
             sx={{
               fontSize: "2rem",
               color: theme.palette.grey[800],
+              wordWrap: "break-word",
             }}
           >
-            LIRS
+            {data?.biller ?? "LIRS"}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -148,6 +233,7 @@ const TaxImplicationBill = ({ id, name }: { id: string; name: string }) => {
             sx={{
               fontSize: "2rem",
               color: theme.palette.grey[800],
+              wordWrap: "break-word",
             }}
           >
             {dayjs(data?.created_at).format("DD/MM/YYYY")}
@@ -168,11 +254,35 @@ const TaxImplicationBill = ({ id, name }: { id: string; name: string }) => {
             sx={{
               fontSize: "2rem",
               color: theme.palette.grey[800],
+              wordWrap: "break-word",
             }}
           >
             {tinProfile?.tax_payer_id ?? "--"}
           </Typography>
         </Grid>
+        {type === "paye" && (
+          <Grid item md={4}>
+            <Typography
+              sx={{
+                color: theme.palette.grey[500],
+                fontSize: "1.4rem",
+                fontWeight: 500,
+                mb: "0.8rem",
+              }}
+            >
+              Tax Month in View
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: "2rem",
+                color: theme.palette.grey[800],
+                wordWrap: "break-word",
+              }}
+            >
+              {data?.month ?? "--"}
+            </Typography>
+          </Grid>
+        )}
         <Grid item md={4}>
           <Typography
             sx={{
@@ -182,35 +292,16 @@ const TaxImplicationBill = ({ id, name }: { id: string; name: string }) => {
               mb: "0.8rem",
             }}
           >
-            Tax Month in View
+            {specialAttributes.name[type]?.label}:
           </Typography>
           <Typography
             sx={{
               fontSize: "2rem",
               color: theme.palette.grey[800],
+              wordWrap: "break-word",
             }}
           >
-            {data?.month ?? "--"}
-          </Typography>
-        </Grid>
-        <Grid item md={4}>
-          <Typography
-            sx={{
-              color: theme.palette.grey[500],
-              fontSize: "1.4rem",
-              fontWeight: 500,
-              mb: "0.8rem",
-            }}
-          >
-            Customer Name:
-          </Typography>
-          <Typography
-            sx={{
-              fontSize: "2rem",
-              color: theme.palette.grey[800],
-            }}
-          >
-            {data?.company_name ?? "--"}
+            {specialAttributes.name[type]?.value ?? "--"}
           </Typography>
         </Grid>
         <Grid item md={4}>
@@ -228,6 +319,7 @@ const TaxImplicationBill = ({ id, name }: { id: string; name: string }) => {
             sx={{
               fontSize: "2rem",
               color: theme.palette.grey[800],
+              wordWrap: "break-word",
             }}
           >
             {data?.phone_number || "--"}
@@ -242,42 +334,47 @@ const TaxImplicationBill = ({ id, name }: { id: string; name: string }) => {
               mb: "0.8rem",
             }}
           >
-            Customer Email Address:
+            {specialAttributes.email[type]?.label}:
           </Typography>
           <Typography
             sx={{
               fontSize: "2rem",
               color: theme.palette.grey[800],
+              wordWrap: "break-word",
             }}
           >
-            {data?.email_address || "--"}
+            {specialAttributes.email[type]?.value ?? "--"}
           </Typography>
         </Grid>
-        <Grid item md={4}>
-          <Typography
-            sx={{
-              color: theme.palette.grey[500],
-              fontSize: "1.4rem",
-              fontWeight: 500,
-              mb: "0.8rem",
-            }}
-          >
-            Surcharge:
-          </Typography>
-          <Typography
-            sx={{
-              fontSize: "2rem",
-              color: theme.palette.grey[800],
-            }}
-          >
-            ₦{Number("0").toLocaleString()}
-          </Typography>
-        </Grid>
+        {type === "pit" && (
+          <Grid item md={4}>
+            <Typography
+              sx={{
+                color: theme.palette.grey[500],
+                fontSize: "1.4rem",
+                fontWeight: 500,
+                mb: "0.8rem",
+              }}
+            >
+              Surcharge:
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: "2rem",
+                color: theme.palette.grey[800],
+                wordWrap: "break-word",
+              }}
+            >
+              ₦{Number("0").toLocaleString()}
+            </Typography>
+          </Grid>
+        )}
       </Grid>
       <Typography
         sx={{
           fontSize: "2.6rem",
           color: theme.palette.grey[800],
+          wordWrap: "break-word",
           fontWeight: 500,
           mt: "5rem",
         }}
@@ -342,6 +439,7 @@ const TaxImplicationBill = ({ id, name }: { id: string; name: string }) => {
               fontSize: "2.6rem",
               fontWeight: 600,
               color: theme.palette.grey[800],
+              wordWrap: "break-word",
             }}
           >
             Crosscheck your entries

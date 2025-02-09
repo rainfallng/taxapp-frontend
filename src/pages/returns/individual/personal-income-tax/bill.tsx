@@ -1,10 +1,10 @@
 import TaxImplicationBill from "@/components/features/returns/tax-implication-bill";
 import { useParams } from "react-router-dom";
 
-const PayeBill = () => {
+const PersonalIncomeTaxBill = () => {
   const { id = "" } = useParams();
 
-  return <TaxImplicationBill id={id} name="Monthly PAYE" type="paye" />;
+  return <TaxImplicationBill id={id} name="Personal Income Tax" type="pit" />;
 };
 
-export default PayeBill;
+export default PersonalIncomeTaxBill;

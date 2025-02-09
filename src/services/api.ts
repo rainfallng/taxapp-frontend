@@ -25,6 +25,7 @@ import {
   IVerifyCAC,
   Nationality,
   PayeSummary,
+  PITSummary,
   ProjectionReturnList,
   ProjectionReturnType,
   ReturnGraph,
@@ -821,5 +822,18 @@ export class APIRequest {
     );
 
     return data as PayeSummary;
+  };
+
+  getPITSummary = async (id: string) => {
+    const { data } = await axios.get(
+      `/api/v1/returns/individual/${id}/summary/`,
+      {
+        headers: {
+          Authorization: `JWT ${this.accessToken}`,
+        },
+      }
+    );
+
+    return data as PITSummary;
   };
 }

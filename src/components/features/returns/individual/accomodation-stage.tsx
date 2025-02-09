@@ -255,7 +255,11 @@ const AccomodationStage: FC = () => {
       <CalculateReturnsModal
         isLoading={isPending}
         open={startCalculating}
-        onClose={() => navigate("/app/returns/success")}
+        onClose={() =>
+          navigate(
+            `/app/returns/personal-income-tax/summary/${returnId}?success=true`
+          )
+        }
       />
     </form>
   );

@@ -241,6 +241,19 @@ export type PayeSummary = {
     company_name: string;
     tax_payer_id: string | null;
     created_at: string;
-    phone_number: string |null;
+    phone_number: string | null;
+  };
+};
+
+export type PITSummary = {
+  success: boolean;
+  data: {
+    biller: string;
+    email_address: string | null;
+    amount: number;
+    customer_name: string;
+    tax_payer_id: string | null;
+    created_at: string;
+    phone_number: string | null;
   };
 };
