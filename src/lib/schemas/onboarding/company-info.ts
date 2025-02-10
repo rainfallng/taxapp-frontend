@@ -7,7 +7,7 @@ const companyInfoSchemaObject = yup.object({
   street_number: yup.number().required("Street number is a required field"),
   street_name: yup.string().required("Street name is a required field"),
   lcda: yup.string().required("LCDA is required"),
-  tax_station: yup.string().required("Tax station is a required field"),
+  tax_station: yup.string().optional(),
   business_type: yup.string().required("Business type is a required field"),
   email_address: yup.string().email().required("Email is a required field"),
   phone_number: yup

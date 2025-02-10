@@ -26,8 +26,11 @@ const AccomodationStage: FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { api } = useAPI();
-  const { id: returnId = "" } = useParams();
+  const { id: returnId = "", year = "" } = useParams();
   const [startCalculating, setStartCalculating] = useState(false);
+
+  const start_date = dayjs(year).startOf("year").format();
+  const end_date = dayjs(year).endOf("year").format();
 
   const form = useForm(individualAccomodationSchema);
 
@@ -219,7 +222,14 @@ const AccomodationStage: FC = () => {
           >
             Date Started
           </FormLabel>
-          <DatePicker name="start_date" format="YYYY-MM-DD" form={form} />
+          <DatePicker
+            name="start_date"
+            format="YYYY-MM-DD"
+            form={form}
+            maxDate={dayjs(end_date)}
+            minDate={dayjs(start_date)}
+            defaultValue={dayjs(start_date)}
+          />
         </Grid>
         <Grid item xs={12} sm={6}>
           <FormLabel
@@ -237,7 +247,8 @@ const AccomodationStage: FC = () => {
             name="end_date"
             format="YYYY-MM-DD"
             form={form}
-            minDate={dayjs(form.watch("start_date"))}
+            minDate={dayjs(form.watch("start_date") || start_date)}
+            maxDate={dayjs(end_date)}
           />
         </Grid>
       </Grid>

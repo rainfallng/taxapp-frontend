@@ -183,7 +183,7 @@ const PersonalInformation = () => {
             <DatePicker
               name="date_of_birth"
               format="YYYY-MM-DD"
-              value={dayjs(user?.date_joined)}
+              value={user?.date_joined ? dayjs(user?.date_joined) : undefined}
               disabled
             />
           </Box>
@@ -635,39 +635,41 @@ const PersonalInformation = () => {
               ))}
             </Select>
           </Grid>
-          <Grid item xs={4}>
-            <FormLabel
-              sx={{
-                fontSize: "2rem",
-                display: "block",
-                fontWeight: 500,
-                mb: "1.6rem",
-                color: theme.palette.grey[800],
-              }}
-            >
-              Business Type
-            </FormLabel>
-            <Select
-              sx={{ height: "5.6rem" }}
-              placeholder="Business Type"
-              value={watch("business_type")}
-              onChange={({ target: { value } }) =>
-                setValue("business_type", value as string)
-              }
-              errorMessage={errors?.business_type?.message}
-            >
-              {[
-                "NGO",
-                "Cooperative",
-                "Sole proprietorship",
-                "Limited Liability Company",
-              ].map((val) => (
-                <MenuItem key={val} value={val}>
-                  {val}
-                </MenuItem>
-              ))}
-            </Select>
-          </Grid>
+          {form.watch("employment_status") !== capitalize("SELFEMPLOYED") && (
+            <Grid item xs={4}>
+              <FormLabel
+                sx={{
+                  fontSize: "2rem",
+                  display: "block",
+                  fontWeight: 500,
+                  mb: "1.6rem",
+                  color: theme.palette.grey[800],
+                }}
+              >
+                Business Type
+              </FormLabel>
+              <Select
+                sx={{ height: "5.6rem" }}
+                placeholder="Business Type"
+                value={watch("business_type")}
+                onChange={({ target: { value } }) =>
+                  setValue("business_type", value as string)
+                }
+                errorMessage={errors?.business_type?.message}
+              >
+                {[
+                  "NGO",
+                  "Cooperative",
+                  "Sole proprietorship",
+                  "Limited Liability Company",
+                ].map((val) => (
+                  <MenuItem key={val} value={val}>
+                    {val}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Grid>
+          )}
           <Grid item xs={4}>
             <FormLabel
               sx={{
