@@ -56,8 +56,8 @@ const InitialOnboarding = () => {
   return (
     <Box>
       <OnboardingHeader
-        title="Lagos Inland Revenue Service Setup"
-        description="Let's set up your Lagos Inland Revenue Service"
+        title="Lagos State Internal Revenue Service Setup"
+        description="Let's set up your Lagos State Internal Revenue Service"
       />
       <Box sx={{ mt: "2.4rem" }}>
         <FormGroup>
