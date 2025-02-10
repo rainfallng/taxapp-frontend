@@ -191,7 +191,7 @@ export class APIRequest {
       }
     );
 
-    toast.success(`${data?.message}: ${data?.code}`);
+    toast.success(`${data?.message}: ${data?.otp}`);
 
     return data;
   };
