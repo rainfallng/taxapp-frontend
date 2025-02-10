@@ -191,9 +191,7 @@ export class APIRequest {
       }
     );
 
-    console.log({ data });
-
-    toast.success(data?.message);
+    toast.success(`${data?.message}: ${data?.code}`);
 
     return data;
   };
