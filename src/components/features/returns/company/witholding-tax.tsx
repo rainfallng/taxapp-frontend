@@ -7,7 +7,7 @@ import { useReducerState } from "@/hooks/useReducerState";
 import { MONTH_INDEX_MAPPER, WITHOLDING_TAX_TYPE } from "@/lib/constants";
 import { withholdingTaxSchema } from "@/lib/schemas/returns/company/witholding-tax";
 import { handleFormErrors, handleFormToastErrors } from "@/lib/utils";
-import { WitholdingTaxType } from "@/types";
+import { WithholdingTaxType } from "@/types";
 import { Box, capitalize, FormLabel, Grid, useTheme } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
@@ -17,7 +17,7 @@ import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import CrossCheckModal from "../../modals/cross-check";
 
-const WitholdingTaxForm = () => {
+const WithholdingTaxForm = () => {
   const theme = useTheme();
   const form = useForm(withholdingTaxSchema);
   const { api } = useAPI();
@@ -25,21 +25,21 @@ const WitholdingTaxForm = () => {
   const navigate = useNavigate();
   const [modalState, setModalState] = useReducerState({
     open: false,
-    values: {} as WitholdingTaxType,
+    values: {} as WithholdingTaxType,
   });
 
   const { isPending, mutateAsync } = useMutation({
-    mutationFn: api.postCompanyWitholdingTax,
+    mutationFn: api.postCompanyWithholdingTax,
     onSuccess() {
       navigate(`/app/returns/success`);
     },
     onError: (error: AxiosError<{ [message: string]: string | string[] }>) => {
-      setModalState({ open: false, values: {} as WitholdingTaxType });
+      setModalState({ open: false, values: {} as WithholdingTaxType });
       handleFormErrors(error, form.setError);
     },
   });
 
-  const onSubmit = (values: WitholdingTaxType) => {
+  const onSubmit = (values: WithholdingTaxType) => {
     setModalState({ open: true, values });
   };
 
@@ -198,7 +198,7 @@ const WitholdingTaxForm = () => {
       <CrossCheckModal
         open={modalState.open}
         toggle={() =>
-          setModalState({ open: false, values: {} as WitholdingTaxType })
+          setModalState({ open: false, values: {} as WithholdingTaxType })
         }
         onProceed={onProceed}
       />
@@ -206,4 +206,4 @@ const WitholdingTaxForm = () => {
   );
 };
 
-export default WitholdingTaxForm;
+export default WithholdingTaxForm;

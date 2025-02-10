@@ -14,7 +14,7 @@ export const withholdingTaxSchemaObject = yup.object({
   amount_paid: yup.string().required("Amount paid is a required field"),
   start_period_of_payment: yup.string().required("Start period of payment is a required field"),
   end_period_of_payment: yup.string().required("End period of payment is a required field"),
-  type_of_witholding: yup.string().required("Type of witholding is a required field"),
+  type_of_witholding: yup.string().required("Type of withholding is a required field"),
 });
 
 export const withholdingTaxSchema = resolveSchema({

@@ -32,8 +32,8 @@ import {
   ReturnStat,
   ScheduleReturnList,
   ScheduleReturnTaxType,
-  WitholdingTaxList,
-  WitholdingTaxType,
+  WithholdingTaxList,
+  WithholdingTaxType,
   YearOrMonthParam,
 } from "@/types";
 import toast from "react-hot-toast";
@@ -190,6 +190,8 @@ export class APIRequest {
         },
       }
     );
+
+    console.log({ data });
 
     toast.success(data?.message);
 
@@ -704,8 +706,8 @@ export class APIRequest {
     return data;
   };
 
-  postCompanyWitholdingTax = async (
-    variables: WitholdingTaxType & {
+  postCompanyWithholdingTax = async (
+    variables: WithholdingTaxType & {
       year: number;
     }
   ) => {
@@ -779,7 +781,7 @@ export class APIRequest {
     return data as ScheduleReturnList;
   };
 
-  getWitholdingTax = async () => {
+  getWithholdingTax = async () => {
     const { data } = await axios.get(
       `/api/v1/returns/company/annual-returns/witholding-tax/`,
       {
@@ -789,7 +791,7 @@ export class APIRequest {
       }
     );
 
-    return data as WitholdingTaxList;
+    return data as WithholdingTaxList;
   };
 
   getMonthlyReturns = async (params?: { year: string }) => {

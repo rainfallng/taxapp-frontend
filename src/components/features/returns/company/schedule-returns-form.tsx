@@ -100,7 +100,6 @@ const Form = ({
           Receipt Number
         </FormLabel>
         <Input
-          isNumber
           sx={{ height: "5.6rem" }}
           label="Enter Number"
           name={`${type}_receipt_number`}

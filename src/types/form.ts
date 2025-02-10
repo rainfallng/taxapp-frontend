@@ -129,7 +129,7 @@ export type ProjectionReturnType = yup.InferType<
   typeof projectionReturnSchemaObject
 >;
 
-export type WitholdingTaxType = yup.InferType<
+export type WithholdingTaxType = yup.InferType<
   typeof withholdingTaxSchemaObject
 >;
 

@@ -51,11 +51,11 @@ import AnnualReturns from "@/pages/returns/company/annual";
 import CreateAnnualReturn from "@/pages/returns/company/annual/create-annual-return";
 import ComputeAnnualReturns from "@/pages/returns/company/annual/compute-annual-returns";
 import ComputeProjectionReturns from "@/pages/returns/company/annual/compute-projection-returns";
-import WitholdingTax from "@/pages/returns/company/annual/withholding-tax";
 import ReturnsSuccess from "@/pages/returns/success";
 import PersonalIncomeTaxCompute from "@/pages/returns/individual/personal-income-tax/compute";
 import PersonalIncomeTaxBill from "@/pages/returns/individual/personal-income-tax/bill";
 import ScheduleReturns from "@/pages/returns/company/annual/schedule-returns";
+import WithholdingTax from "@/pages/returns/company/annual/withholding-tax";
 
 const AppRoutes = () => {
   return (
@@ -165,7 +165,7 @@ const AppRoutes = () => {
               path="projection/:year"
               element={<ComputeProjectionReturns />}
             />
-            <Route path="witholding/:year" element={<WitholdingTax />} />
+            <Route path="withholding/:year" element={<WithholdingTax />} />
             <Route path="schedule/:year" element={<ScheduleReturns />} />
           </Route>
           <Route path="paye" element={<Outlet />}>

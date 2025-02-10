@@ -3,7 +3,7 @@ import * as yup from "yup";
 import {
   ProjectionReturnType,
   ScheduleReturnTaxType,
-  WitholdingTaxType,
+  WithholdingTaxType,
 } from "./form";
 
 export type IAnnualReturnStage = "id" | "income" | "accomodation";
@@ -225,11 +225,11 @@ export type ScheduleReturnList = {
   results: (CompanyReturnSchema & ScheduleReturnTaxType)[];
 };
 
-export type WitholdingTaxList = {
+export type WithholdingTaxList = {
   count: number;
   page: number;
   pages: number;
-  results: (CompanyReturnSchema & WitholdingTaxType)[];
+  results: (CompanyReturnSchema & WithholdingTaxType)[];
 };
 
 export type PayeSummary = {

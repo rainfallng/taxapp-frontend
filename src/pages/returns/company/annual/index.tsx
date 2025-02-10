@@ -21,7 +21,7 @@ import {
   AnnualReturnList,
   ProjectionReturnList,
   ScheduleReturnList,
-  WitholdingTaxList,
+  WithholdingTaxList,
 } from "@/types";
 import { PREVIOUS_YEARS } from "@/lib/constants";
 
@@ -36,7 +36,7 @@ const AnnualReturns = () => {
   const apis = {
     annual: api.getAnnualReturns,
     projection: api.getProjectionReturns,
-    witholding: api.getWitholdingTax,
+    withholding: api.getWithholdingTax,
     schedule: api.getScheduleReturns,
   };
 
@@ -47,13 +47,13 @@ const AnnualReturns = () => {
 
   const annualReturns = responses as AnnualReturnList;
   const projectionReturns = responses as ProjectionReturnList;
-  const withholdingTax = responses as WitholdingTaxList;
+  const withholdingTax = responses as WithholdingTaxList;
   const scheduleReturns = responses as ScheduleReturnList;
 
   const tabDataMapper = {
     annual: annualReturns,
     projection: projectionReturns,
-    witholding: withholdingTax,
+    withholding: withholdingTax,
     schedule: scheduleReturns,
   };
 
