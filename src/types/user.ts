@@ -99,7 +99,7 @@ export type IndividualProfile = {
   tax_station: string | null;
   first_time_filling: string | null;
   past_tax_filling: string | null;
-  age: number |null;
+  age: number | null;
   nationality: string;
   house_number: null;
   street: string | null;
@@ -148,8 +148,10 @@ export interface IUser {
   is_staff: boolean;
   is_active: boolean;
   date_joined: string;
+  date_of_birth: string;
   email: string;
   phone: string;
+  tax_payer_id_verified: boolean;
   other_name: string;
   phone_verified: boolean;
   identity_verified: boolean;

@@ -183,7 +183,7 @@ const PersonalInformation = () => {
             <DatePicker
               name="date_of_birth"
               format="YYYY-MM-DD"
-              value={user?.date_joined ? dayjs(user?.date_joined) : undefined}
+              value={user?.date_of_birth ? dayjs(user?.date_of_birth) : undefined}
               disabled
             />
           </Box>

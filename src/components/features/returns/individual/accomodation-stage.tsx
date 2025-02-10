@@ -21,6 +21,8 @@ import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import dayjs from "dayjs";
 import CalculateReturnsModal from "../../modals/calculate-returns";
+import CrossCheckModal from "../../modals/cross-check";
+import { useReducerState } from "@/hooks/useReducerState";
 
 const AccomodationStage: FC = () => {
   const theme = useTheme();
@@ -28,6 +30,10 @@ const AccomodationStage: FC = () => {
   const { api } = useAPI();
   const { id: returnId = "", year = "" } = useParams();
   const [startCalculating, setStartCalculating] = useState(false);
+  const [modalState, setModalState] = useReducerState({
+    open: false,
+    values: {} as IIndividualAnnualAccomodationInput,
+  });
 
   const start_date = dayjs(year).startOf("year").format();
   const end_date = dayjs(year).endOf("year").format();
@@ -43,8 +49,13 @@ const AccomodationStage: FC = () => {
   });
 
   const onSubmit = (values: IIndividualAnnualAccomodationInput) => {
+    setModalState({ open: true, values });
+  };
+
+  const onProceed = () => {
+    setModalState({ open: false, values: {} as IIndividualAnnualAccomodationInput });
     setStartCalculating(true);
-    toast.promise(mutateAsync(values), {
+    toast.promise(mutateAsync(modalState.values), {
       success: "Successful",
       loading: "Please wait...",
       error: (error) => handleFormToastErrors(error, "Failed"),
@@ -271,6 +282,17 @@ const AccomodationStage: FC = () => {
           Next
         </Button>
       </Box>
+
+      <CrossCheckModal
+        open={modalState.open}
+        toggle={() =>
+          setModalState({
+            open: false,
+            values: {} as IIndividualAnnualAccomodationInput,
+          })
+        }
+        onProceed={onProceed}
+      />
       <CalculateReturnsModal
         isLoading={isPending}
         open={startCalculating}

@@ -1,5 +1,6 @@
 import * as yup from "yup";
 import { resolveSchema } from "../../utils";
+import { capitalize } from "@mui/material";
 
 const personalInfoSchemaObject = yup.object({
   title: yup.string().required("Select a title"),
@@ -13,7 +14,13 @@ const personalInfoSchemaObject = yup.object({
   state_of_residence: yup.string().required("Select a state"),
   lga_of_residence: yup.string().required("Select a LGA"),
   tax_station: yup.string().optional(),
-  business_type: yup.string().required("Select a business type"),
+  business_type: yup
+    .string()
+    .when("employment_status", ([employmentStatus], schema) =>
+      employmentStatus === capitalize("SELFEMPLOYED")
+        ? schema.optional()
+        : schema.required("Select a business type")
+    ),
   lcda: yup.string().required("LCDA is required"),
   occupation: yup.string().required("Occupation is required"),
   phone_number_1: yup
@@ -24,7 +31,7 @@ const personalInfoSchemaObject = yup.object({
   is_public_servant: yup.boolean(),
   lasra: yup.string().optional(),
   house_number: yup.number().required("House number is a required field"),
-  street: yup.string().required("Street is a required field")
+  street: yup.string().required("Street is a required field"),
 });
 
 const personalInfoDefaultValues = {
@@ -47,7 +54,7 @@ const personalInfoDefaultValues = {
   lasra: "",
   house_number: 0,
   street: "",
-  state_of_residence: ""
+  state_of_residence: "",
 };
 
 export const personalInfoSchema = resolveSchema({

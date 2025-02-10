@@ -16,6 +16,8 @@ import { useLoader } from "@/hooks/useLoader";
 import toast from "react-hot-toast";
 import { handleFormToastErrors } from "@/lib/utils";
 import { IAnnualReturnStage } from "@/types/returns";
+import CrossCheckModal from "../../modals/cross-check";
+import { useReducerState } from "@/hooks/useReducerState";
 
 const IncomeStage: FC<{ setStage: (stage: IAnnualReturnStage) => void }> = ({
   setStage,
@@ -28,6 +30,10 @@ const IncomeStage: FC<{ setStage: (stage: IAnnualReturnStage) => void }> = ({
   const [file, setFile] = useState<File | null>(null);
   const form = useForm(individualIncomeSchema);
   const otherIncomes = form.watch("other_incomes") ?? [];
+  const [modalState, setModalState] = useReducerState({
+    open: false,
+    values: {} as IIndividualAnnualIncome,
+  });
 
   const removeAdditionalIncome = (index: number) => {
     const format = otherIncomes?.filter((_, key) => key !== index);
@@ -41,15 +47,22 @@ const IncomeStage: FC<{ setStage: (stage: IAnnualReturnStage) => void }> = ({
         ...variables,
         statement_of_income: file || "",
         year_in_view: Number(year),
-        returnId
+        returnId,
       }),
     onSuccess() {
       setStage("accomodation");
     },
+    onSettled() {
+      setModalState({ open: false, values: {} as IIndividualAnnualIncome });
+    },
   });
 
   const onSubmit = (values: IIndividualAnnualIncome) => {
-    toast.promise(mutateAsync(values), {
+    setModalState({ open: true, values });
+  };
+
+  const onProceed = () => {
+    toast.promise(mutateAsync(modalState.values), {
       success: "Successful",
       loading: "Please wait...",
       error: (error) => handleFormToastErrors(error, "Failed"),
@@ -350,10 +363,19 @@ const IncomeStage: FC<{ setStage: (stage: IAnnualReturnStage) => void }> = ({
         >
           Cancel
         </Button>
-        <Button rounded type="submit">
+        <Button rounded type="submit" disabled={isPending}>
           Next
         </Button>
       </Box>
+
+      <CrossCheckModal
+        open={modalState.open}
+        isLoading={isPending}
+        toggle={() =>
+          setModalState({ open: false, values: {} as IIndividualAnnualIncome })
+        }
+        onProceed={onProceed}
+      />
     </form>
   );
 };
