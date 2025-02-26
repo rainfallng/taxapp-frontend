@@ -177,7 +177,7 @@ const AppRoutes = () => {
             />
           </Route>
         </Route>
-        <Route index element={<Navigate replace to="/app/quick-menu" />} />
+        <Route index element={<Navigate replace to="/app/home" />} />
         <Route path="*" element={<Error404 />} />
       </Route>
       <Route index path="*" element={<Navigate replace to="/app" />} />

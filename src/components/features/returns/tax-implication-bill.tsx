@@ -37,7 +37,7 @@ const TaxImplicationBill = ({
   const theme = useTheme();
   const navigate = useNavigate();
   const { api } = useAPI();
-  const { user } = useStore();
+  const { user, tenant } = useStore();
   const [open, setOpen] = useState(false);
   const [params] = useSearchParams();
   const [data, setData] = useState<Data | null>(null);
@@ -217,7 +217,7 @@ const TaxImplicationBill = ({
               wordWrap: "break-word",
             }}
           >
-            {data?.biller ?? "LIRS"}
+            {data?.biller ?? tenant.acronym}
           </Typography>
         </Grid>
         <Grid item md={4}>

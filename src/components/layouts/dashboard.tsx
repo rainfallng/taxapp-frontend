@@ -4,7 +4,7 @@ import { Box, Typography } from "@mui/material";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import Button from "../ui/button";
 import { SIDEBAR_LINKS } from "./constants";
-import SegmentOutlinedIcon from "@mui/icons-material/SegmentOutlined";
+// import SegmentOutlinedIcon from "@mui/icons-material/SegmentOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import PersonIcon from "@mui/icons-material/Person";
 import { useStore } from "@/store";
@@ -107,13 +107,13 @@ const DashboardLayout = () => {
             <Box
               sx={{ display: "flex", flexDirection: "column", gap: "1.1rem" }}
             >
-              <SidebarItem
+              {/* <SidebarItem
                 item={{
                   title: "Quick Menu",
                   link: "/app/quick-menu",
                   icon: SegmentOutlinedIcon,
                 }}
-              />
+              /> */}
               <Button
                 variant="text"
                 sx={{

@@ -66,7 +66,7 @@ function VerifyIdentity<T extends FieldValues>({
             {...form.register(getField("id_type"))}
             errorMessage={form.formState.errors.id_type?.message as string}
           >
-            {["BVN", "NIN"].map((val) => (
+            {["BVN"].map((val) => (
               <MenuItem key={val} value={val}>
                 {val}
               </MenuItem>

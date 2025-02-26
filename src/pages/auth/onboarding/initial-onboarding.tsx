@@ -16,7 +16,7 @@ const InitialOnboarding = () => {
   const [tin, setTIN] = useState("");
   const navigate = useNavigate();
   const { api } = useAPI();
-  const { user, setTaxPayerId } = useStore();
+  const { user, setTaxPayerId, tenant } = useStore();
 
   const onCheck = (value: number, level = 0) => {
     if (level === 0) {
@@ -56,8 +56,8 @@ const InitialOnboarding = () => {
   return (
     <Box>
       <OnboardingHeader
-        title="Lagos State Internal Revenue Service Setup"
-        description="Let's set up your Lagos State Internal Revenue Service"
+        title={`${tenant.title} Setup`}
+        description={`Let's set up your ${tenant.title}`}
       />
       <Box sx={{ mt: "2.4rem" }}>
         <FormGroup>

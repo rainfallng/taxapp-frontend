@@ -15,7 +15,11 @@ const identificationSchemaObject = yup.object({
             .min(7, "Identification number should be 7 characters long")
             .max(7, "Identification number should be 7 characters long");
     }),
-  date_of_birth: yup.string(),
+  date_of_birth: yup
+    .string()
+    .test("date-of-birth", "You must be at least 18 years old", (value) =>
+      value ? new Date(value).getFullYear() - new Date().getFullYear() > 18 : false
+    ),
 });
 
 const identificationDefaultValues = {
