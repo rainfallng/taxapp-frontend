@@ -1,8 +1,8 @@
 import * as yup from "yup";
-import { resolveSchema } from "../../utils";
-import { useStore } from "@/store";
+import { getStore, resolveSchema } from "../../utils";
+import { SliceType } from "@/store";
 
-const { tenantName } = useStore.getState()
+const { tenantName } = getStore() as SliceType
 
 const companyInfoSchemaObject = yup.object({
   state: yup.string().required("Select a state"),

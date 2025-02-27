@@ -1,9 +1,9 @@
 import * as yup from "yup";
-import { resolveSchema } from "../../utils";
+import { getStore, resolveSchema } from "../../utils";
 import { capitalize } from "@mui/material";
-import { useStore } from "@/store";
+import { SliceType } from "@/store";
 
-const { tenantName } = useStore.getState();
+const { tenantName } = getStore() as SliceType
 
 const personalInfoSchemaObject = yup.object({
   title: yup.string().required("Select a title"),

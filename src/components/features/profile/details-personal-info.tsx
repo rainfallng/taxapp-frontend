@@ -10,12 +10,12 @@ import dayjs from "dayjs";
 
 const DetailsMode = () => {
   const theme = useTheme();
-  const user = useStore((s) => s.user);
+  const { user } = useStore();
   const { api } = useAPI();
 
   const tinProfile = user?.profile;
 
-  const age =  dayjs().diff(dayjs(tinProfile?.date_of_birth))
+  const age = dayjs().diff(dayjs(tinProfile?.date_of_birth));
 
   const { data: states, isLoading: isLoadingStates } = useQuery({
     queryKey: [QueryKeys.STATES],
@@ -128,7 +128,7 @@ const DetailsMode = () => {
             wordBreak: "break-all",
           }}
         >
-          {tinProfile?.date_of_birth ? age : '--'}
+          {tinProfile?.date_of_birth ? age : "--"}
         </Typography>
       </Grid>
       <Grid item md={4}>

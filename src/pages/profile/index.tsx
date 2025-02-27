@@ -73,7 +73,7 @@ const MyProfile = () => {
       }),
       {} as Partial<typeof individualProfileSchema.defaultValues>
     );
-  }, [individualForm, user?.profile]);
+  }, [individualForm, user]);
 
   const getCompanyFieldValue = useMemo(() => {
     const profile = user?.company_profile as unknown as {
@@ -90,7 +90,7 @@ const MyProfile = () => {
       }),
       {} as CompanyProfileUpdateType
     );
-  }, [companyForm, user?.company_profile]);
+  }, [companyForm, user]);
 
   useEffect(() => {
     if (editMode) individualForm.reset(getFieldValue);

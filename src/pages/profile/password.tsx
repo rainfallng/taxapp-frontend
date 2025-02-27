@@ -3,10 +3,68 @@ import Input from "@/components/ui/input";
 import { Box, Typography, useTheme } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useAPI } from "@/hooks/useApi";
+import { useMutation } from "@tanstack/react-query";
+import { useStore } from "@/store";
+import { IResetPassword } from "@/types";
+import { AxiosError } from "axios";
+import { handleFormErrors, handleFormToastErrors } from "@/lib/utils";
+import toast from "react-hot-toast";
+import { useLoader } from "@/hooks/useLoader";
 
 const ChangePassword = () => {
   const theme = useTheme();
-  const [status, setStatus] = useState("id");
+  const [status, setStatus] = useState("otp");
+  const { access } = useStore();
+
+  const schema = yup.object({
+    password1: yup
+      .string()
+      .required("Password is a required field")
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%_*?&])[A-Za-z\d@$!%_*?&]{8,}$/,
+        "Password must contain 8 characters, one Uppercase, one Lowercase, one number and one special case character"
+      ),
+    password2: yup
+      .string()
+      .required("Password is a required field")
+      .when("password1", ([password1], schema) => {
+        return password1
+          ? schema.oneOf([yup.ref("password1")], "Passwords do not match")
+          : schema;
+      }),
+  });
+
+  const form = useForm({
+    defaultValues: {
+      password1: "",
+      password2: "",
+    },
+    resolver: yupResolver(schema),
+  });
+  const { api } = useAPI();
+
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: api.resetPassword,
+    onSuccess() {
+      setStatus("success");
+    },
+    onError: (error: AxiosError<{ [message: string]: string | string[] }>) =>
+      handleFormErrors(error, form.setError),
+  });
+
+  const onSubmit = (data: Omit<IResetPassword, "token">) => {
+    toast.promise(mutateAsync({ ...data, token: access as string }), {
+      success: "Change password successful",
+      loading: "Please wait...",
+      error: (error) => handleFormToastErrors(error, "Request failed"),
+    });
+  };
+
+  useLoader(isPending, "Please wait...");
 
   return (
     <>
@@ -76,22 +134,45 @@ const ChangePassword = () => {
               </Box>
             </>
           ) : status === "otp" ? (
-            <Box component="form" sx={{ maxWidth: "34.5rem", mx: "auto" }}>
-              <Input label="OTP*" />
-              <Input
-                type="password"
-                sx={{ my: "2.4rem" }}
-                label="Enter New Password"
-              />
-              <Input type="password" label="Confirm New Password" />
-              <Button
-                fullWidth
-                rounded
-                sx={{ mt: "4rem", fontSize: "1.8rem", py: "1.45rem" }}
-                onClick={() => setStatus("success")}
-              >
-                Proceed
-              </Button>
+            <Box
+              component="form"
+              onSubmit={form.handleSubmit(onSubmit)}
+              sx={{
+                maxWidth: "34.5rem",
+                mx: "auto",
+                display: "flex",
+                flexDirection: "column",
+                gap: "2.4rem",
+              }}
+            >
+              {/* <form onSubmit={form.handleSubmit(onSubmit)}> */}
+                {/* <Input label="OTP*" /> */}
+                <div>
+                  <Input
+                    type="password"
+                    label="Enter New Password"
+                    name="password1"
+                    form={form}
+                  />
+                </div>
+                <div>
+                  <Input
+                    type="password"
+                    name="password2"
+                    form={form}
+                    label="Confirm New Password"
+                  />
+                </div>
+                <Button
+                  fullWidth
+                  rounded
+                  type="submit"
+                  disabled={isPending}
+                  sx={{ mt: "1.6rem", fontSize: "1.8rem", py: "1.45rem" }}
+                >
+                  Proceed
+                </Button>
+              {/* </form> */}
             </Box>
           ) : (
             <Box
