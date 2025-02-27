@@ -1,6 +1,9 @@
 import * as yup from "yup";
 import { resolveSchema } from "../../utils";
 import { capitalize } from "@mui/material";
+import { useStore } from "@/store";
+
+const { tenantName } = useStore.getState();
 
 const personalInfoSchemaObject = yup.object({
   title: yup.string().required("Select a title"),
@@ -21,7 +24,10 @@ const personalInfoSchemaObject = yup.object({
         ? schema.optional()
         : schema.required("Select a business type")
     ),
-  lcda: yup.string().required("LCDA is required"),
+  lcda:
+    tenantName === "fct"
+      ? yup.string()
+      : yup.string().required("LCDA is required"),
   occupation: yup.string().required("Occupation is required"),
   phone_number_1: yup
     .string()

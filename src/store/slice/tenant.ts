@@ -16,7 +16,7 @@ export const tenantSlice: StateCreator<ITenantSlice> = (set, get) => ({
     lagos: { acronym: "LIRS", title: "Lagos State Internal Revenue Service" },
     fct: { acronym: "FCT- IRS", title: "FCT Internal Revenue Service" }
   },
-  tenant: get().tenants[get().tenantName],
+  tenant: get()?.tenants?.[get()?.tenantName] ?? '',
   setTenantName: (value: string) => set({ tenantName: value }),
   reset: () => set((s) => ({ ...s, tenantName: "" })),
 });

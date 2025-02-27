@@ -23,7 +23,7 @@ const AddressInfo = <T extends FieldValues>({
   setEditMode,
   form,
 }: AddressInfoProps<T>) => {
-  const user = useStore((s) => s.user);
+  const { user, tenantName } = useStore();
   const { api } = useAPI();
 
   const isCompany = user.user_type === UserType.COMPANY;
@@ -252,33 +252,35 @@ const AddressInfo = <T extends FieldValues>({
           )}
         </Grid>
 
-        <Grid item md={2}>
-          {editMode ? (
-            <Input label="LCDA" name={"lcda" as Path<T>} form={form} />
-          ) : (
-            <>
-              <Typography
-                sx={{
-                  color: theme.palette.grey[400],
-                  fontSize: "1.8rem",
-                  mb: "0.8rem",
-                }}
-              >
-                LCDA
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: "1.8rem",
-                  color: theme.palette.grey[800],
-                  fontWeight: 500,
-                  wordBreak: "break-all",
-                }}
-              >
-                {getValue(tinProfile?.lcda)}
-              </Typography>
-            </>
-          )}
-        </Grid>
+        {tenantName !== "fct" && (
+          <Grid item md={2}>
+            {editMode ? (
+              <Input label="LCDA" name={"lcda" as Path<T>} form={form} />
+            ) : (
+              <>
+                <Typography
+                  sx={{
+                    color: theme.palette.grey[400],
+                    fontSize: "1.8rem",
+                    mb: "0.8rem",
+                  }}
+                >
+                  LCDA
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: "1.8rem",
+                    color: theme.palette.grey[800],
+                    fontWeight: 500,
+                    wordBreak: "break-all",
+                  }}
+                >
+                  {getValue(tinProfile?.lcda)}
+                </Typography>
+              </>
+            )}
+          </Grid>
+        )}
       </Grid>
     </Box>
   );

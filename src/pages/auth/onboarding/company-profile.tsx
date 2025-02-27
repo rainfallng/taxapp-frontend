@@ -21,7 +21,7 @@ const CompanyProfile = () => {
   const theme = useTheme();
   const form = useForm(companyInfoSchema);
   const { api } = useAPI();
-  const { setUser, user } = useStore();
+  const { setUser, user, tenantName } = useStore();
   const navigate = useNavigate();
   const {
     setValue,
@@ -274,20 +274,22 @@ const CompanyProfile = () => {
               ))}
             </Select>
           </Box>
-          <Box>
-            <FormLabel
-              sx={{
-                fontSize: "2rem",
-                display: "block",
-                fontWeight: 500,
-                mb: "1.6rem",
-                color: theme.palette.grey[800],
-              }}
-            >
-              LCDA
-            </FormLabel>
-            <Input name="lcda" placeholder="Enter LCDA" form={form} />
-          </Box>
+          {tenantName !== "fct" && (
+            <Box>
+              <FormLabel
+                sx={{
+                  fontSize: "2rem",
+                  display: "block",
+                  fontWeight: 500,
+                  mb: "1.6rem",
+                  color: theme.palette.grey[800],
+                }}
+              >
+                LCDA
+              </FormLabel>
+              <Input name="lcda" placeholder="Enter LCDA" form={form} />
+            </Box>
+          )}
         </Box>
         <Box
           sx={{

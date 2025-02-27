@@ -39,7 +39,7 @@ import { useNavigate } from "react-router-dom";
 const PersonalInformation = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const { user, setUser } = useStore();
+  const { user, setUser, tenantName } = useStore();
   const { api } = useAPI();
   const form = useForm(personalInfoSchema);
   const {
@@ -183,7 +183,9 @@ const PersonalInformation = () => {
             <DatePicker
               name="date_of_birth"
               format="YYYY-MM-DD"
-              value={user?.date_of_birth ? dayjs(user?.date_of_birth) : undefined}
+              value={
+                user?.date_of_birth ? dayjs(user?.date_of_birth) : undefined
+              }
               disabled
             />
           </Box>
@@ -487,20 +489,22 @@ const PersonalInformation = () => {
               ))}
             </Select>
           </Grid>
-          <Grid item xs={4}>
-            <FormLabel
-              sx={{
-                fontSize: "2rem",
-                display: "block",
-                fontWeight: 500,
-                mb: "1.6rem",
-                color: theme.palette.grey[800],
-              }}
-            >
-              LCDA
-            </FormLabel>
-            <Input label="Enter LCDA" name="lcda" form={form} />
-          </Grid>
+          {tenantName !== "fct" && (
+            <Grid item xs={4}>
+              <FormLabel
+                sx={{
+                  fontSize: "2rem",
+                  display: "block",
+                  fontWeight: 500,
+                  mb: "1.6rem",
+                  color: theme.palette.grey[800],
+                }}
+              >
+                LCDA
+              </FormLabel>
+              <Input label="Enter LCDA" name="lcda" form={form} />
+            </Grid>
+          )}
           <Grid item xs={4}>
             <FormLabel
               sx={{

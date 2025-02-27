@@ -31,7 +31,7 @@ export interface ICompanyInfo {
   lga: string;
   street_number: number;
   street_name: string;
-  lcda: string;
+  lcda?: string;
   tax_station?: string;
   business_type: string;
   place_of_business: string;
