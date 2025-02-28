@@ -18,7 +18,7 @@ const identificationSchemaObject = yup.object({
   date_of_birth: yup
     .string()
     .test("date-of-birth", "You must be at least 18 years old", (value) =>
-      value ? new Date(value).getFullYear() - new Date().getFullYear() > 18 : false
+      value ? new Date(value).getFullYear() - new Date().getFullYear() > 18 : true
     ),
 });
 
